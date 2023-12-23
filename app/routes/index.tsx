@@ -40,6 +40,31 @@ export default function Index() {
           </li>
         ))}
       </ul>
+      <h1 className="font-extrabold">Table</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>Pts.</th>
+            <th>W</th>
+            <th>D</th>
+            <th>L</th>
+          </tr>
+        </thead>
+        <tbody>
+          {league.table.map((team, idx) => (
+            <tr>
+              <td>{idx + 1}</td>
+              <td>{league.teams[team.team].name}</td>
+              <td>{team.points}</td>
+              <td>{team.wins}</td>
+              <td>{team.draws}</td>
+              <td>{team.losses}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
