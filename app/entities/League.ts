@@ -104,16 +104,3 @@ export default class League {
     this.teams = randomTeams;
   }
 }
-
-new League([
-  { name: 'Flamengo' },
-  { name: 'Fluminense' },
-  { name: 'Vasco da Gama' },
-  { name: 'São Paulo' },
-  { name: 'Grêmio' },
-  { name: 'Internacional' },
-  { name: 'Portuguesa' },
-  { name: 'Manchester City' },
-  { name: 'Portsmouth' },
-  { name: 'Real Sociedad' },
-]);
