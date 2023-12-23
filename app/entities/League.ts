@@ -20,9 +20,13 @@ const POINTS_PER_DRAW = 1;
 type Table = {
   team: number;
   points: number;
+  games: number;
   wins: number;
   losses: number;
   draws: number;
+  goalsScored: number;
+  goalsConceived: number;
+  goalsDifference: number;
 }[];
 
 const GAMES_AGAINST_EACH_OTHER = 2; // Right now it's 2 games against each other;
@@ -146,34 +150,50 @@ export default class League {
         if (!home) {
           table[game.homeTeam!] = {
             team: game.homeTeam!,
+            games: 1,
             points: homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW,
             wins: homeWin,
             losses: awayWin,
             draws: draw,
+            goalsScored: game.homeScore!,
+            goalsConceived: game.awayScore!,
+            goalsDifference: game.homeScore! - game.awayScore!,
           };
         } else {
+          home.games += 1;
           home.points += homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
           home.wins += homeWin;
           home.losses += awayWin;
           home.draws += draw;
+          home.goalsScored += game.homeScore!;
+          home.goalsConceived += game.awayScore!;
+          home.goalsDifference += game.homeScore! - game.awayScore!;
         };
 
         if (!away) {
           table[game.awayTeam!] = {
             team: game.awayTeam!,
+            games: 1,
             points: awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW,
             wins: awayWin,
             losses: homeWin,
             draws: draw,
+            goalsScored: game.awayScore!,
+            goalsConceived: game.homeScore!,
+            goalsDifference: game.awayScore! - game.homeScore!,
           };
         } else {
+          away.games += 1;
           away.points += awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
           away.wins += awayWin;
           away.losses += homeWin;
           away.draws += draw;
+          away.goalsScored += game.awayScore!;
+          away.goalsConceived += game.homeScore!;
+          away.goalsDifference += game.awayScore! - game.homeScore!;
         };
       })
     });
-    return table.sort((b, a) => a.points - b.points || a.wins - b.wins);
+    return table.sort((b, a) => a.points - b.points || a.wins - b.wins || a.goalsDifference - b.goalsDifference);
   }
 }
