@@ -13,16 +13,22 @@ export class League {
   fixtures: any[];
 
   constructor(public teams: Team[]) {
+    this._randomizeTeams();
     this.fixtures = this._createFixtures();
     this._fillFixtures();
-    this.print();
+    this.print(true);
   }
 
-  print() {
+  print(showNames: boolean = false) {
     this.fixtures.forEach((round: any, idx: any) => {
       console.log('Round ' + (idx + 1));
       round.forEach((game: any) => {
-        console.log(`${game.teamA !== null ? (game.teamA + 1) : 'x'} - ${game.teamB !== null ? (game.teamB + 1) : 'x'}`);
+        let teamA, teamB;
+        if (showNames) {
+          teamA = showNames ? `${this.teams[game.teamA]!.name} [${game.teamA + 1}]` : game.teamA + 1;
+          teamB = showNames ? `${this.teams[game.teamB]!.name} [${game.teamB + 1}]` : game.teamB + 1;
+        }
+        console.log(`${teamA} - ${teamB}`);
       });
       console.log('------------');
     });
@@ -83,17 +89,26 @@ export class League {
       }
     }
   }
+
+  private _randomizeTeams() {
+    const randomTeams: any[] = [];
+    while (this.teams.length) {
+      const [randomTeam] = this.teams.splice(Math.floor(Math.random() * this.teams.length), 1);
+      randomTeams.push(randomTeam);
+    }
+    this.teams = randomTeams;
+  }
 }
 
 new League([
-  { name: '1' },
-  { name: '2' },
-  { name: '3' },
-  { name: '4' },
-  { name: '5' },
-  { name: '6' },
-  { name: '7' },
-  { name: '8' },
-  { name: '9' },
-  { name: '10' },
+  { name: 'Flamengo' },
+  { name: 'Fluminense' },
+  { name: 'Vasco da Gama' },
+  { name: 'São Paulo' },
+  { name: 'Grêmio' },
+  { name: 'Internacional' },
+  { name: 'Portuguesa' },
+  { name: 'Manchester City' },
+  { name: 'Portsmouth' },
+  { name: 'Real Sociedad' },
 ]);
