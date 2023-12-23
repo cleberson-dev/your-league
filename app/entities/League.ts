@@ -36,6 +36,7 @@ export default class League {
     this.teams = randomizeArray(this.teams);
     this.fixtures = this._createFixtures();
     this._fillFixtures();
+    this.simulate();
   }
 
   print(showNames: boolean = false) {
@@ -117,6 +118,17 @@ export default class League {
     roundGame.finished = true;
   }
 
+  // Just for fun and testing :p
+  simulate() {
+    this.fixtures.forEach(round => {
+      round.forEach(game => {
+        game.finished = true;
+        game.homeScore = Math.round(Math.random() * 3);
+        game.awayScore = Math.round(Math.random() * 3);
+      });
+    });
+  }
+
   // Generated in real-time (but think about performance later)
   get table() {
     const table: Table = [];
@@ -126,7 +138,7 @@ export default class League {
 
         const draw = game.homeScore! === game.awayScore! ? 1 : 0;
         const homeWin = game.homeScore! > game.awayScore! ? 1 : 0;
-        const awayWin = game.awayScore! < game.homeScore! ? 1 : 0;
+        const awayWin = game.awayScore! > game.homeScore! ? 1 : 0;
 
         const home = table[game.homeTeam!];
         const away = table[game.awayTeam!];
@@ -162,6 +174,6 @@ export default class League {
         };
       })
     });
-    return table.sort((a, b) => a.points - b.points || a.wins - b.wins);
+    return table.sort((b, a) => a.points - b.points || a.wins - b.wins);
   }
 }

@@ -26,13 +26,15 @@ export default function Index() {
       <h1 className="text-4xl font-bold my-8">It's YOUR LEAGUE!</h1>
       <ul className="w-4/5 text-center">
         {league.fixtures.map((round, roundIdx) => (
-          <li className="mb-4">
+          <li key={roundIdx} className="mb-4">
             <h1 className="bg-slate-200 p-2 mb-2 font-bold">Round {roundIdx + 1}</h1>
             <ul>
-              {round.map((game) => (
-                <li className="grid grid-cols-3 p-2">
+              {round.map((game, gameIdx) => (
+                <li key={gameIdx} className="grid grid-cols-3 p-2">
                   <span className="items-end">{league.teams[game.homeTeam!].name}</span>
-                  <span className="">x</span>
+                  {game.finished ? 
+                    <span>{game.homeScore} x {game.awayScore}</span> : <span>- x -</span>
+                  }
                   <span>{league.teams[game.awayTeam!].name}</span>
                 </li>
               ))}
@@ -41,7 +43,7 @@ export default function Index() {
         ))}
       </ul>
       <h1 className="font-extrabold">Table</h1>
-      <table>
+      <table className="w-full">
         <thead>
           <tr>
             <th>#</th>
@@ -54,7 +56,7 @@ export default function Index() {
         </thead>
         <tbody>
           {league.table.map((team, idx) => (
-            <tr>
+            <tr key={league.teams[team.team].name}>
               <td>{idx + 1}</td>
               <td>{league.teams[team.team].name}</td>
               <td>{team.points}</td>
