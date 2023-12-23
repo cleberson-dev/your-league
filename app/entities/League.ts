@@ -13,48 +13,8 @@ export class League {
   fixtures: any[];
 
   constructor(public teams: Team[]) {
-    // Ensure the number of teams is even;
-
-    this.fixtures = [];
-    for (let roundIdx = 0; roundIdx < this.numberOfRounds; roundIdx += 1) {
-      const round: any[] = [];
-      for (let gameIdx = 0; gameIdx < this.numberOfGamesPerRound; gameIdx += 1) {
-        round.push({ teamA: null, teamB: null });
-      }
-      this.fixtures.push(round);
-    }
-
-    for (let roundIdx = 0; roundIdx < this.numberOfRounds; roundIdx += 1) {
-      const round = this.fixtures[roundIdx];
-      for (let gameIdx = 0; gameIdx < this.numberOfGamesPerRound; gameIdx += 1) {
-        const game = round[gameIdx];
-
-        if (gameIdx === 0) {
-          game.teamA = 0;
-
-          if (roundIdx === 0) {
-            game.teamB = this.numberOfTeams - 1;
-          }
-        }
-
-        if (roundIdx === 0 && gameIdx > 0) {
-          game.teamA = gameIdx;
-          game.teamB = this.numberOfTeams - gameIdx - 1;
-        }
-
-        if (roundIdx > 0 && gameIdx === 0) {
-          const endIdx = this.numberOfTeams - 1;
-          game.teamB = this.numberOfTeams - 1 - (roundIdx % endIdx);
-        }
-
-        if (roundIdx > 0 && gameIdx > 0) {
-          const gameOfPreviousRound = this.fixtures[roundIdx - 1][gameIdx];
-          game.teamA = gameOfPreviousRound.teamA > 1 ? gameOfPreviousRound.teamA - 1 : this.numberOfTeams - 1;
-          game.teamB = gameOfPreviousRound.teamB > 1 ? gameOfPreviousRound.teamB - 1 : this.numberOfTeams - 1;
-        }
-      }
-    }
-
+    this.fixtures = this._createFixtures();
+    this._fillFixtures();
     this.print();
   }
 
@@ -78,6 +38,50 @@ export class League {
 
   get numberOfGamesPerRound() {
     return this.teams.length / 2;
+  }
+
+  private _createFixtures(): any[] {
+    const fixtures: any[] = [];
+    for (let roundIdx = 0; roundIdx < this.numberOfRounds; roundIdx += 1) {
+      const round: any[] = [];
+      for (let gameIdx = 0; gameIdx < this.numberOfGamesPerRound; gameIdx += 1) {
+        round.push({ teamA: null, teamB: null });
+      }
+      fixtures.push(round);
+    }
+    return fixtures;
+  }
+
+  private _fillFixtures() {
+    for (let roundIdx = 0; roundIdx < this.numberOfRounds; roundIdx += 1) {
+      const round = this.fixtures[roundIdx];
+      for (let gameIdx = 0; gameIdx < this.numberOfGamesPerRound; gameIdx += 1) {
+        const game = round[gameIdx];
+
+        // The first team will start every first game in the round
+        if (gameIdx === 0) {
+          game.teamA = 0;
+        }
+
+        if (roundIdx === 0) {
+          game.teamA = gameIdx > 0 ? gameIdx : game.teamA;
+          game.teamB = gameIdx === 0 ? this.numberOfTeams - 1 : this.numberOfTeams - gameIdx - 1;
+        }
+
+        if (roundIdx > 0) {
+          if (gameIdx === 0) {
+            const endIdx = this.numberOfTeams - 1;
+            game.teamB = endIdx - (roundIdx % endIdx);
+          }
+          
+          if (gameIdx > 0) {
+            const gameOfPreviousRound = this.fixtures[roundIdx - 1][gameIdx];
+            game.teamA = gameOfPreviousRound.teamA > 1 ? gameOfPreviousRound.teamA - 1 : this.numberOfTeams - 1;
+            game.teamB = gameOfPreviousRound.teamB > 1 ? gameOfPreviousRound.teamB - 1 : this.numberOfTeams - 1;
+          }
+        }
+      }
+    }
   }
 }
 
