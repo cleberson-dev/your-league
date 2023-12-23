@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import cls from "classnames";
 import League from "~/entities/League";
 
 const league = new League([
@@ -26,6 +27,9 @@ const league = new League([
   { name: 'Paysandu' },
 ]);
 
+const PROMOTION_SPOTS = 4;
+const RELEGATION_SPOTS = 4;
+
 export default function TableAndFixtures() {
   const [currentRound, setCurrentRound] = useState(0);
 
@@ -48,7 +52,10 @@ export default function TableAndFixtures() {
         </thead>
         <tbody>
           {league.table.map((team, idx) => (
-            <tr key={league.teams[team.team].name}>
+            <tr className={cls({
+              'bg-green-100': idx < PROMOTION_SPOTS,
+              'bg-red-100': idx > (league.numberOfTeams - 1 - RELEGATION_SPOTS),
+            })} key={league.teams[team.team].name}>
               <td>{idx + 1}</td>
               <td>{league.teams[team.team].name}</td>
               <td>{team.games}</td>
