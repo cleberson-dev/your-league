@@ -1,5 +1,8 @@
-import League from "~/entities/League";
+"use client";
+
+import League, { Table } from "~/entities/League";
 import cls from "classnames";
+import { useState } from "react";
 
 const PROMOTION_SPOTS = 4;
 const RELEGATION_SPOTS = 4;
@@ -9,20 +12,20 @@ type Props = {
 };
 
 const tableHeaders = [
-  { key: "position", label: "Pos" },
-  { key: "team", label: "Team", align: 'left' },
+  { key: "position", label: "Pos", initialSortingOrder: 'asc' as 'asc' | 'desc' },
+  { key: "team", label: "Team", align: 'left', notSortable: true },
   { key: "points", label: "Points" },
   { key: "played", label: "Played" },
   { key: "wins", label: "Wins" },
   { key: "draws", label: "Draws" },
   { key: "losses", label: "Losses" },
-  { key: "goalsFor", label: "GF", hideHorizontalPadding: true, },
-  { key: "goalsAgainst", label: "GA", hideHorizontalPadding: true, },
-  { key: "goalsDifference", label: "+/-", hideHorizontalPadding: true, },
-  { key: "form", label: "Form" },
+  { key: "goalsFor", label: "GF", hideHorizontalPadding: true },
+  { key: "goalsAgainst", label: "GA", hideHorizontalPadding: true },
+  { key: "goalsDifference", label: "+/-", hideHorizontalPadding: true },
+  { key: "form", label: "Form", notSortable: true },
 ];
 
-const mapTeamToRowData = (tableTeam: any, idx: number, league: League): {
+const mapTeamToRowData = (tableTeam: Table[number], league: League): {
   key: string;
   element?: any;
   value?: any;
@@ -31,7 +34,7 @@ const mapTeamToRowData = (tableTeam: any, idx: number, league: League): {
   fullWidth?: boolean;
   bold?: boolean;
 }[] => [
-  { key: "position", value: idx + 1, showHorizontalPadding: true, },
+  { key: "position", value: tableTeam.position, showHorizontalPadding: true },
   { key: "team", value: league.teams[tableTeam.team].name, align: 'left', fullWidth: true, showHorizontalPadding: true, },
   { key: "points", value: tableTeam.points, bold: true },
   { key: "played", value: tableTeam.games },
@@ -62,19 +65,40 @@ const mapTeamToRowData = (tableTeam: any, idx: number, league: League): {
 ] 
 
 export default function LeagueTable({ league }: Props) {
+  const [sortColumnIdx, setSortColumnIdx] = useState<number | null>(null);
+  const [sortColumnOrder, setSortColumnOrder] = useState<'asc' | 'desc'>('asc'); 
+
+  const table = sortColumnIdx !== null ? league.table.sort((a, b) => {
+    const valueA = mapTeamToRowData(a, league)[sortColumnIdx]!.value;
+    const valueB = mapTeamToRowData(b, league)[sortColumnIdx]!.value;
+
+    return sortColumnOrder === 'asc' ? valueA - valueB : valueB - valueA;
+  }) : league.table;
+
   return (
     <table className="w-full table-auto shadow">
       <thead className="bg-primary-dark text-sm text-black/50">
         <tr className="font-black lowercase">
           {tableHeaders.map((header, idx) => (
-            <th 
+            <th
+              onClick={header.notSortable ? undefined : () => {
+                if (idx === sortColumnIdx) {
+                  setSortColumnOrder(sortColumnOrder === 'asc' ? 'desc' : 'asc');
+                  return;
+                }
+
+                setSortColumnIdx(idx);
+                setSortColumnOrder(header.initialSortingOrder ?? 'desc');
+              }} 
               key={header.key}
               className={cls({
-                "py-4 font-black first:pl-6 last:pr-6": true,
+                "py-4 font-black first:pl-6 last:pr-6 cursor-pointer": true,
                 "px-4": !header.hideHorizontalPadding,
                 "rounded-tl-2xl": idx === 0,
                 "rounded-tr-2xl": idx === tableHeaders.length - 1,
                 "text-left": header.align === 'left',
+                "cursor-default": header.notSortable,
+                "text-red-600": sortColumnIdx === idx,
               })} 
             >
               {header.label}
@@ -83,7 +107,7 @@ export default function LeagueTable({ league }: Props) {
         </tr>
       </thead>
       <tbody className="bg-primary text-center text-sm">
-        {league.table.map((team, idx) => (
+        {table.map((team, idx) => (
           <tr
             className={cls({
               "bg-green-100": idx < PROMOTION_SPOTS,
@@ -92,7 +116,7 @@ export default function LeagueTable({ league }: Props) {
             })}
             key={league.teams[team.team].name}
           >
-            {mapTeamToRowData(team, idx, league).map(colData => (
+            {mapTeamToRowData(team, league).map(colData => (
               <td
                 key={colData.key}
                 className={cls({

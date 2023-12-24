@@ -19,7 +19,8 @@ const POINTS_PER_DRAW = 1;
 
 type TeamResult = "WIN" | "DRAW" | "LOSS";
 
-type Table = {
+export type Table = {
+  position: number;
   team: number;
   points: number;
   games: number;
@@ -203,7 +204,9 @@ export default class League {
         };
       })
     });
-    return table.sort((b, a) => a.points - b.points || a.wins - b.wins || a.goalsDifference - b.goalsDifference);
+    return table
+      .sort((b, a) => a.points - b.points || a.wins - b.wins || a.goalsDifference - b.goalsDifference)
+      .map((team, idx) => ({...team, position: idx + 1 }));
   }
 
   getTeamResult(game: Game): [TeamResult, TeamResult] {
