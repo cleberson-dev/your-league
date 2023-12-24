@@ -17,6 +17,8 @@ type Game = {
 const POINTS_PER_WIN = 3;
 const POINTS_PER_DRAW = 1;
 
+type TeamResult = "WIN" | "DRAW" | "LOSS";
+
 type Table = {
   team: number;
   points: number;
@@ -27,6 +29,7 @@ type Table = {
   goalsScored: number;
   goalsConceived: number;
   goalsDifference: number;
+  results: TeamResult[];
 }[];
 
 const GAMES_AGAINST_EACH_OTHER = 2; // Right now it's 2 games against each other;
@@ -147,6 +150,8 @@ export default class League {
         const home = table[game.homeTeam!];
         const away = table[game.awayTeam!];
 
+        const [homeResult, awayResult] = this.getTeamResult(game);
+        
         if (!home) {
           table[game.homeTeam!] = {
             team: game.homeTeam!,
@@ -158,6 +163,7 @@ export default class League {
             goalsScored: game.homeScore!,
             goalsConceived: game.awayScore!,
             goalsDifference: game.homeScore! - game.awayScore!,
+            results: [homeResult],
           };
         } else {
           home.games += 1;
@@ -168,6 +174,7 @@ export default class League {
           home.goalsScored += game.homeScore!;
           home.goalsConceived += game.awayScore!;
           home.goalsDifference += game.homeScore! - game.awayScore!;
+          home.results.unshift(homeResult);
         };
 
         if (!away) {
@@ -181,6 +188,7 @@ export default class League {
             goalsScored: game.awayScore!,
             goalsConceived: game.homeScore!,
             goalsDifference: game.awayScore! - game.homeScore!,
+            results: [awayResult],
           };
         } else {
           away.games += 1;
@@ -191,9 +199,20 @@ export default class League {
           away.goalsScored += game.awayScore!;
           away.goalsConceived += game.homeScore!;
           away.goalsDifference += game.awayScore! - game.homeScore!;
+          away.results.unshift(awayResult);
         };
       })
     });
     return table.sort((b, a) => a.points - b.points || a.wins - b.wins || a.goalsDifference - b.goalsDifference);
+  }
+
+  getTeamResult(game: Game): [TeamResult, TeamResult] {
+    const homeWin = game.homeScore! > game.awayScore!;
+    const awayWin = game.awayScore! > game.homeScore!;
+
+    if (homeWin) return ["WIN", "LOSS"];
+    if (awayWin) return ["LOSS", "WIN"];
+    
+    return ["DRAW", "DRAW"];
   }
 }
