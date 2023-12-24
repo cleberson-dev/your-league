@@ -8,22 +8,39 @@ type Props = {
   league: League;
 };
 
+const tableHeaders = [
+  { key: "position", label: "Pos" },
+  { key: "team", label: "Team", align: 'left' },
+  { key: "points", label: "Points" },
+  { key: "played", label: "Played" },
+  { key: "wins", label: "Wins" },
+  { key: "draws", label: "Draws" },
+  { key: "losses", label: "Losses" },
+  { key: "goalsFor", label: "GF", hideHorizontalPadding: true, },
+  { key: "goalsAgainst", label: "GA", hideHorizontalPadding: true, },
+  { key: "goalsDifference", label: "+/-", hideHorizontalPadding: true, },
+  { key: "form", label: "Form" },
+];
+
 export default function LeagueTable({ league }: Props) {
   return (
     <table className="w-full table-auto shadow">
       <thead className="bg-primary-dark text-sm text-black/50">
         <tr className="font-black lowercase">
-          <th className="rounded-tl-2xl px-4 py-4 pl-6 font-black">Pos</th>
-          <th className="px-4 py-4 text-left font-black">team</th>
-          <th className="px-4 py-4 font-black">points</th>
-          <th className="px-4 py-4 font-black">played</th>
-          <th className="px-4 py-4 font-black">wins</th>
-          <th className="px-4 py-4 font-black">draws</th>
-          <th className="px-4 py-4 font-black">losses</th>
-          <th className="py-4 font-black">gf</th>
-          <th className="py-4 font-black">ga</th>
-          <th className="py-4 font-black">+/-</th>
-          <th className="rounded-tr-2xl px-4 py-4 pr-6 font-black">form</th>
+          {tableHeaders.map((header, idx) => (
+            <th 
+              key={header.key}
+              className={cls({
+                "py-4 font-black": true,
+                "px-4": !header.hideHorizontalPadding,
+                "rounded-tl-2xl pl-6": idx === 0,
+                "rounded-tr-2xl pr-6": idx === tableHeaders.length - 1,
+                "text-left": header.align === 'left',
+              })} 
+            >
+              {header.label}
+            </th>
+          ))}
         </tr>
       </thead>
       <tbody className="bg-primary text-center text-sm">
