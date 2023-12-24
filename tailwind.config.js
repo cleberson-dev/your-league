@@ -6,7 +6,14 @@ module.exports = {
   content: [fromRoot('./app/**/*.+(js|ts|tsx|mdx|md)')],
   darkMode: 'media',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#F5EBE0',
+          dark: '#E3D5CA',
+        },
+      },
+    },
   },
   variants: {
     extend: {},
