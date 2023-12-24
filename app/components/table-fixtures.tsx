@@ -38,7 +38,7 @@ export default function TableAndFixtures() {
       <table className="w-full table-auto shadow">
         <thead className="bg-primary-dark text-black/50 text-sm">
           <tr className="font-black lowercase">
-            <th className="font-black rounded-tl py-4 px-4 pl-6">Pos</th>
+            <th className="font-black rounded-tl-2xl py-4 px-4 pl-6">Pos</th>
             <th className="text-left font-black py-4 px-4">team</th>
             <th className="font-black py-4 px-4">points</th>
             <th className="font-black py-4 px-4">played</th>
@@ -47,7 +47,8 @@ export default function TableAndFixtures() {
             <th className="font-black py-4 px-4">losses</th>
             <th className="font-black py-4">gf</th>
             <th className="font-black py-4">ga</th>
-            <th className="font-black rounded-tr py-4 px-4 pr-6">+/-</th>
+            <th className="font-black py-4">+/-</th>
+            <th className="font-black rounded-tr-2xl py-4 px-4 pr-6">form</th>
           </tr>
         </thead>
         <tbody className="bg-primary text-center text-sm">
@@ -55,17 +56,25 @@ export default function TableAndFixtures() {
             <tr className={cls({
               'bg-green-100': idx < PROMOTION_SPOTS,
               'bg-red-100': idx > (league.numberOfTeams - 1 - RELEGATION_SPOTS),
+              'border-b border-solid border-black/5': true,
             })} key={league.teams[team.team].name}>
-              <td className="py-4 px-4 pl-6 border-b border-solid border-black/5">{idx + 1}</td>
-              <td className="w-full text-left py-4 px-4 border-b border-solid border-black/5">{league.teams[team.team].name}</td>
-              <td className="py-4 font-bold border-b border-solid border-black/5">{team.points}</td>
-              <td className="py-4 border-b border-solid border-black/5">{team.games}</td>
-              <td className="py-4 border-b border-solid border-black/5">{team.wins}</td>
-              <td className="py-4 border-b border-solid border-black/5">{team.draws}</td>
-              <td className="py-4 border-b border-solid border-black/5">{team.losses}</td>
-              <td className="py-4 px-4 border-b border-solid border-black/5">{team.goalsScored}</td>
-              <td className="py-4 px-4 border-b border-solid border-black/5">{team.goalsConceived}</td>
-              <td className="py-4 px-4 pr-6 border-b border-solid border-black/5">{team.goalsDifference}</td>
+              <td className="py-4 px-4 pl-6">{idx + 1}</td>
+              <td className="w-full text-left py-4 px-4">{league.teams[team.team].name}</td>
+              <td className="py-4 font-bold">{team.points}</td>
+              <td className="py-4">{team.games}</td>
+              <td className="py-4">{team.wins}</td>
+              <td className="py-4">{team.draws}</td>
+              <td className="py-4">{team.losses}</td>
+              <td className="py-4 px-4">{team.goalsScored}</td>
+              <td className="py-4 px-4">{team.goalsConceived}</td>
+              <td className="py-4 px-4">{team.goalsDifference}</td>
+              <td className="py-6 px-4 pr-6 flex gap-x-1">
+                <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+                <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+                <div className="w-2 h-2 rounded-full bg-red-400"></div>
+              </td>
             </tr>
           ))}
         </tbody>
