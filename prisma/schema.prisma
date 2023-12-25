@@ -16,7 +16,7 @@ model User {
   password  String
   
   teams     Team[]
-  leagues   League[] 
+  leagues   League[]
 }
 
 
