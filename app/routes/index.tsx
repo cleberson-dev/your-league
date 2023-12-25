@@ -47,15 +47,18 @@ type PaginationControlsProps = {
 
 const PaginationControls = ({ onPrevious, onNext, isPrevious, isNext }: PaginationControlsProps) => {
   const classes = {
-    button: "h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center hover:",
-    disabledButton: "opacity-30 cursor-default",
-  }
+    button: "h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center transition-colors",
+    disabledButton: "opacity-30 cursor-default hover:bg-gray-300",
+    enabledButton: "hover:bg-gray-200",
+  };
+
   return (
     <div className="flex gap-x-1">
       <button 
         className={cls({
           [classes.button]: true,
-          [classes.disabledButton]: !isPrevious
+          [classes.disabledButton]: !isPrevious,
+          [classes.enabledButton]: isPrevious,
         })}
         onClick={onPrevious}
       >
@@ -64,7 +67,8 @@ const PaginationControls = ({ onPrevious, onNext, isPrevious, isNext }: Paginati
       <button 
         className={cls({
           [classes.button]: true,
-          [classes.disabledButton]: !isNext
+          [classes.disabledButton]: !isNext,
+          [classes.enabledButton]: isNext,
         })} 
         onClick={onNext}
       >
@@ -103,7 +107,7 @@ export default function Index() {
       <div className="mb-16">
         <div className="flex justify-between items-center mb-2">
           <h1 className="font-bold text-2xl">Your leagues</h1>
-          <button className="bg-cyan-500 text-white py-2 px-4 rounded">+ Create a new League</button>
+          <button className="bg-cyan-500 text-white py-2 px-4 rounded hover:bg-cyan-600 transition-colors">+ Create a new League</button>
         </div>
         <PaginationControls isNext />
         <ul className="mt-5 flex gap-x-7">
@@ -117,7 +121,7 @@ export default function Index() {
       <div>
         <div className="flex justify-between items-center mb-2">
           <h1 className="font-bold text-2xl">Your teams</h1>
-          <button className="bg-cyan-500 text-white py-2 px-4 rounded">+ Create a new Team</button>
+          <button className="bg-cyan-500 text-white py-2 px-4 rounded hover:bg-cyan-600">+ Create a new Team</button>
         </div>
         <PaginationControls isNext />
         <ul className="mt-5 flex gap-x-4">
