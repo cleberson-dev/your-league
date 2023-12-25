@@ -2,6 +2,8 @@ import { ActionFunction } from '@remix-run/server-runtime'
 import { Form, useActionData } from "@remix-run/react";
 import { PrismaClient } from "@prisma/client";
 import { compare } from 'bcrypt';
+import { createUserSession, login } from '~/utils/session.server';
+import { badRequest } from 'remix-utils';
 
 export default function Register() {
   const actionData = useActionData<typeof action>();
@@ -20,7 +22,6 @@ export default function Register() {
 export const action: ActionFunction = async ({
   request,
 }: any) => {
-  const db = new PrismaClient();
   const form = await request.formData();
 
   const data = {
@@ -28,18 +29,13 @@ export const action: ActionFunction = async ({
     password: form.get("password"),
   }
 
-  const user = await db.user.findUnique({ where: { email: data.email } });
+  const user = await login({ email: data.email, password: data.password });
+
   if (!user) {
-    return { ok: false, error: "User not found" };
-  }
-  
-  const doPasswordsMatch = await compare(data.password, user.password);
-  if (!doPasswordsMatch) {
-    return { ok: false, error: "E-mail and Password invalids" };
+    return badRequest({
+      error: 'Username and/or password are invalid',
+    });
   }
 
-  console.log('User logged in', user);
-
-  return { ok: true };
+  return createUserSession(user.id, "/dashboard");
 }
-
