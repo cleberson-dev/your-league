@@ -13,6 +13,11 @@ export const loader = async ({ request }: any) => {
 export default function Dashboard() {
   const { user } = useLoaderData<typeof loader>();
   return (
-    <h1 className="font-bold text-4xl">Hello, { user?.name }!</h1>
+    <>
+      <h1 className="font-bold text-4xl">Hello, { user?.name }!</h1>
+      <form action="/logout" method="POST">
+        <button type="submit" className="bg-red-500 p-2 text-white">Logout</button>
+      </form>
+    </>
   )
 }
