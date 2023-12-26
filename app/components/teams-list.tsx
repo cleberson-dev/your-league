@@ -1,28 +1,39 @@
+import PaginationControls from "./pagination-controls";
 import TeamCard from "./team-card";
-
-const mockTeams = [
-  { id: 1, name: "Arsenal FC" },
-  { id: 2, name: "Arsenal FC" },
-  { id: 3, name: "Arsenal FC" },
-  { id: 4, name: "Arsenal FC" },
-  { id: 5, name: "Arsenal FC" },
-];
 
 type Props = {
   teams: {
     id: string;
     name: string;
+    logoFiletype?: string | null;
   }[];
-}
+};
 
 export default function TeamsList({ teams }: Props) {
+  if (teams.length === 0)
+    return (
+      <p className="my-8 text-center text-2xl font-bold text-black/20">
+        No Teams
+      </p>
+    );
+
   return (
-    <ul className="mt-5 flex gap-x-4">
-      {teams.map((team) => (
-        <li key={team.id}>
-          <TeamCard name={team.name} logo={`/team-logos/${team.id}.png`} />
-        </li>
-      ))}
-    </ul>
+    <>
+      <PaginationControls isNext />
+      <ul className="mt-5 flex gap-x-4">
+        {teams.map((team) => (
+          <li key={team.id}>
+            <TeamCard
+              name={team.name}
+              logo={
+                team.logoFiletype
+                  ? `/team-logos/${team.id}.${team.logoFiletype}`
+                  : ""
+              }
+            />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

@@ -21,29 +21,32 @@ model User {
 
 
 model Team {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  logoFiletype String?
+  createdAt    DateTime @default(now())
 
-  user    User      @relation(fields: [userId], references: [id])
-  userId  String    @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String   @db.ObjectId
 
-  leagues League[] @relation(fields: [leagueIDs], references: [id])
-  leagueIDs String[] @db.ObjectId
+  leagues      League[] @relation(fields: [leagueIDs], references: [id])
+  leagueIDs    String[] @db.ObjectId
 
-  matchTeams MatchTeam[]
+  matchTeams   MatchTeam[]
 }
 
 
 model League {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
 
-  user     User    @relation(fields: [userId], references: [id])
-  userId   String  @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
 
-  teams    Team[]  @relation(fields: [teamIDs], references: [id])
-  teamIDs  String[] @db.ObjectId
-  fixtures Round[]
+  teams     Team[]   @relation(fields: [teamIDs], references: [id])
+  teamIDs   String[] @db.ObjectId
+  fixtures  Round[]
 }
 
 
@@ -76,12 +79,12 @@ model Match {
 
 // Storing Info about a team in a match (goals, shots on target, ball possession)
 model MatchTeam {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   score       Int
 
-  team        Team         @relation(fields: [teamId], references: [id])
-  teamId      String       @db.ObjectId
+  team        Team    @relation(fields: [teamId], references: [id])
+  teamId      String  @db.ObjectId
   
-  matchesHome Match[]      @relation("MatchesHome")
-  matchesAway Match[]      @relation("MatchesAway")
+  matchesHome Match[] @relation("MatchesHome")
+  matchesAway Match[] @relation("MatchesAway")
 }

@@ -1,6 +1,6 @@
 // It's not a dashboard, but I couldn't figure out a name hihi
 
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Button from "~/components/button";
 import LeaguesList from "~/components/leagues-list";
@@ -15,8 +15,8 @@ import { badRequest } from "remix-utils";
 export const loader = async ({ request }: any) => {
   const userId = await requireUserId(request);
   const user = await getUser(request);
-  const leagues = await db.league.findMany({ where: { userId }, select: { id: true, name: true } });
-  const teams = await db.team.findMany({ where: { userId }, select: { id: true, name: true } });
+  const leagues = (await db.league.findMany({ where: { userId }, select: { id: true, name: true, teamIDs: true, }, orderBy: { createdAt: "desc" } })).map(league => ({...league, teamIDs: undefined, teamsCount: league.teamIDs.length}));
+  const teams = await db.team.findMany({ where: { userId }, select: { id: true, name: true, logoFiletype: true }, orderBy: { createdAt: "desc" } });
 
   return { user, leagues, teams };
 }
@@ -24,8 +24,10 @@ export const loader = async ({ request }: any) => {
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
   const name = formData.get("name") as string;
+  
   const logo = formData.get("logo") as Blob;
-  const isValidLogoType = ["png", "jpeg", "jpg"].some(format => logo.type.includes(format));
+  const logoType = logo.type.split("/").at(-1) || "";
+  const isValidLogoType = ["png", "jpeg", "jpg"].includes(logoType);
 
   if (!name || !logo || !isValidLogoType) return badRequest({
     message: "Invalid form",
@@ -33,17 +35,17 @@ export const action = async ({ request }: { request: Request }) => {
 
   const userId = await getUserId(request) as string;
   const createdTeam = await db.team.create({
-    data: { name, userId },
+    data: { name, userId, logoFiletype: logoType },
   });
   const buffer = Buffer.from(await logo.arrayBuffer());
-  const logoType = logo.type.split("/").at(-1);
-  await writeFile(path.join("public", "team-logos", createdTeam.id + "." + logoType), buffer);
+  const filename = `${createdTeam.id}.${logoType}`;
+  await writeFile(path.join("public", "team-logos", filename), buffer);
   
   return createdTeam;
 }
 
 export default function Dashboard() {
-  const { user, teams } = useLoaderData<typeof loader>();
+  const { user, teams, leagues } = useLoaderData<typeof loader>();
   const [createLeagueModal, setCreateLeagueModal] = useState(false);
   const [createTeamModal, setCreateTeamModal] = useState(false);
 
@@ -59,8 +61,7 @@ export default function Dashboard() {
           <h1 className="font-bold text-2xl">Your leagues</h1>
           <Button onClick={() => setCreateLeagueModal(true)}>+ Create a new League</Button>
         </div>
-        <PaginationControls isNext />
-        <LeaguesList />
+        <LeaguesList leagues={leagues} />
       </div>
 
       {/* User Teams */}
@@ -69,7 +70,6 @@ export default function Dashboard() {
           <h1 className="font-bold text-2xl">Your teams</h1>
           <Button onClick={() => setCreateTeamModal(true)}>+ Create a new Team</Button>
         </div>
-        <PaginationControls isNext />
         <TeamsList teams={teams} />
       </div>
 
