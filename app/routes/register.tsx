@@ -1,7 +1,6 @@
 import { ActionFunction } from '@remix-run/server-runtime'
 import { Form, Link, useActionData } from "@remix-run/react";
 import { PrismaClient } from "@prisma/client";
-import { hash } from 'bcrypt';
 import { createUserSession, register } from '~/utils/session.server';
 import { badRequest } from 'remix-utils';
 

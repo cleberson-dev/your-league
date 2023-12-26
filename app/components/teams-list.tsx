@@ -8,12 +8,19 @@ const mockTeams = [
   { id: 5, name: "Arsenal FC" },
 ];
 
-export default function TeamsList() {
+type Props = {
+  teams: {
+    id: string;
+    name: string;
+  }[];
+}
+
+export default function TeamsList({ teams }: Props) {
   return (
     <ul className="mt-5 flex gap-x-4">
-      {mockTeams.map((team) => (
+      {teams.map((team) => (
         <li key={team.id}>
-          <TeamCard name={team.name} logo="/team-logo.png" />
+          <TeamCard name={team.name} logo={`/team-logos/${team.id}.png`} />
         </li>
       ))}
     </ul>
