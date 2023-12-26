@@ -13,26 +13,7 @@ export let meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className="min-h-[100svh] py-12 px-16">
-
-      {/* User Leagues */}
-      <div className="mb-16">
-        <div className="flex justify-between items-center mb-2">
-          <h1 className="font-bold text-2xl">Your leagues</h1>
-          <Button>+ Create a new League</Button>
-        </div>
-        <PaginationControls isNext />
-        <LeaguesList />
-      </div>
-
-      {/* User Teams */}
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h1 className="font-bold text-2xl">Your teams</h1>
-          <Button>+ Create a new Team</Button>
-        </div>
-        <PaginationControls isNext />
-        <TeamsList />
-      </div>
+     <h1>Home Page</h1>
     </div>
   );
 }
