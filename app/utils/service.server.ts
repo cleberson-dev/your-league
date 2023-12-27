@@ -25,7 +25,15 @@ export const createTeam = async (request: Request, formData: FormData) => {
   const logoFiletype = hasFileData ? logo.type.split("/").at(-1) : undefined;
   const userId = (await getUserId(request)) as string;
   const createdTeam = await db.team.create({
-    data: { name, userId, logoFiletype },
+    data: { 
+      name, 
+      logoFiletype, 
+      user: { 
+        connect: { 
+          id: userId 
+        } 
+      },  
+    },
   });
 
   if (hasFileData) {
@@ -40,15 +48,17 @@ export const createTeam = async (request: Request, formData: FormData) => {
 export const createLeague = async (request: Request, formData: FormData) => {
   const userId = (await getUserId(request))!;
   const name = formData.get("name") as string;
-  const teamIDs = [...formData.entries()].filter(([key]) => key.startsWith("teamIDs")).map(([,value]) => value as string);
+  const teams = formData.getAll("teams").map(team => JSON.parse(team as string));
+  console.log({ userId, name, teams });
 
-  if (teamIDs.length % 2 !== 0) return badRequest({ error: "Number of teams must be even" });
+  if (teams.length % 2 !== 0) return badRequest({ error: "Number of teams must be even" });
 
   await db.league.create({
     data: {
-      name: name,
+      name,
       teams: {
-        connect: teamIDs.map(teamId => ({ id: teamId })),
+        connect: teams.filter(team => !!team.id).map(team => ({ id: team.id })),
+        create: teams.filter(team => !team.id && !!team.name).map(team => ({ name: team.name, user: { connect: { id: userId } } })),
       },
       user: {
         connect: {

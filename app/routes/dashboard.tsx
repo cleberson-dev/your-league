@@ -7,7 +7,7 @@ import LeaguesList from "~/components/leagues-list";
 import TeamsList from "~/components/teams-list";
 import { db } from "~/utils/db.server";
 import { getUser, requireUserId } from "~/utils/session.server";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import * as service from '~/utils/service.server';
 
 export const loader = async ({ request }: any) => {
@@ -77,8 +77,6 @@ export default function Dashboard() {
   const [createLeagueModal, setCreateLeagueModal] = useState(false);
   const [createTeamModal, setCreateTeamModal] = useState(false);
 
-  const [selectedTeamIds, setSelectedTeamIds] = useState<(string | null)[]>([null]);
-
   return (
     <>
       <header className="fixed top-0 w-full flex justify-end p-2">
@@ -131,23 +129,17 @@ export default function Dashboard() {
                   />
                 </div>
                 <div>
-                  <label className="block">Teams ({selectedTeamIds.filter(id => id !== null).length} included)</label>
+                  <label className="block">Teams</label>
                   <div className="flex flex-col gap-y-2 mb-2">
-                    {selectedTeamIds.map((id, idx) => (
-                      <Select
-                        name={`teamIDs[${idx}]`} 
-                        placeholder={`Team ${idx + 1}`}
-                        options={
-                          teams.filter(team => !selectedTeamIds.slice(0, idx).includes(team.id)).map(team => ({ value: team.id, label: team.name }))
-                        }
-                        onChange={e => {
-                          setSelectedTeamIds(prev => prev.map((teamId, teamIdIdx) => teamIdIdx === idx ? e!.value : teamId))
-                        }}  
-                      />
-                      ))
-                    }            
+                    <CreatableSelect
+                      isMulti
+                      name="teams"
+                      options={teams.map(team => ({ label: team.name, value: JSON.stringify({ id: team.id }) }))}
+                      getNewOptionData={newOption => {
+                        return { label: newOption, value: JSON.stringify({ name: newOption }) };
+                      }}
+                    />         
                   </div>
-                  <Button disabled={selectedTeamIds.length === teams.length} type="button" onClick={() => setSelectedTeamIds(prev => [...prev, null])}>+</Button>
                 </div>
               </div>
               <div className="flex justify-end gap-x-2">
