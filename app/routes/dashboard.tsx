@@ -4,13 +4,13 @@ import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Button from "~/components/button";
 import LeaguesList from "~/components/leagues-list";
-import PaginationControls from "~/components/pagination-controls";
 import TeamsList from "~/components/teams-list";
 import { db } from "~/utils/db.server";
 import { getUser, getUserId, requireUserId } from "~/utils/session.server";
 import { writeFile } from "fs/promises";
 import path from "path";
 import { badRequest } from "remix-utils";
+import Select from "react-select";
 
 export const loader = async ({ request }: any) => {
   const userId = await requireUserId(request);
@@ -61,8 +61,10 @@ export const action = async ({ request }: { request: Request }) => {
 
 export default function Dashboard() {
   const { user, teams, leagues } = useLoaderData<typeof loader>();
-  const [createLeagueModal, setCreateLeagueModal] = useState(false);
+  const [createLeagueModal, setCreateLeagueModal] = useState(true);
   const [createTeamModal, setCreateTeamModal] = useState(false);
+
+  const [selectedTeamIds, setSelectedTeamIds] = useState<(string | null)[]>([null]);
 
   return (
     <>
@@ -99,33 +101,48 @@ export default function Dashboard() {
         </div>
 
         {/* TODO AFTER SUCCESSFULLY CREATE TEAMS THROUGH MODAL */}
-        {/* {
+        {
         createLeagueModal && (
           <div className="h-[100svh] w-full absolute top-0 left-0 bg-black/10 flex justify-center items-center">
-            <form className="rounded w-3/4 h-3/4 bg-white shadow p-8">
-              <h1 className="font-bold text-2xl" onClick={() => {
-                fetcher.load("/api/leagues");
-              }}>Create your league</h1>
-              <input placeholder="Name" name="name" />
-              <Select 
-                options={[
-                  { value: '1', label: 'Time 1' },
-                  { value: '2', label: 'Time 2' },
-                  { value: '3', label: 'Time 3' },
-                  { value: '4', label: 'Time 4' },
-                  { value: '5', label: 'Time 5' },
-                  { value: '6', label: 'Time 6' },
-                  { value: '7', label: 'Time 7' },
-                  { value: '8', label: 'Time 8' },
-                  { value: '9', label: 'Time 9' },
-                  { value: '10', label: 'Time 10' },
-                ]}
-                isMulti 
-              />
+            <form className="rounded w-3/4 h-3/4 bg-white shadow p-8 flex flex-col">
+              <h1 className="font-bold text-2xl mb-10">Create your league</h1>
+              <div className="flex flex-grow flex-col gap-y-8 overflow-auto">
+                <div>
+                  <label className="block">Name</label>
+                  <input
+                    required
+                    name="name"
+                    className="w-60 rounded border border-solid border-black/10"
+                  />
+                </div>
+                <div>
+                  <label className="block">Teams ({selectedTeamIds.filter(id => id !== null).length} selected)</label>
+                  <div className="flex flex-col gap-y-2 mb-2">
+                    {selectedTeamIds.map((id, idx) => (
+                      <Select
+                        name={`teamIDs[${idx}]`} 
+                        placeholder={`Team ${idx + 1}`}
+                        options={teams.map(team => ({ value: team.id, label: team.name }))}
+                        onChange={e => {
+                          setSelectedTeamIds(prev => prev.map((teamId, teamIdIdx) => teamIdIdx === idx ? e!.value : teamId))
+                        }}  
+                      />
+                      ))
+                    }            
+                  </div>
+                  <Button type="button" onClick={() => setSelectedTeamIds(prev => [...prev, null])}>+</Button>
+                </div>
+              </div>
+              <div className="flex justify-end gap-x-2">
+                <Button type="submit">Create</Button>
+                <Button type="button" onClick={() => setCreateLeagueModal(false)}>
+                  Close
+                </Button>
+              </div>
             </form>
           </div>
         )
-      } */}
+      }
 
         {createTeamModal && (
           <div className="fixed left-0 top-0 flex h-[100svh] w-full items-center justify-center bg-black/10">
