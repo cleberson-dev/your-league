@@ -40,28 +40,32 @@ export const action = async ({ request }: { request: Request }) => {
   const name = formData.get("name") as string;
 
   const logo = formData.get("logo") as Blob;
+  const hasLogo = logo.size > 0;
+  const isValidLogoType = logo.type.match(/jpg|jpeg|png/);
+  
+  if (!name) return badRequest({ message: "Invalid form" });
+
+  if (hasLogo && !isValidLogoType) {
+    return badRequest({ message: "Invalid form" });
+  }
+
   const logoType = logo.type.split("/").at(-1) || "";
-  const isValidLogoType = ["png", "jpeg", "jpg"].includes(logoType);
-
-  if (!name || !logo || !isValidLogoType)
-    return badRequest({
-      message: "Invalid form",
-    });
-
   const userId = (await getUserId(request)) as string;
   const createdTeam = await db.team.create({
-    data: { name, userId, logoFiletype: logoType },
+    data: { name, userId, logoFiletype: hasLogo ? logoType : undefined },
   });
-  const buffer = Buffer.from(await logo.arrayBuffer());
-  const filename = `${createdTeam.id}.${logoType}`;
-  await writeFile(path.join("public", "team-logos", filename), buffer);
+  if (logo) {
+    const buffer = Buffer.from(await logo.arrayBuffer());
+    const filename = `${createdTeam.id}.${logoType}`;
+    await writeFile(path.join("public", "team-logos", filename), buffer);
+  }
 
   return createdTeam;
 };
 
 export default function Dashboard() {
   const { user, teams, leagues } = useLoaderData<typeof loader>();
-  const [createLeagueModal, setCreateLeagueModal] = useState(true);
+  const [createLeagueModal, setCreateLeagueModal] = useState(false);
   const [createTeamModal, setCreateTeamModal] = useState(false);
 
   const [selectedTeamIds, setSelectedTeamIds] = useState<(string | null)[]>([null]);

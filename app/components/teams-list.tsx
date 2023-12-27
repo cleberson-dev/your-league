@@ -20,7 +20,7 @@ export default function TeamsList({ teams }: Props) {
   return (
     <>
       <PaginationControls isNext />
-      <ul className="mt-5 flex gap-x-4">
+      <ul className="mt-5 flex gap-x-4 overflow-auto">
         {teams.map((team) => (
           <li key={team.id}>
             <TeamCard
