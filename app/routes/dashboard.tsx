@@ -6,11 +6,9 @@ import Button from "~/components/button";
 import LeaguesList from "~/components/leagues-list";
 import TeamsList from "~/components/teams-list";
 import { db } from "~/utils/db.server";
-import { getUser, getUserId, requireUserId } from "~/utils/session.server";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { badRequest } from "remix-utils";
+import { getUser, requireUserId } from "~/utils/session.server";
 import Select from "react-select";
+import * as service from '~/utils/service.server';
 
 export const loader = async ({ request }: any) => {
   const userId = await requireUserId(request);
@@ -36,31 +34,42 @@ export const loader = async ({ request }: any) => {
 };
 
 export const action = async ({ request }: { request: Request }) => {
-  const formData = await request.formData();
-  const name = formData.get("name") as string;
+  const formData = await request.formData()
+  const actionType = formData.get("actionType");
 
-  const logo = formData.get("logo") as Blob;
-  const hasLogo = logo.size > 0;
-  const isValidLogoType = logo.type.match(/jpg|jpeg|png/);
+  switch(actionType) {
+    case "createTeam":
+      return service.createTeam(request, formData);
+    case "createLeague":
+      return service.createLeague(request, formData);
+    default:
+      return { ok: true };
+  }
+  // const formData = await request.formData();
+  // const name = formData.get("name") as string;
+
+  // const logo = formData.get("logo") as Blob;
+  // const hasLogo = logo.size > 0;
+  // const isValidLogoType = logo.type.match(/jpg|jpeg|png/);
   
-  if (!name) return badRequest({ message: "Invalid form" });
+  // if (!name) return badRequest({ message: "Invalid form" });
 
-  if (hasLogo && !isValidLogoType) {
-    return badRequest({ message: "Invalid form" });
-  }
+  // if (hasLogo && !isValidLogoType) {
+  //   return badRequest({ message: "Invalid form" });
+  // }
 
-  const logoType = logo.type.split("/").at(-1) || "";
-  const userId = (await getUserId(request)) as string;
-  const createdTeam = await db.team.create({
-    data: { name, userId, logoFiletype: hasLogo ? logoType : undefined },
-  });
-  if (logo) {
-    const buffer = Buffer.from(await logo.arrayBuffer());
-    const filename = `${createdTeam.id}.${logoType}`;
-    await writeFile(path.join("public", "team-logos", filename), buffer);
-  }
+  // const logoType = logo.type.split("/").at(-1) || "";
+  // const userId = (await getUserId(request)) as string;
+  // const createdTeam = await db.team.create({
+  //   data: { name, userId, logoFiletype: hasLogo ? logoType : undefined },
+  // });
+  // if (logo) {
+  //   const buffer = Buffer.from(await logo.arrayBuffer());
+  //   const filename = `${createdTeam.id}.${logoType}`;
+  //   await writeFile(path.join("public", "team-logos", filename), buffer);
+  // }
 
-  return createdTeam;
+  // return createdTeam;
 };
 
 export default function Dashboard() {
@@ -108,7 +117,9 @@ export default function Dashboard() {
         {
         createLeagueModal && (
           <div className="h-[100svh] w-full absolute top-0 left-0 bg-black/10 flex justify-center items-center">
-            <form className="rounded w-3/4 h-3/4 bg-white shadow p-8 flex flex-col">
+            <form method="POST" className="rounded w-3/4 h-3/4 bg-white shadow p-8 flex flex-col">
+              <input readOnly name="actionType" value="createLeague" className="hidden" />
+              
               <h1 className="font-bold text-2xl mb-10">Create your league</h1>
               <div className="flex flex-grow flex-col gap-y-8 overflow-auto">
                 <div>
@@ -157,6 +168,8 @@ export default function Dashboard() {
               className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow"
               method="POST"
             >
+              <input readOnly name="actionType" value="createTeam" className="hidden" />
+
               <h1 className="mb-8 text-2xl font-bold">Create your team</h1>
               <div className="flex flex-grow flex-col gap-y-8">
                 <div>
