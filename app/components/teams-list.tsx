@@ -7,9 +7,10 @@ type Props = {
     name: string;
     logoFiletype?: string | null;
   }[];
+  removable?: boolean;
 };
 
-export default function TeamsList({ teams }: Props) {
+export default function TeamsList({ teams, removable }: Props) {
   if (teams.length === 0)
     return (
       <p className="my-8 text-center text-2xl font-bold text-black/20">
@@ -30,6 +31,7 @@ export default function TeamsList({ teams }: Props) {
                   ? `/team-logos/${team.id}.${team.logoFiletype}`
                   : ""
               }
+              removable={removable}
             />
           </li>
         ))}

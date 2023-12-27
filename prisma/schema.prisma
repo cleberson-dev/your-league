@@ -31,8 +31,6 @@ model Team {
 
   leagues      League[] @relation(fields: [leagueIDs], references: [id])
   leagueIDs    String[] @db.ObjectId
-
-  matchTeams   MatchTeam[]
 }
 
 
@@ -46,45 +44,6 @@ model League {
 
   teams     Team[]   @relation(fields: [teamIDs], references: [id])
   teamIDs   String[] @db.ObjectId
-  fixtures  Round[]
-}
 
-
-// Fixtures Struct
-model Round {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  
-  number   Int
-
-  league   League  @relation(fields: [leagueId], references: [id])
-  leagueId String  @db.ObjectId
-  
-  matches  Match[]
-}
-
-
-model Match {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  finished  Boolean?
-  
-  home      MatchTeam @relation("MatchesHome", fields: [homeId], references: [id])
-  homeId    String    @db.ObjectId
-  away      MatchTeam @relation("MatchesAway", fields: [awayId], references: [id])
-  awayId    String    @db.ObjectId
-
-  round     Round     @relation(fields: [roundId], references: [id])
-  roundId   String    @db.ObjectId
-}
-
-
-// Storing Info about a team in a match (goals, shots on target, ball possession)
-model MatchTeam {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  score       Int
-
-  team        Team    @relation(fields: [teamId], references: [id])
-  teamId      String  @db.ObjectId
-  
-  matchesHome Match[] @relation("MatchesHome")
-  matchesAway Match[] @relation("MatchesAway")
+  fixtures  Json[]
 }

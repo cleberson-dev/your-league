@@ -97,7 +97,7 @@ export default function Dashboard() {
               + Create a new League
             </Button>
           </div>
-          <LeaguesList leagues={leagues} />
+          <LeaguesList leagues={leagues} removable />
         </div>
 
         {/* User Teams */}
@@ -170,6 +170,7 @@ export default function Dashboard() {
                     required
                     name="name"
                     className="w-60 rounded border border-solid border-black/10"
+                    autoComplete="off"
                   />
                 </div>
                 <div>
@@ -177,7 +178,7 @@ export default function Dashboard() {
                   <input
                     type="file"
                     name="logo"
-                    accept="image/jpeg,image/png"
+                    accept=".jpeg, .png, .svg, .jpg"
                   />
                 </div>
               </div>

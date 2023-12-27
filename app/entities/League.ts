@@ -1,6 +1,5 @@
-import { randomizeArray } from "~/utils";
-
 type Team = {
+  id: string;
   name: string;
 }
 
@@ -20,7 +19,7 @@ const POINTS_PER_DRAW = 1;
 type TeamResult = "WIN" | "DRAW" | "LOSS";
 
 export type Table = {
-  position: number;
+  position?: number;
   team: number;
   points: number;
   games: number;
@@ -36,15 +35,19 @@ export type Table = {
 const GAMES_AGAINST_EACH_OTHER = 2; // Right now it's 2 games against each other;
 
 export default class League {
-  fixtures: Fixtures;
-
-  constructor(public teams: Team[]) {
+  constructor(
+    public name: string,
+    public teams: Team[],
+    public fixtures: Fixtures,
+  ) {
     if (teams.length % 2 !== 0) throw new Error('The number of teams should be even!');
+  }
 
-    this.teams = randomizeArray(this.teams);
-    this.fixtures = this._createFixtures();
-    this._fillFixtures();
-    this.simulate();
+  static create(name: string, teams: Team[]): League {
+    const fixtures = League._createFixtures(teams);
+    League._fillFixtures(fixtures, teams);
+
+    return new League(name, teams, fixtures);
   }
 
   print(showNames: boolean = false) {
@@ -74,11 +77,15 @@ export default class League {
     return this.teams.length / 2;
   }
 
-  private _createFixtures(): any[] {
+  private static _createFixtures(teams: Team[]): Fixtures {
+    const numberOfTeams = teams.length;
+    const numberOfRounds = (numberOfTeams - 1) * GAMES_AGAINST_EACH_OTHER;
+    const numberOfGamesPerRound = numberOfTeams / GAMES_AGAINST_EACH_OTHER;
+
     const fixtures: any[] = [];
-    for (let roundIdx = 0; roundIdx < this.numberOfRounds; roundIdx += 1) {
+    for (let roundIdx = 0; roundIdx < numberOfRounds; roundIdx += 1) {
       const round: any[] = [];
-      for (let gameIdx = 0; gameIdx < this.numberOfGamesPerRound; gameIdx += 1) {
+      for (let gameIdx = 0; gameIdx < numberOfGamesPerRound; gameIdx += 1) {
         round.push({ homeTeam: null, awayTeam: null });
       }
       fixtures.push(round);
@@ -86,10 +93,14 @@ export default class League {
     return fixtures;
   }
 
-  private _fillFixtures() {
-    for (let roundIdx = 0; roundIdx < this.numberOfRounds; roundIdx += 1) {
-      const round = this.fixtures[roundIdx];
-      for (let gameIdx = 0; gameIdx < this.numberOfGamesPerRound; gameIdx += 1) {
+  private static _fillFixtures(fixtures: any, teams: Team[]) {
+    const numberOfTeams = teams.length;
+    const numberOfRounds = (numberOfTeams - 1) * GAMES_AGAINST_EACH_OTHER;
+    const numberOfGamesPerRound = numberOfTeams / GAMES_AGAINST_EACH_OTHER;
+    
+    for (let roundIdx = 0; roundIdx < numberOfRounds; roundIdx += 1) {
+      const round = fixtures[roundIdx];
+      for (let gameIdx = 0; gameIdx < numberOfGamesPerRound; gameIdx += 1) {
         const game = round[gameIdx];
 
         // The first team will start every first game in the round
@@ -99,18 +110,18 @@ export default class League {
 
         if (roundIdx === 0) {
           game.homeTeam = gameIdx > 0 ? gameIdx : game.homeTeam;
-          game.awayTeam = gameIdx === 0 ? this.numberOfTeams - 1 : this.numberOfTeams - gameIdx - 1;
+          game.awayTeam = gameIdx === 0 ? numberOfTeams - 1 : numberOfTeams - gameIdx - 1;
         }
 
         if (roundIdx > 0) {
-          const endIdx = this.numberOfTeams - 1;
+          const endIdx = numberOfTeams - 1;
 
           if (gameIdx === 0) {
             game.awayTeam = endIdx - (roundIdx % endIdx);
           }
           
           if (gameIdx > 0) {
-            const gameOfPreviousRound = this.fixtures[roundIdx - 1][gameIdx];
+            const gameOfPreviousRound = fixtures[roundIdx - 1][gameIdx];
             game.homeTeam = gameOfPreviousRound.homeTeam! > 1 ? gameOfPreviousRound.homeTeam! - 1 : endIdx;
             game.awayTeam = gameOfPreviousRound.awayTeam! > 1 ? gameOfPreviousRound.awayTeam! - 1 : endIdx;
           }

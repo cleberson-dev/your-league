@@ -1,11 +1,21 @@
+import { TrashIcon } from '@heroicons/react/16/solid';
+
 type Props = {
   name: string;
   logo?: string;
+  removable?: boolean;
 };
 
-export default function TeamCard({ name, logo }: Props) {
+export default function TeamCard({ name, logo, removable }: Props) {
   return (
     <div className="group relative flex h-36 w-40 select-none flex-col justify-end rounded-3xl border border-solid border-black/5 bg-primary py-4 text-center font-medium text-black/50">
+      <div className="absolute top-2 right-2">
+        {removable && 
+          <button>
+            <TrashIcon width={16} height={16} />
+          </button>
+        }
+      </div>
       <div className="absolute top-0 flex h-full w-full items-center justify-center">
         <img src={logo || "/default-team-logo.png"} className="h-12" />
       </div>
