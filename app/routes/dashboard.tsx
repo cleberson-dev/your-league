@@ -116,13 +116,15 @@ export default function Dashboard() {
                   />
                 </div>
                 <div>
-                  <label className="block">Teams ({selectedTeamIds.filter(id => id !== null).length} selected)</label>
+                  <label className="block">Teams ({selectedTeamIds.filter(id => id !== null).length} included)</label>
                   <div className="flex flex-col gap-y-2 mb-2">
                     {selectedTeamIds.map((id, idx) => (
                       <Select
                         name={`teamIDs[${idx}]`} 
                         placeholder={`Team ${idx + 1}`}
-                        options={teams.map(team => ({ value: team.id, label: team.name }))}
+                        options={
+                          teams.filter(team => !selectedTeamIds.slice(0, idx).includes(team.id)).map(team => ({ value: team.id, label: team.name }))
+                        }
                         onChange={e => {
                           setSelectedTeamIds(prev => prev.map((teamId, teamIdIdx) => teamIdIdx === idx ? e!.value : teamId))
                         }}  
@@ -130,7 +132,7 @@ export default function Dashboard() {
                       ))
                     }            
                   </div>
-                  <Button type="button" onClick={() => setSelectedTeamIds(prev => [...prev, null])}>+</Button>
+                  <Button disabled={selectedTeamIds.length === teams.length} type="button" onClick={() => setSelectedTeamIds(prev => [...prev, null])}>+</Button>
                 </div>
               </div>
               <div className="flex justify-end gap-x-2">
