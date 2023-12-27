@@ -1,6 +1,6 @@
 "use client";
 
-import League, { Table } from "~/entities/League";
+import League, { Fixtures, Table, Team } from "~/entities/League";
 import cls from "classnames";
 import { useState } from "react";
 
@@ -8,7 +8,8 @@ const PROMOTION_SPOTS = 4;
 const RELEGATION_SPOTS = 4;
 
 type Props = {
-  league: League;
+  fixtures: Fixtures;
+  teams: Team[];
 };
 
 const tableHeaders = [
@@ -25,7 +26,7 @@ const tableHeaders = [
   { key: "form", label: "Form", notSortable: true },
 ];
 
-const mapTeamToRowData = (tableTeam: Table[number], league: League): {
+const mapTeamToRowData = (tableTeam: Table[number], teams: Team[]): {
   key: string;
   element?: any;
   value?: any;
@@ -35,7 +36,7 @@ const mapTeamToRowData = (tableTeam: Table[number], league: League): {
   bold?: boolean;
 }[] => [
   { key: "position", value: tableTeam.position, showHorizontalPadding: true },
-  { key: "team", value: league.teams[tableTeam.team].name, align: 'left', fullWidth: true, showHorizontalPadding: true, },
+  { key: "team", value: teams[tableTeam.team].name, align: 'left', fullWidth: true, showHorizontalPadding: true, },
   { key: "points", value: tableTeam.points, bold: true },
   { key: "played", value: tableTeam.games },
   { key: "wins", value: tableTeam.wins },
@@ -64,16 +65,20 @@ const mapTeamToRowData = (tableTeam: Table[number], league: League): {
   },
 ] 
 
-export default function LeagueTable({ league }: Props) {
+export default function LeagueTable({ fixtures, teams }: Props) {
   const [sortColumnIdx, setSortColumnIdx] = useState<number | null>(null);
   const [sortColumnOrder, setSortColumnOrder] = useState<'asc' | 'desc'>('asc'); 
 
-  const table = sortColumnIdx !== null ? league.table.sort((a, b) => {
-    const valueA = mapTeamToRowData(a, league)[sortColumnIdx]!.value;
-    const valueB = mapTeamToRowData(b, league)[sortColumnIdx]!.value;
+  let table = League.getTable(fixtures, teams);
 
-    return sortColumnOrder === 'asc' ? valueA - valueB : valueB - valueA;
-  }) : league.table;
+  if (sortColumnIdx !== null) {
+    table = table.sort((a, b) => {
+      const valueA = mapTeamToRowData(a, teams)[sortColumnIdx]!.value;
+      const valueB = mapTeamToRowData(b, teams)[sortColumnIdx]!.value;
+  
+      return sortColumnOrder === 'asc' ? valueA - valueB : valueB - valueA;
+    });
+  }
 
   return (
     <table className="w-full table-auto shadow">
@@ -111,12 +116,12 @@ export default function LeagueTable({ league }: Props) {
           <tr
             className={cls({
               "bg-green-100": idx < PROMOTION_SPOTS,
-              "bg-red-100": idx > league.numberOfTeams - 1 - RELEGATION_SPOTS,
+              "bg-red-100": idx > teams.length - 1 - RELEGATION_SPOTS,
               "border-b border-solid border-black/5": true,
             })}
-            key={league.teams[team.team].name}
+            key={teams[team.team].name}
           >
-            {mapTeamToRowData(team, league).map(colData => (
+            {mapTeamToRowData(team, teams).map(colData => (
               <td
                 key={colData.key}
                 className={cls({

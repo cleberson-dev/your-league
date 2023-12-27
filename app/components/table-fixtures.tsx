@@ -4,28 +4,7 @@ import { useState } from "react";
 import League from "~/entities/League";
 import LeagueTable from "./league-table";
 
-const league = new League([
-  { name: 'Flamengo' },
-  { name: 'Fluminense' },
-  { name: 'Vasco da Gama' },
-  { name: 'Botafogo' },
-  { name: 'São Paulo' },
-  { name: 'Corinthians' },
-  { name: 'Palmeiras' },
-  { name: 'RB Bragantino' },
-  { name: 'Santos' },
-  { name: 'Atlético-MG' },
-  { name: 'Athletico-PR' },
-  { name: 'Cruzeiro' },
-  { name: 'Bahia' },
-  { name: 'Cuiabá' },
-  { name: 'Coritiba' },
-  { name: 'América-MG' },
-  { name: 'Sport Recife' },
-  { name: 'Sampaio Corrêa' },
-  { name: 'Remo' },
-  { name: 'Paysandu' },
-]);;
+const league = new League("", [], []);;
 
 export default function TableAndFixtures() {
   const [currentRound, setCurrentRound] = useState(0);

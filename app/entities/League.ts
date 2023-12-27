@@ -1,9 +1,9 @@
-type Team = {
+export type Team = {
   id: string;
   name: string;
 }
 
-type Fixtures = Round[];
+export type Fixtures = Round[];
 type Round = Game[]; 
 type Game = {
   homeTeam: number | null;
@@ -39,30 +39,15 @@ export default class League {
     public name: string,
     public teams: Team[],
     public fixtures: Fixtures,
-  ) {
-    if (teams.length % 2 !== 0) throw new Error('The number of teams should be even!');
-  }
+  ) {}
 
   static create(name: string, teams: Team[]): League {
+    if (teams.length % 2 !== 0) throw new Error('The number of teams should be even!');
+
     const fixtures = League._createFixtures(teams);
     League._fillFixtures(fixtures, teams);
 
     return new League(name, teams, fixtures);
-  }
-
-  print(showNames: boolean = false) {
-    this.fixtures.forEach((round: any, idx: any) => {
-      console.log('Round ' + (idx + 1));
-      round.forEach((game: any) => {
-        let homeTeam, awayTeam;
-        if (showNames) {
-          homeTeam = showNames ? `${this.teams[game.homeTeam]!.name} [${game.homeTeam + 1}]` : game.homeTeam + 1;
-          awayTeam = showNames ? `${this.teams[game.awayTeam]!.name} [${game.awayTeam + 1}]` : game.awayTeam + 1;
-        }
-        console.log(`${homeTeam} - ${awayTeam}`);
-      });
-      console.log('------------');
-    });
   }
 
   get numberOfTeams() {
@@ -130,13 +115,6 @@ export default class League {
     }
   }
 
-  setScore({ round, game, home, away }: { round: number; game: number; home: number; away: number }) {
-    const roundGame = this.fixtures[round][game];
-    roundGame.homeScore = home;
-    roundGame.awayScore = away;
-    roundGame.finished = true;
-  }
-
   // Just for fun and testing :p
   simulate() {
     this.fixtures.forEach(round => {
@@ -149,9 +127,20 @@ export default class League {
   }
 
   // Generated in real-time (but think about performance later)
-  get table() {
-    const table: Table = [];
-    this.fixtures.forEach(round => {
+  static getTable(fixtures: Fixtures, teams: Team[]) {
+    const table: Table = teams.map((_, idx) => ({
+      team: idx,
+      games: 0,
+      points: 0,
+      wins: 0,
+      losses: 0,
+      draws: 0,
+      goalsScored: 0,
+      goalsConceived: 0,
+      goalsDifference: 0,
+      results: [],
+    }));
+    fixtures.forEach(round => {
       round.forEach(game => {
         if (!game.finished) return;
 
@@ -162,57 +151,27 @@ export default class League {
         const home = table[game.homeTeam!];
         const away = table[game.awayTeam!];
 
-        const [homeResult, awayResult] = this.getTeamResult(game);
+        const [homeResult, awayResult] = League.getTeamResult(game);
         
-        if (!home) {
-          table[game.homeTeam!] = {
-            team: game.homeTeam!,
-            games: 1,
-            points: homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW,
-            wins: homeWin,
-            losses: awayWin,
-            draws: draw,
-            goalsScored: game.homeScore!,
-            goalsConceived: game.awayScore!,
-            goalsDifference: game.homeScore! - game.awayScore!,
-            results: [homeResult],
-          };
-        } else {
-          home.games += 1;
-          home.points += homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
-          home.wins += homeWin;
-          home.losses += awayWin;
-          home.draws += draw;
-          home.goalsScored += game.homeScore!;
-          home.goalsConceived += game.awayScore!;
-          home.goalsDifference += game.homeScore! - game.awayScore!;
-          home.results.unshift(homeResult);
-        };
+        home.games += 1;
+        home.points += homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
+        home.wins += homeWin;
+        home.losses += awayWin;
+        home.draws += draw;
+        home.goalsScored += game.homeScore!;
+        home.goalsConceived += game.awayScore!;
+        home.goalsDifference += game.homeScore! - game.awayScore!;
+        home.results.unshift(homeResult);
 
-        if (!away) {
-          table[game.awayTeam!] = {
-            team: game.awayTeam!,
-            games: 1,
-            points: awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW,
-            wins: awayWin,
-            losses: homeWin,
-            draws: draw,
-            goalsScored: game.awayScore!,
-            goalsConceived: game.homeScore!,
-            goalsDifference: game.awayScore! - game.homeScore!,
-            results: [awayResult],
-          };
-        } else {
-          away.games += 1;
-          away.points += awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
-          away.wins += awayWin;
-          away.losses += homeWin;
-          away.draws += draw;
-          away.goalsScored += game.awayScore!;
-          away.goalsConceived += game.homeScore!;
-          away.goalsDifference += game.awayScore! - game.homeScore!;
-          away.results.unshift(awayResult);
-        };
+        away.games += 1;
+        away.points += awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
+        away.wins += awayWin;
+        away.losses += homeWin;
+        away.draws += draw;
+        away.goalsScored += game.awayScore!;
+        away.goalsConceived += game.homeScore!;
+        away.goalsDifference += game.awayScore! - game.homeScore!;
+        away.results.unshift(awayResult);
       })
     });
     return table
@@ -220,7 +179,7 @@ export default class League {
       .map((team, idx) => ({...team, position: idx + 1 }));
   }
 
-  getTeamResult(game: Game): [TeamResult, TeamResult] {
+  static getTeamResult(game: Game): [TeamResult, TeamResult] {
     const homeWin = game.homeScore! > game.awayScore!;
     const awayWin = game.awayScore! > game.homeScore!;
 
