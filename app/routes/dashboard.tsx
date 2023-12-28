@@ -7,8 +7,9 @@ import LeaguesList from "~/components/leagues-list";
 import TeamsList from "~/components/teams-list";
 import { db } from "~/utils/db.server";
 import { getUser, requireUserId } from "~/utils/session.server";
-import CreatableSelect from "react-select/creatable";
 import * as service from '~/utils/service.server';
+import CreateLeagueModal from "~/components/create-league.modal";
+import CreateTeamModal from "~/components/create-team.modal";
 
 export const meta = () => ({
   title: "Dashboard | Your League",
@@ -90,85 +91,8 @@ export default function Dashboard() {
           <TeamsList teams={teams} />
         </div>
 
-        {
-        createLeagueModal && (
-          <div className="h-[100svh] w-full absolute top-0 left-0 bg-black/10 flex justify-center items-center">
-            <form method="POST" className="rounded w-3/4 h-3/4 bg-white shadow p-8 flex flex-col">
-              <input readOnly name="actionType" value="createLeague" className="hidden" />
-              
-              <h1 className="font-bold text-2xl mb-10">Create your league</h1>
-              <div className="flex flex-grow flex-col gap-y-8 overflow-auto">
-                <div>
-                  <label className="block">Name</label>
-                  <input
-                    required
-                    name="name"
-                    className="w-60 rounded border border-solid border-black/10"
-                  />
-                </div>
-                <div>
-                  <label className="block">Teams</label>
-                  <div className="flex flex-col gap-y-2 mb-2">
-                    <CreatableSelect
-                      isMulti
-                      name="teams"
-                      options={teams.map(team => ({ label: team.name, value: JSON.stringify({ id: team.id }) }))}
-                      getNewOptionData={newOption => {
-                        return { label: newOption, value: JSON.stringify({ name: newOption }) };
-                      }}
-                    />         
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-end gap-x-2">
-                <Button type="submit">Create</Button>
-                <Button type="button" onClick={() => setCreateLeagueModal(false)}>
-                  Close
-                </Button>
-              </div>
-            </form>
-          </div>
-        )
-      }
-
-        {createTeamModal && (
-          <div className="fixed left-0 top-0 flex h-[100svh] w-full items-center justify-center bg-black/10">
-            <form
-              encType="multipart/form-data"
-              className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow"
-              method="POST"
-            >
-              <input readOnly name="actionType" value="createTeam" className="hidden" />
-
-              <h1 className="mb-8 text-2xl font-bold">Create your team</h1>
-              <div className="flex flex-grow flex-col gap-y-8">
-                <div>
-                  <label className="block">Name</label>
-                  <input
-                    required
-                    name="name"
-                    className="w-60 rounded border border-solid border-black/10"
-                    autoComplete="off"
-                  />
-                </div>
-                <div>
-                  <label className="block">Logo</label>
-                  <input
-                    type="file"
-                    name="logo"
-                    accept=".jpeg, .png, .svg, .jpg"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end gap-x-2">
-                <Button type="submit">Create</Button>
-                <Button type="button" onClick={() => setCreateTeamModal(false)}>
-                  Close
-                </Button>
-              </div>
-            </form>
-          </div>
-        )}
+        {createLeagueModal && <CreateLeagueModal teams={teams} onClose={() => setCreateLeagueModal(false)} />}
+        {createTeamModal && <CreateTeamModal onClose={() => setCreateTeamModal(false)} />}
       </div>
     </>
   );
