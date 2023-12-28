@@ -14,6 +14,7 @@ type Props = {
 
 const tableHeaders = [
   { key: "position", label: "Pos", initialSortingOrder: 'asc' as 'asc' | 'desc' },
+  { key: "logo", label: "", notSortable: true },
   { key: "team", label: "Team", align: 'left', notSortable: true },
   { key: "points", label: "Points" },
   { key: "played", label: "Played" },
@@ -36,7 +37,27 @@ const mapTeamToRowData = (tableTeam: Table[number], teams: Team[]): {
   bold?: boolean;
 }[] => [
   { key: "position", value: tableTeam.position, showHorizontalPadding: true },
-  { key: "team", value: teams[tableTeam.team].name, align: 'left', fullWidth: true, showHorizontalPadding: true, },
+  { 
+    key: "logo",
+    element: (
+      <div className="flex justify-center items-center">
+        <img
+          className="h-5"
+          src={tableTeam.team.logoFiletype
+            ? `/team-logos/${tableTeam.team.id}.${tableTeam.team.logoFiletype}`
+            : ""
+          } 
+        />
+      </div>
+    ),
+  },
+  { 
+    key: "team",
+    value: tableTeam.team.name,
+    align: 'left', 
+    fullWidth: true, 
+    showHorizontalPadding: true,
+  },
   { key: "points", value: tableTeam.points, bold: true },
   { key: "played", value: tableTeam.games },
   { key: "wins", value: tableTeam.wins },
@@ -119,9 +140,9 @@ export default function LeagueTable({ fixtures, teams }: Props) {
               "bg-red-100": idx > teams.length - 1 - RELEGATION_SPOTS,
               "border-b border-solid border-black/5": true,
             })}
-            key={teams[team.team].name}
+            key={team.team.name}
           >
-            {mapTeamToRowData(team, teams).map(colData => (
+            {mapTeamToRowData(team, teams).map((colData, colIdx) => (
               <td
                 key={colData.key}
                 className={cls({

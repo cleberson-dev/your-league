@@ -1,6 +1,7 @@
 export type Team = {
   id: string;
   name: string;
+  logoFiletype?: string;
 }
 
 export type Fixtures = Round[];
@@ -20,7 +21,7 @@ type TeamResult = "WIN" | "DRAW" | "LOSS";
 
 export type Table = {
   position?: number;
-  team: number;
+  team: Team;
   points: number;
   games: number;
   wins: number;
@@ -128,8 +129,8 @@ export default class League {
 
   // Generated in real-time (but think about performance later)
   static getTable(fixtures: Fixtures, teams: Team[]) {
-    const table: Table = teams.map((_, idx) => ({
-      team: idx,
+    const table: Table = teams.map((team) => ({
+      team,
       games: 0,
       points: 0,
       wins: 0,
