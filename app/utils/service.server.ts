@@ -5,6 +5,7 @@ import { getUserId } from "./session.server";
 import { db } from "./db.server";
 import { randomizeArray } from ".";
 import League from "~/entities/League";
+import { redirect } from "@remix-run/node";
 
 export const saveLogo = async (path: string, blob: Blob) => {
   const buffer = Buffer.from(await blob.arrayBuffer());
@@ -81,6 +82,7 @@ export const createLeague = async (request: Request, formData: FormData) => {
   const entityLeague = League.create(league.name, league.teams);
   await db.league.update({ where: { id: league.id }, data: { fixtures: entityLeague.fixtures.map(randomizeArray) } });
 
-  return { ok: true };
+
+  return redirect(`/leagues/${league.id}`);
 }
  
