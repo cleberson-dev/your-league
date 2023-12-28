@@ -79,7 +79,7 @@ export const createLeague = async (request: Request, formData: FormData) => {
   });
 
   const entityLeague = League.create(league.name, league.teams);
-  await db.league.update({ where: { id: league.id }, data: { fixtures: entityLeague.fixtures } });
+  await db.league.update({ where: { id: league.id }, data: { fixtures: entityLeague.fixtures.map(randomizeArray) } });
 
   return { ok: true };
 }

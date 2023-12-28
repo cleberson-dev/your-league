@@ -36,7 +36,7 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
           })}>
             <span 
               className={cls({
-                "p-2 items-end cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap": true,
+                "p-2 cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap": true,
                 "bg-green-100 font-medium": game.homeScore > game.awayScore,
                 "bg-red-100": game.awayScore > game.homeScore,
               })} 

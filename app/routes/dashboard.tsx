@@ -45,31 +45,6 @@ export const action = async ({ request }: { request: Request }) => {
     default:
       return { ok: true };
   }
-  // const formData = await request.formData();
-  // const name = formData.get("name") as string;
-
-  // const logo = formData.get("logo") as Blob;
-  // const hasLogo = logo.size > 0;
-  // const isValidLogoType = logo.type.match(/jpg|jpeg|png/);
-  
-  // if (!name) return badRequest({ message: "Invalid form" });
-
-  // if (hasLogo && !isValidLogoType) {
-  //   return badRequest({ message: "Invalid form" });
-  // }
-
-  // const logoType = logo.type.split("/").at(-1) || "";
-  // const userId = (await getUserId(request)) as string;
-  // const createdTeam = await db.team.create({
-  //   data: { name, userId, logoFiletype: hasLogo ? logoType : undefined },
-  // });
-  // if (logo) {
-  //   const buffer = Buffer.from(await logo.arrayBuffer());
-  //   const filename = `${createdTeam.id}.${logoType}`;
-  //   await writeFile(path.join("public", "team-logos", filename), buffer);
-  // }
-
-  // return createdTeam;
 };
 
 export default function Dashboard() {
