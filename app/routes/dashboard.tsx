@@ -86,7 +86,6 @@ export default function Dashboard() {
           <TeamsList teams={teams} />
         </div>
 
-        {/* TODO AFTER SUCCESSFULLY CREATE TEAMS THROUGH MODAL */}
         {
         createLeagueModal && (
           <div className="h-[100svh] w-full absolute top-0 left-0 bg-black/10 flex justify-center items-center">

@@ -1,12 +1,9 @@
+import { Team } from "~/entities/League";
 import PaginationControls from "./pagination-controls";
 import TeamCard from "./team-card";
 
 type Props = {
-  teams: {
-    id: string;
-    name: string;
-    logoFiletype?: string | null;
-  }[];
+  teams: Team[];
   removable?: boolean;
 };
 
@@ -25,12 +22,7 @@ export default function TeamsList({ teams, removable }: Props) {
         {teams.map((team) => (
           <li key={team.id}>
             <TeamCard
-              name={team.name}
-              logo={
-                team.logoFiletype
-                  ? `/team-logos/${team.id}.${team.logoFiletype}`
-                  : ""
-              }
+              team={team}
               removable={removable}
             />
           </li>

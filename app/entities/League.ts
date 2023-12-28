@@ -1,7 +1,7 @@
 export type Team = {
   id: string;
   name: string;
-  logoFiletype?: string;
+  logoFiletype?: string | null;
 }
 
 export type Fixtures = Round[];

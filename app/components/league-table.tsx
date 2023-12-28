@@ -4,6 +4,7 @@ import { useState } from "react";
 import cls from "classnames";
 import { ArrowLongUpIcon, ArrowLongDownIcon } from "@heroicons/react/16/solid";
 import League, { Fixtures, Table, Team } from "~/entities/League";
+import TeamLogo from "./team-logo";
 
 const PROMOTION_SPOTS = 4;
 const RELEGATION_SPOTS = 4;
@@ -49,12 +50,9 @@ const mapTeamToRowData = (tableTeam: Table[number], teams: Team[]): {
     key: "logo",
     element: (
       <div className="flex justify-center items-center">
-        <img
+        <TeamLogo
+          team={tableTeam.team}
           className="h-5"
-          src={tableTeam.team.logoFiletype
-            ? `/team-logos/${tableTeam.team.id}.${tableTeam.team.logoFiletype}`
-            : ""
-          } 
         />
       </div>
     ),
