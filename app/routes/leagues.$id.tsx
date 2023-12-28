@@ -59,7 +59,7 @@ export default function LeaguePage() {
             simulateGame(roundIdx, gameIdx, homeOrAway === "home" ? 3 : 0, homeOrAway === "away" ? 3 : 0);
           }}
         />
-      b</div>
+      </div>
     </div>
   );
 }
