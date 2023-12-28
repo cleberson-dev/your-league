@@ -24,6 +24,7 @@ const tableHeaders = [
   { key: "goalsFor", label: "GF", hideHorizontalPadding: true },
   { key: "goalsAgainst", label: "GA", hideHorizontalPadding: true },
   { key: "goalsDifference", label: "+/-", hideHorizontalPadding: true },
+  { key: "percentage", label: "%", hideHorizontalPadding: true },
   { key: "form", label: "Form", notSortable: true },
 ];
 
@@ -66,6 +67,7 @@ const mapTeamToRowData = (tableTeam: Table[number], teams: Team[]): {
   { key: "goalsFor", value: tableTeam.goalsScored, showHorizontalPadding: true, },
   { key: "goalsAgainst", value: tableTeam.goalsConceived, showHorizontalPadding: true, },
   { key: "goalsDifference", value: tableTeam.goalsDifference, showHorizontalPadding: true, },
+  { key: "percentage", value: tableTeam.games > 0 ? Math.round(100 * (tableTeam.points / (tableTeam.games * 3))) : 0, showHorizontalPadding: true, },
   { 
     key: "form", 
     showHorizontalPadding: true,
@@ -142,7 +144,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
             })}
             key={team.team.name}
           >
-            {mapTeamToRowData(team, teams).map((colData, colIdx) => (
+            {mapTeamToRowData(team, teams).map((colData) => (
               <td
                 key={colData.key}
                 className={cls({

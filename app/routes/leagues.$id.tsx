@@ -3,7 +3,6 @@ import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import Fixtures from "~/components/fixtures";
 import LeagueTable from "~/components/league-table";
-import TeamsList from "~/components/teams-list";
 import League from "~/entities/League";
 import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
@@ -29,6 +28,15 @@ export default function LeaguePage() {
 
   const [simulatedFixtures, setSimulatedFixtures] = useState([...league.fixtures]);
 
+  const simulate = () => {
+    setSimulatedFixtures(simulatedFixtures.map(round => round.map((game) => ({
+      ...game,
+      homeScore: Math.round(Math.random() * 3),
+      awayScore: Math.round(Math.random() * 3),
+      finished: true,
+    }))));
+  }
+
   const simulateGame = (roundIdx: number, gameIdx: number, homeScore: number, awayScore: number) => {
     setSimulatedFixtures(
       simulatedFixtures.map((oldRound, oldRoundIdx) => oldRoundIdx === roundIdx ? oldRound.map((oldGame: any, oldGameIdx: any) => gameIdx === oldGameIdx ? ({...oldGame, homeScore, awayScore, finished: true}) : oldGame) : oldRound)
@@ -37,11 +45,12 @@ export default function LeaguePage() {
   
   return (
     <div>
-      <h1>League: {league.name}</h1>
+      <div className="flex justify-between items-center p-4">
+        <h1 className="font-bold text-3xl">{league.name}</h1>
+        <button className="p-4 bg-green-500 text-white rounded" onClick={simulate}>Simulate</button>
+      </div>
 
-      <TeamsList teams={league.teams} />
-
-      <div className="grid grid-cols-[8fr_2fr]">
+      <div className="grid grid-cols-[85fr_25fr] p-2 gap-x-4">
         <LeagueTable fixtures={simulatedFixtures} teams={league.teams} />
         <Fixtures 
           fixtures={simulatedFixtures} 
@@ -50,7 +59,7 @@ export default function LeaguePage() {
             simulateGame(roundIdx, gameIdx, homeOrAway === "home" ? 3 : 0, homeOrAway === "away" ? 3 : 0);
           }}
         />
-      </div>
+      b</div>
     </div>
   );
 }
