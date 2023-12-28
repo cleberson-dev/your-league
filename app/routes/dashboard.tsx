@@ -10,6 +10,10 @@ import { getUser, requireUserId } from "~/utils/session.server";
 import CreatableSelect from "react-select/creatable";
 import * as service from '~/utils/service.server';
 
+export const meta = () => ({
+  title: "Dashboard | Your League",
+});
+
 export const loader = async ({ request }: any) => {
   const userId = await requireUserId(request);
   const user = await getUser(request);

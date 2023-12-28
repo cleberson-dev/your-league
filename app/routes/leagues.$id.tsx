@@ -1,11 +1,18 @@
-import { redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import { MetaFunction, redirect } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+
 import Fixtures from "~/components/fixtures";
 import LeagueTable from "~/components/league-table";
-import League from "~/entities/League";
+
 import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
+
+import League from "~/entities/League";
+
+export const meta: MetaFunction = ({ data }) => ({
+  title: `${data.league.name} | Your League`,
+})
 
 export const loader = async ({ request, params }: any) => {
   const userId = await requireUserId(request);
@@ -17,7 +24,7 @@ export const loader = async ({ request, params }: any) => {
 
     return { ok: true, league };
   } catch (err) {
-    console.log({ err });
+    console.error(err);
     return redirect("/");
   }
 };
@@ -44,13 +51,13 @@ export default function LeaguePage() {
   }
   
   return (
-    <div>
-      <div className="flex justify-between items-center p-4">
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-8">
         <h1 className="font-bold text-3xl">{league.name}</h1>
-        <button className="p-4 bg-green-500 text-white rounded" onClick={simulate}>Simulate</button>
+        <button className="px-4 py-2 text-sm bg-green-500 text-white rounded" onClick={simulate}>Simulate</button>
       </div>
 
-      <div className="grid grid-cols-[85fr_25fr] p-2 gap-x-4">
+      <div className="grid grid-cols-[85fr_25fr] gap-x-4">
         <LeagueTable fixtures={simulatedFixtures} teams={league.teams} />
         <Fixtures 
           fixtures={simulatedFixtures} 
