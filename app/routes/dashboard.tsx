@@ -7,7 +7,7 @@ import LeaguesList from "~/components/leagues-list";
 import TeamsList from "~/components/teams-list";
 import { db } from "~/utils/db.server";
 import { getUser, requireUserId } from "~/utils/session.server";
-import * as service from '~/utils/service.server';
+import * as service from "~/utils/service.server";
 import CreateLeagueModal from "~/components/create-league.modal";
 import CreateTeamModal from "~/components/create-team.modal";
 
@@ -39,10 +39,10 @@ export const loader = async ({ request }: any) => {
 };
 
 export const action = async ({ request }: { request: Request }) => {
-  const formData = await request.formData()
+  const formData = await request.formData();
   const actionType = formData.get("actionType");
 
-  switch(actionType) {
+  switch (actionType) {
     case "createTeam":
       return service.createTeam(request, formData);
     case "createLeague":
@@ -59,16 +59,21 @@ export default function Dashboard() {
 
   return (
     <>
-      <header className="fixed top-0 w-full flex justify-end p-2">
+      <header className="fixed top-0 flex w-full justify-end p-2">
         <form action="/logout" method="POST">
-          <button type="submit" className="text-red-500 p-2 text-xs font-medium rounded hover:bg-red-500 hover:text-white transition-colors">
+          <button
+            type="submit"
+            className="rounded p-2 text-xs font-medium text-red-500 transition-colors hover:bg-red-500 hover:text-white"
+          >
             Logout
           </button>
         </form>
       </header>
       <div className="min-h-[100svh] px-16 py-12">
-        <h1 className="text-4xl font-bold mb-16">Welcome, <span className="text-purple-500">{user?.name}!</span></h1>
-        
+        <h1 className="mb-16 text-4xl font-bold">
+          Welcome, <span className="text-purple-500">{user?.name}!</span>
+        </h1>
+
         {/* User Leagues */}
         <div className="mb-16">
           <div className="mb-2 flex items-center justify-between">
@@ -91,8 +96,15 @@ export default function Dashboard() {
           <TeamsList teams={teams} />
         </div>
 
-        {createLeagueModal && <CreateLeagueModal teams={teams} onClose={() => setCreateLeagueModal(false)} />}
-        {createTeamModal && <CreateTeamModal onClose={() => setCreateTeamModal(false)} />}
+        {createLeagueModal && (
+          <CreateLeagueModal
+            teams={teams}
+            onClose={() => setCreateLeagueModal(false)}
+          />
+        )}
+        {createTeamModal && (
+          <CreateTeamModal onClose={() => setCreateTeamModal(false)} />
+        )}
       </div>
     </>
   );
