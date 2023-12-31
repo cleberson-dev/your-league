@@ -6,6 +6,6 @@
 - [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)
 - [Prisma](https://github.com/prisma/prisma) (SQLite by default)
 - [Zod](https://github.com/colinhacks/zod) (To easily validate and format form errors)
-- [qs](https://github.com/ljharb/qs) (To parse complex form data)
+- [qs](https://github.com/ljharb/qs) (To parse complex form data, p.s. still not using this bad boy :x)
 - [SuperJSON](https://github.com/blitz-js/superjson) (To send complex data through loaders)
 - [Remix Utils](https://github.com/sergiodxa/remix-utils)
