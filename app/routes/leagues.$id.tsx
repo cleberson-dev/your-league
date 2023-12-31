@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { MetaFunction, redirect } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import { HomeIcon, ArrowLongLeftIcon, ArrowRightStartOnRectangleIcon } from '@heroicons/react/16/solid';
-import cls from "classnames";
+import { useLoaderData } from "@remix-run/react";
 
 import Fixtures from "~/components/fixtures";
 import LeagueTable from "~/components/league-table";
@@ -11,6 +9,7 @@ import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
 import League from "~/entities/League";
+import Menu from "~/components/menu";
 
 export const meta: MetaFunction = ({ data }) => ({
   title: `${data.league.name} | Your League`,
@@ -52,40 +51,9 @@ export default function LeaguePage() {
     )
   }
 
-
-  const links = [
-    { href: "#", onClick: () => window.history.back(), Icon: ArrowLongLeftIcon },
-    { href: "/", Icon: HomeIcon },
-  ]
-
-  const bottomLinks = [
-    { href: "/logout", Icon: ArrowRightStartOnRectangleIcon, className: "text-red-500", },
-  ];
-  
   return (
     <div className="relative pl-10">
-      <menu className="h-[100svh] bg-slate-50 shadow fixed left-0 top-0">
-        <ul className="flex flex-col h-full">
-          <div className="flex-grow">
-            {links.map(link => (
-              <li className="group hover:bg-gradient-to-r hover:from-indigo-500 hover:to-indigo-400 transition-colors" onClick={link.onClick}>
-                <Link to={link.href} className="block p-4">
-                  <link.Icon className="w-4 h-4 text-indigo-500 group-hover:text-white transition-colors" />
-                </Link>
-              </li>
-            ))}
-          </div>
-          <div>
-            {bottomLinks.map(link => (
-              <li className="group hover:bg-gradient-to-r hover:from-red-500 hover:to-red-400 transition-colors">
-                <Link to={link.href} className="block p-4">
-                  <link.Icon className={cls(["w-4 h-4 text-red-500 group-hover:text-white transition-colors", link.className])} />
-                </Link>
-              </li>
-            ))}
-          </div>
-        </ul>
-      </menu>
+      <Menu isLoggedIn={false} />
       <div className="p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="font-bold text-3xl">{league.name}</h1>
