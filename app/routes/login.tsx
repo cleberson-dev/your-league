@@ -22,38 +22,46 @@ export default function LoginPage() {
   });
 
   return (
-    <form
-      className="flex min-h-[100svh] flex-col items-center justify-center gap-y-4"
-      method="POST"
-    >
-      <h1 className="text-2xl font-bold">Login</h1>
-
-      <div>
-        <label className="block">E-mail</label>
-        <input type="email" {...register("email")} />
-        {errors.email && (
-          <p className="text-red-500">
-            <small>{errors.email.message}</small>
-          </p>
-        )}
+    <div className="h-[100svh] grid grid-cols-[7fr_3fr]">
+      <div className="p-16 h-full flex flex-col justify-center">
+        <h1 className="text-5xl font-black mb-6">Welcome, and join us to build your league!</h1>
+        <p >
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum officia tempore obcaecati aliquam fugit eligendi pariatur repudiandae eius nemo mollitia, eaque dolorum aut voluptatibus accusamus dicta, minima perspiciatis. Similique nesciunt odio autem totam quo tenetur. Ipsam nihil suscipit quibusdam earum libero perspiciatis molestias necessitatibus ex, animi officia dolores et odit!</p>
       </div>
-      <div>
-        <label className="block">Password</label>
-        <input type="password" {...register("password")} />
-        {errors.password && (
-          <p className="text-red-500">
-            <small>{errors.password.message}</small>
-          </p>
-        )}
-      </div>
-      <Button type="submit" disabled={!isValid}>
-        Login
-      </Button>
+      <form
+        className="relative flex h-full bg-white shadow flex-col items-center justify-center gap-y-4 text-sm"
+        method="POST"
+      >
+        <div>
+          <label className="block mb-1">E-mail</label>
+          <input type="email" className="rounded border-gray-300" {...register("email")} />
+          {errors.email && (
+            <p className="text-red-500">
+              <small>{errors.email.message}</small>
+            </p>
+          )}
+        </div>
+        <div>
+          <label className="block">Password</label>
+          <input type="password" className="rounded border-gray-300" {...register("password")} />
+          {errors.password && (
+            <p className="text-red-500">
+              <small>{errors.password.message}</small>
+            </p>
+          )}
+        </div>
+        <Button type="submit" disabled={!isValid}>
+          Login
+        </Button>
 
-      <Link to="/register" className="text-blue-500 underline">
-        Register
-      </Link>
-    </form>
+        <p className="absolute bottom-8 text-center">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-500 underline">
+            Sign up
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }
 
