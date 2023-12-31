@@ -6,11 +6,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import Button from "~/components/button";
 import { createUserSession, login } from "~/utils/session.server";
+import Input from "~/components/input";
 
 const schema = yup.object({
   email: yup.string().email().required(),
   password: yup.string().min(8).max(16).required(),
 });
+
+const classes = {
+  title: "text-5xl font-black mb-6",
+  form: "relative flex h-full bg-white shadow flex-col items-center justify-center gap-y-4 text-sm",
+  formGroup: "flex flex-col gap-y-1",
+  fieldErrorMessage: "text-red-500",
+};
 
 export default function LoginPage() {
   const {
@@ -22,30 +30,35 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="h-[100svh] grid grid-cols-[7fr_3fr]">
-      <div className="p-16 h-full flex flex-col justify-center">
-        <h1 className="text-5xl font-black mb-6">Welcome, and join us to build your league!</h1>
-        <p >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum officia tempore obcaecati aliquam fugit eligendi pariatur repudiandae eius nemo mollitia, eaque dolorum aut voluptatibus accusamus dicta, minima perspiciatis. Similique nesciunt odio autem totam quo tenetur. Ipsam nihil suscipit quibusdam earum libero perspiciatis molestias necessitatibus ex, animi officia dolores et odit!</p>
+    <div className="grid h-[100svh] grid-cols-[7fr_3fr]">
+      <div className="flex h-full flex-col justify-center p-16">
+        <h1 className={classes.title}>
+          Welcome, and join us to build your league!
+        </h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
+          officia tempore obcaecati aliquam fugit eligendi pariatur repudiandae
+          eius nemo mollitia, eaque dolorum aut voluptatibus accusamus dicta,
+          minima perspiciatis. Similique nesciunt odio autem totam quo tenetur.
+          Ipsam nihil suscipit quibusdam earum libero perspiciatis molestias
+          necessitatibus ex, animi officia dolores et odit!
+        </p>
       </div>
-      <form
-        className="relative flex h-full bg-white shadow flex-col items-center justify-center gap-y-4 text-sm"
-        method="POST"
-      >
-        <div>
-          <label className="block mb-1">E-mail</label>
-          <input type="email" className="rounded border-gray-300" {...register("email")} />
+      <form className={classes.form} method="POST">
+        <div className={classes.formGroup}>
+          <label>E-mail</label>
+          <Input type="email" {...register("email")} />
           {errors.email && (
-            <p className="text-red-500">
+            <p className={classes.fieldErrorMessage}>
               <small>{errors.email.message}</small>
             </p>
           )}
         </div>
-        <div>
-          <label className="block">Password</label>
-          <input type="password" className="rounded border-gray-300" {...register("password")} />
+        <div className={classes.formGroup}>
+          <label>Password</label>
+          <Input type="password" {...register("password")} />
           {errors.password && (
-            <p className="text-red-500">
+            <p className={classes.fieldErrorMessage}>
               <small>{errors.password.message}</small>
             </p>
           )}
