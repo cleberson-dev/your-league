@@ -24,12 +24,13 @@ const schema = yup
 export default function CreateLeagueModal({ teams, onClose }: Props) {
   const fetcher = useFetcher();
   
-  const { control, register, formState: { errors }, watch, handleSubmit } = useForm({
+  const { control, register, formState: { errors, isValid }, watch, handleSubmit } = useForm({
     resolver: yupResolver(schema),
     values: {
       name: "",
       teams: [],
     },
+    mode: "onBlur",
   });
   const teamsCount = (watch("teams") || []).length;
 
@@ -91,7 +92,7 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
           </div>
         </div>
         <div className="flex justify-end gap-x-2">
-          <Button type="submit">Create</Button>
+          <Button type="submit" disabled={!isValid}>Create</Button>
           <Button type="button" onClick={onClose}>
             Close
           </Button>

@@ -1,47 +1,86 @@
-import { ActionFunction } from '@remix-run/server-runtime'
-import { Form, Link, useActionData } from "@remix-run/react";
-import { PrismaClient } from "@prisma/client";
-import { createUserSession, register } from '~/utils/session.server';
-import { badRequest } from 'remix-utils';
+import { badRequest } from "remix-utils";
+import { Link, useActionData } from "@remix-run/react";
+import { ActionFunction } from "@remix-run/server-runtime";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Button from "~/components/button";
+import { createUserSession, register } from "~/utils/session.server";
+
+const schema = yup.object({
+  name: yup.string().min(3).max(32).required(),
+  email: yup.string().email().required(),
+  password: yup.string().min(8).max(16).required(),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), undefined], "Passwords must match")
+    .required(),
+});
 
 export default function Register() {
-  const actionData = useActionData<typeof action>();
+  const {
+    register,
+    formState: { isValid, errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const actionData = useActionData();
 
   return (
-    <Form className="flex flex-col gap-y-4 justify-center items-center min-h-[100svh]" method="POST">
-      <h1 className="font-bold text-2xl">Register right now!!</h1>
-      <input placeholder="Enter your Name" name="name" required maxLength={32} />
-      <input placeholder="Enter your e-mail address" type="email" name="email" required />
-      <input placeholder="Enter your password" type="password" name="password" required minLength={8} maxLength={16} />
-      <input placeholder="Re-enter your password" type="password" name="password_2" required minLength={8} maxLength={16} />
-      <button type="submit">Create</button>
-      <p className="text-xs text-red-400">{actionData?.error}</p>
-      <Link to="/login" className='underline text-blue-500'>Login</Link>
-    </Form>
+    <form
+      className="flex min-h-[100svh] flex-col items-center justify-center gap-y-4"
+      method="POST"
+    >
+      <h1 className="text-2xl font-bold">Register right now!!</h1>
+      <div>
+        <label className="block">Name</label>
+        <input {...register("name")} />
+        <p className="text-red-500">
+          <small>{errors.name?.message}</small>
+        </p>
+      </div>
+      <div>
+        <label className="block">E-mail</label>
+        <input type="email" {...register("email")} />
+        <p className="text-red-500">
+          <small>{errors.email?.message}</small>
+        </p>
+      </div>
+      <div>
+        <label className="block">Password</label>
+        <input type="password" {...register("password")} />
+        <p className="text-red-500">
+          <small>{errors.password?.message}</small>
+        </p>
+      </div>
+      <div>
+        <label className="block">Confirm your password</label>
+        <input type="password" {...register("passwordConfirmation")} />
+        <p className="text-red-500">
+          <small>{errors.passwordConfirmation?.message}</small>
+        </p>
+      </div>
+      <p className="text-red-500">
+        <small>{actionData?.error}</small>
+      </p>
+      <Button type="submit" disabled={!isValid}>
+        Create
+      </Button>
+      <Link to="/login" className="text-blue-500 underline">
+        Login
+      </Link>
+    </form>
   );
 }
 
-export const action: ActionFunction = async ({
-  request,
-}: any) => {
-  const db = new PrismaClient();
+export const action: ActionFunction = async ({ request }: any) => {
   const form = await request.formData();
 
-  const data = {
+  const user = await register({
     name: form.get("name"),
     email: form.get("email"),
     password: form.get("password"),
-    password2: form.get("password_2"),
-  }
-
-  if (data.password !== data.password2) {
-    return { ok: false, error: "Passwords don't match" };
-  };
-
-  const user = await register({ 
-    name: data.name,
-    email: data.email,
-    password: data.password, 
   });
 
   if (!user) {
@@ -50,8 +89,5 @@ export const action: ActionFunction = async ({
     });
   }
 
-  console.log('User registered', user);
-
   return createUserSession(user.id, "/dashboard");
-}
-
+};
