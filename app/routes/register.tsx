@@ -28,49 +28,59 @@ export default function Register() {
   const actionData = useActionData();
 
   return (
-    <form
-      className="flex min-h-[100svh] flex-col items-center justify-center gap-y-4"
-      method="POST"
-    >
-      <h1 className="text-2xl font-bold">Register right now!!</h1>
-      <div>
-        <label className="block">Name</label>
-        <input {...register("name")} />
-        <p className="text-red-500">
-          <small>{errors.name?.message}</small>
-        </p>
+    <div className="h-[100svh] grid grid-cols-[7fr_3fr]">
+      <div className="p-16 h-full flex flex-col justify-center">
+        <h1 className="text-5xl font-black mb-6">Welcome, and join us to build your league!</h1>
+        <p >
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum officia tempore obcaecati aliquam fugit eligendi pariatur repudiandae eius nemo mollitia, eaque dolorum aut voluptatibus accusamus dicta, minima perspiciatis. Similique nesciunt odio autem totam quo tenetur. Ipsam nihil suscipit quibusdam earum libero perspiciatis molestias necessitatibus ex, animi officia dolores et odit!</p>
       </div>
-      <div>
-        <label className="block">E-mail</label>
-        <input type="email" {...register("email")} />
+      <form
+        className="relative flex h-full bg-white shadow flex-col items-center justify-center gap-y-4 text-sm"
+        method="POST"
+      >
+        <div>
+          <label className="block mb-1">Name</label>
+          <input className="rounded border-gray-300" {...register("name")} />
+          <p className="text-red-500">
+            <small>{errors.name?.message}</small>
+          </p>
+        </div>
+        <div>
+          <label className="block mb-1">E-mail</label>
+          <input className="rounded border-gray-300" type="email" {...register("email")} />
+          <p className="text-red-500">
+            <small>{errors.email?.message}</small>
+          </p>
+        </div>
+        <div>
+          <label className="block mb-1">Password</label>
+          <input className="rounded border-gray-300" type="password" {...register("password")} />
+          <p className="text-red-500">
+            <small>{errors.password?.message}</small>
+          </p>
+        </div>
+        <div>
+          <label className="block mb-1">Confirm your password</label>
+          <input className="rounded border-gray-300" type="password" {...register("passwordConfirmation")} />
+          <p className="text-red-500">
+            <small>{errors.passwordConfirmation?.message}</small>
+          </p>
+        </div>
         <p className="text-red-500">
-          <small>{errors.email?.message}</small>
+          <small>{actionData?.error}</small>
         </p>
-      </div>
-      <div>
-        <label className="block">Password</label>
-        <input type="password" {...register("password")} />
-        <p className="text-red-500">
-          <small>{errors.password?.message}</small>
+        <Button type="submit" disabled={!isValid}>
+          Create
+        </Button>
+
+        <p className="absolute bottom-8 text-center">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 underline">
+            Sign in
+          </Link>
         </p>
-      </div>
-      <div>
-        <label className="block">Confirm your password</label>
-        <input type="password" {...register("passwordConfirmation")} />
-        <p className="text-red-500">
-          <small>{errors.passwordConfirmation?.message}</small>
-        </p>
-      </div>
-      <p className="text-red-500">
-        <small>{actionData?.error}</small>
-      </p>
-      <Button type="submit" disabled={!isValid}>
-        Create
-      </Button>
-      <Link to="/login" className="text-blue-500 underline">
-        Login
-      </Link>
-    </form>
+      </form>
+    </div>
   );
 }
 
