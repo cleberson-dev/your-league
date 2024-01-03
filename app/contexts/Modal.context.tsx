@@ -1,7 +1,9 @@
 import {
+  KeyboardEventHandler,
   MouseEventHandler,
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -53,6 +55,19 @@ export const ModalContextProvider = ({
       destroyModal();
     }
   };
+
+  useEffect(() => {
+    const close = (e: any) => {
+      if (isHidden || !content) return;
+      
+      if (e.key === 'Escape') {
+        destroyModal();
+      }
+    }
+
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [content, isHidden]);
 
   return (
     <ModalContext.Provider
