@@ -4,7 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --scrollbar-foreground: #dcdcdc;
+  --scrollbar-background: transparent;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: #EDEDE9;
+}
+
+* {
+  scrollbar-color: var(--scrollbar-foreground) var(--scrollbar-background);
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-foreground);
+  @apply rounded border border-solid border-violet-200;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-background);
 }
