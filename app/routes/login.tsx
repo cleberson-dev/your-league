@@ -29,6 +29,8 @@ export default function LoginPage() {
     mode: "onBlur",
   });
 
+  console.log({ errors });
+
   return (
     <div className="grid h-[100svh] grid-cols-[7fr_3fr]">
       <div className="flex h-full flex-col justify-center p-16">
