@@ -15,6 +15,7 @@ import {
 import * as React from "react";
 
 import globalStylesUrl from "~/styles/global.css";
+import { ModalContextProvider } from "./contexts/Modal.context";
 
 export let links: LinksFunction = () => {
   return [
@@ -41,9 +42,11 @@ export let meta: MetaFunction = () => {
 export default function App() {
   return (
     <Document>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <ModalContextProvider>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </ModalContextProvider>
     </Document>
   );
 }

@@ -1,7 +1,6 @@
 // It's not a dashboard, but I couldn't figure out a name hihi
 
 import { useLoaderData } from "@remix-run/react";
-import { useState } from "react";
 import Button from "~/components/button";
 import LeaguesList from "~/components/leagues-list";
 import TeamsList from "~/components/teams-list";
@@ -10,6 +9,7 @@ import { getUser, requireUserId } from "~/utils/session.server";
 import * as service from "~/utils/service.server";
 import CreateLeagueModal from "~/components/create-league.modal";
 import CreateTeamModal from "~/components/create-team.modal";
+import { useModal } from "~/contexts/Modal.context";
 
 export const meta = () => ({
   title: "Dashboard | Your League",
@@ -54,8 +54,13 @@ export const action = async ({ request }: { request: Request }) => {
 
 export default function Dashboard() {
   const { user, teams, leagues } = useLoaderData<typeof loader>();
-  const [createLeagueModal, setCreateLeagueModal] = useState(false);
-  const [createTeamModal, setCreateTeamModal] = useState(false);
+  const { setModal, destroyModal } = useModal();
+
+  const openCreateLeagueModal = () =>
+    setModal(<CreateLeagueModal teams={teams} onClose={destroyModal} />);
+
+  const openCreateTeamModal = () =>
+    setModal(<CreateTeamModal onClose={destroyModal} />);
 
   return (
     <>
@@ -78,7 +83,7 @@ export default function Dashboard() {
         <div className="mb-16">
           <div className="mb-2 flex items-center justify-between">
             <h1 className="text-2xl font-bold">Your leagues</h1>
-            <Button onClick={() => setCreateLeagueModal(true)}>
+            <Button onClick={openCreateLeagueModal}>
               + Create a new League
             </Button>
           </div>
@@ -89,22 +94,10 @@ export default function Dashboard() {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <h1 className="text-2xl font-bold">Your teams</h1>
-            <Button onClick={() => setCreateTeamModal(true)}>
-              + Create a new Team
-            </Button>
+            <Button onClick={openCreateTeamModal}>+ Create a new Team</Button>
           </div>
           <TeamsList teams={teams} />
         </div>
-
-        {createLeagueModal && (
-          <CreateLeagueModal
-            teams={teams}
-            onClose={() => setCreateLeagueModal(false)}
-          />
-        )}
-        {createTeamModal && (
-          <CreateTeamModal onClose={() => setCreateTeamModal(false)} />
-        )}
       </div>
     </>
   );
