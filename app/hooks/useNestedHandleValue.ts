@@ -9,12 +9,12 @@ import { useMatches } from "remix";
  * @returns the value if it exists, undefined otherwise
  */
 export default function useNestedHandleValue<T>(key: string): T | undefined {
-  let matches = useMatches();
+	const matches = useMatches();
 
-  let defaultValue = { data: { [key]: undefined } };
-  let foundValue = matches.find((m) => key in (m.data ?? {}));
+	const defaultValue = { data: { [key]: undefined } };
+	const foundValue = matches.find((m) => key in (m.data ?? {}));
 
-  let { data } = foundValue ?? defaultValue;
+	const { data } = foundValue ?? defaultValue;
 
-  return data[key];
+	return data[key];
 }

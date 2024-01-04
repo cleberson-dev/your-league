@@ -10,34 +10,34 @@ type Props = {
 }
 
 export default function PaginationControls({ onPrevious, onNext, isPrevious, isNext }: Props) {
-  const classes = {
-    button: "h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center transition-colors",
-    disabledButton: "opacity-30 cursor-default hover:bg-gray-300",
-    enabledButton: "hover:bg-gray-200",
-  };
+	const classes = {
+		button: "h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center transition-colors",
+		disabledButton: "opacity-30 cursor-default hover:bg-gray-300",
+		enabledButton: "hover:bg-gray-200",
+	};
 
-  return (
-    <div className="flex gap-x-1">
-      <button 
-        className={cls({
-          [classes.button]: true,
-          [classes.disabledButton]: !isPrevious,
-          [classes.enabledButton]: isPrevious,
-        })}
-        onClick={onPrevious}
-      >
-        <LeftArrowIcon />
-      </button>
-      <button 
-        className={cls({
-          [classes.button]: true,
-          [classes.disabledButton]: !isNext,
-          [classes.enabledButton]: isNext,
-        })} 
-        onClick={onNext}
-      >
-        <RightArrowIcon />
-      </button>
-    </div>
-  );
+	return (
+		<div className="flex gap-x-1">
+			<button 
+				className={cls({
+					[classes.button]: true,
+					[classes.disabledButton]: !isPrevious,
+					[classes.enabledButton]: isPrevious,
+				})}
+				onClick={onPrevious}
+			>
+				<LeftArrowIcon />
+			</button>
+			<button 
+				className={cls({
+					[classes.button]: true,
+					[classes.disabledButton]: !isNext,
+					[classes.enabledButton]: isNext,
+				})} 
+				onClick={onNext}
+			>
+				<RightArrowIcon />
+			</button>
+		</div>
+	);
 }

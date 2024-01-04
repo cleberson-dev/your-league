@@ -8,26 +8,26 @@ type Props = {
 };
 
 export default function TeamsList({ teams, removable }: Props) {
-  if (teams.length === 0)
-    return (
-      <p className="my-8 text-center text-2xl font-bold text-black/20">
+	if (teams.length === 0)
+		return (
+			<p className="my-8 text-center text-2xl font-bold text-black/20">
         No Teams
-      </p>
-    );
+			</p>
+		);
 
-  return (
-    <>
-      <PaginationControls isNext />
-      <ul className="mt-5 flex gap-x-4 overflow-auto">
-        {teams.map((team) => (
-          <li key={team.id}>
-            <TeamCard
-              team={team}
-              removable={removable}
-            />
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+	return (
+		<>
+			<PaginationControls isNext />
+			<ul className="mt-5 flex gap-x-4 overflow-auto">
+				{teams.map((team) => (
+					<li key={team.id}>
+						<TeamCard
+							team={team}
+							removable={removable}
+						/>
+					</li>
+				))}
+			</ul>
+		</>
+	);
 }
