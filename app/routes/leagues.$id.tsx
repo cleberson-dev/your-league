@@ -8,7 +8,7 @@ import LeagueTable from "~/components/league-table";
 import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
-import League from "~/entities/League";
+import League from "~/entities/League.entity";
 import Menu from "~/components/menu";
 
 export const meta: MetaFunction = ({ data }) => ({

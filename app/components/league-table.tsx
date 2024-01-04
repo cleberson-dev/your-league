@@ -3,7 +3,7 @@
 import { useState } from "react";
 import cls from "classnames";
 import { ArrowLongUpIcon, ArrowLongDownIcon } from "@heroicons/react/16/solid";
-import League, { Fixtures, Table, Team } from "~/entities/League";
+import League, { Fixtures, Table, Team } from "~/entities/League.entity";
 import TeamLogo from "./team-logo";
 
 const PROMOTION_SPOTS = 4;

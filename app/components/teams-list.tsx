@@ -1,4 +1,4 @@
-import { Team } from "~/entities/League";
+import { Team } from "~/entities/League.entity";
 import PaginationControls from "./pagination-controls";
 import TeamCard from "./team-card";
 

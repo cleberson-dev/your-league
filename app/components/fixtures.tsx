@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import cls from "classnames";
-import { Fixtures, Team } from "~/entities/League";
+import { Fixtures, Team } from "~/entities/League.entity";
 
 type Props = {
   fixtures: Fixtures;

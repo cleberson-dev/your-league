@@ -1,33 +1,17 @@
 import CreatableSelect from "react-select/creatable";
 import { useFetcher } from "@remix-run/react";
 import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Team } from "~/entities/League";
+import { Team } from "~/entities/League.entity";
 
 import Button from "~/components/button";
+import createLeagueSchema from "~/schemas/create-league.schema";
 
 type Props = {
   teams: Team[];
   onClose: () => void;
 };
-
-const schema = yup
-	.object({
-		name: yup.string().required(),
-		teams: yup
-			.array()
-			.of(yup.string())
-			.min(4)
-			.required()
-			.test(
-				"evenTeamsCount",
-				"The number of teams should be even",
-				(teams) => teams.length % 2 === 0
-			),
-	})
-	.required();
 
 export default function CreateLeagueModal({ teams, onClose }: Props) {
 	const fetcher = useFetcher();
@@ -39,7 +23,7 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
 		watch,
 		handleSubmit,
 	} = useForm({
-		resolver: yupResolver(schema),
+		resolver: yupResolver(createLeagueSchema),
 		values: {
 			name: "",
 			teams: [],

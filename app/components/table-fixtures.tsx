@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import League from "~/entities/League";
+import League from "~/entities/League.entity";
 import LeagueTable from "./league-table";
 
 const league = new League("", [], []);

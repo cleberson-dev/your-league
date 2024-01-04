@@ -1,21 +1,11 @@
 import { useForm, Form } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "./button";
+import createTeamSchema from "~/schemas/create-team.schema";
 
 type Props = {
   onClose: () => void;
 };
-
-const schema = yup.object({
-	name: yup.string().min(3).max(32).required(),
-	logo: yup
-		.mixed<{ length: number; type: string }>()
-		.test("fileType", "File type must be png, jpeg or svg", (value) => {
-			if (!value || !value.length) return true; // logo should be optional
-			return !!value.type.match(/jpg|jpeg|png|svg/);
-		}),
-});
 
 export default function CreateTeamModal({ onClose }: Props) {
 	const {
@@ -23,7 +13,7 @@ export default function CreateTeamModal({ onClose }: Props) {
 		register,
 		formState: { errors, isValid },
 	} = useForm({
-		resolver: yupResolver(schema),
+		resolver: yupResolver(createTeamSchema),
 	});
 
 	return (

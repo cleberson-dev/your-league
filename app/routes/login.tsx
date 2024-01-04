@@ -1,17 +1,13 @@
 import { Link } from "@remix-run/react";
 import { badRequest } from "remix-utils";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Button from "~/components/button";
-import { createUserSession, login } from "~/utils/session.server";
 import Input from "~/components/input";
 
-const schema = yup.object({
-	email: yup.string().email().required(),
-	password: yup.string().min(8).max(16).required(),
-});
+import { createUserSession, login } from "~/utils/session.server";
+import loginSchema from "~/schemas/login.schema";
 
 const classes = {
 	title: "text-5xl font-black mb-6",
@@ -25,11 +21,9 @@ export default function LoginPage() {
 		register,
 		formState: { errors, isValid },
 	} = useForm({
-		resolver: yupResolver(schema),
+		resolver: yupResolver(loginSchema),
 		mode: "onBlur",
 	});
-
-	console.log({ errors });
 
 	return (
 		<div className="grid h-[100svh] grid-cols-[7fr_3fr]">

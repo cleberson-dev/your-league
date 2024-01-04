@@ -1,4 +1,4 @@
-import { Team } from "~/entities/League";
+import { Team } from "~/entities/League.entity";
 
 type Props = {
   team: Team;

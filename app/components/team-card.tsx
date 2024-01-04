@@ -1,6 +1,6 @@
 import { TrashIcon } from "@heroicons/react/16/solid";
 import TeamLogo from "~/components/team-logo";
-import { Team } from "~/entities/League";
+import { Team } from "~/entities/League.entity";
 
 type Props = {
   team: Team;

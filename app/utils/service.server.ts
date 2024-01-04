@@ -4,7 +4,7 @@ import { badRequest } from "remix-utils";
 import { getUserId } from "./session.server";
 import { db } from "./db.server";
 import { randomizeArray } from ".";
-import League from "~/entities/League";
+import League from "~/entities/League.entity";
 import { redirect } from "@remix-run/node";
 
 export const saveLogo = async (path: string, blob: Blob) => {

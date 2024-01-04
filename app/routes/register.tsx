@@ -2,21 +2,11 @@ import { badRequest } from "remix-utils";
 import { Link, useActionData } from "@remix-run/react";
 import { ActionFunction } from "@remix-run/server-runtime";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "~/components/button";
 import { createUserSession, register } from "~/utils/session.server";
 import Input from "~/components/input";
-
-const schema = yup.object({
-	name: yup.string().min(3).max(32).required(),
-	email: yup.string().email().required(),
-	password: yup.string().min(8).max(16).required(),
-	passwordConfirmation: yup
-		.string()
-		.oneOf([yup.ref("password"), undefined], "Passwords must match")
-		.required(),
-});
+import registerSchema from "~/schemas/register.schema";
 
 const classes = {
 	title: "text-5xl font-black mb-6",
@@ -30,7 +20,7 @@ export default function Register() {
 		register,
 		formState: { isValid, errors },
 	} = useForm({
-		resolver: yupResolver(schema),
+		resolver: yupResolver(registerSchema),
 	});
 
 	const actionData = useActionData();
