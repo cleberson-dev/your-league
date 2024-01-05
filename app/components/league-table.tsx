@@ -127,7 +127,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 
 	return (
 		<table className="w-full table-auto shadow">
-			<thead className="bg-primary-dark text-sm text-black/50 select-none">
+			<thead className="bg-primary-dark dark:bg-dark text-sm text-black/50 dark:text-black/75 select-none">
 				<tr className="font-black lowercase">
 					{tableHeaders.map((header, idx) => (
 						<th
@@ -142,7 +142,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 							}} 
 							key={header.key}
 							className={cls({
-								"py-4 font-black first:pl-6 last:pr-6 hover:text-black": true,
+								"py-4 font-black first:pl-6 last:pr-6 hover:text-black dark:hover:text-violet": true,
 								"px-4": !header.hideHorizontalPadding,
 								"rounded-tl-2xl": idx === 0,
 								"rounded-tr-2xl": idx === tableHeaders.length - 1,
@@ -158,7 +158,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 					))}
 				</tr>
 			</thead>
-			<tbody className="bg-primary text-black text-center text-sm">
+			<tbody className="bg-primary dark:bg-dark/50 text-black dark:text-white text-center text-sm">
 				{table.map((team, idx) => (
 					<tr
 						className={cls({
@@ -175,11 +175,11 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 									"font-bold": colData.bold,
 									"w-full": colData.fullWidth,
 									"text-left": colData.align === "left",
-									"bg-primary-dark": colIdx === sortColumnIdx,
+									"bg-primary-dark dark:bg-darker/60": colIdx === sortColumnIdx,
 									"bg-green/10": idx < PROMOTION_SPOTS,
 									"bg-red/10": idx > teams.length - 1 - RELEGATION_SPOTS,
-									"bg-green/30": idx < PROMOTION_SPOTS && colIdx === sortColumnIdx,
-									"bg-red/30": (idx > teams.length - 1 - RELEGATION_SPOTS) && colIdx === sortColumnIdx,
+									"bg-green/30 dark:bg-green/20": idx < PROMOTION_SPOTS && colIdx === sortColumnIdx,
+									"bg-red/30 dark:bg-red/20": (idx > teams.length - 1 - RELEGATION_SPOTS) && colIdx === sortColumnIdx,
 								})}
 							>
 								{colData.element ?? colData.value}
