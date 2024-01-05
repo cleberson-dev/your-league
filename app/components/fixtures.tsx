@@ -38,8 +38,8 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 						<span 
 							className={cls({
 								"p-2 cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap": true,
-								"bg-green-100 font-medium": game.homeScore! > game.awayScore!,
-								"bg-red-100": game.awayScore! > game.homeScore!,
+								"bg-green font-medium": game.homeScore! > game.awayScore!,
+								"bg-red": game.awayScore! > game.homeScore!,
 							})} 
 							onClick={() => onTeamClicked?.(currentRound, gameIdx, "home")}
 						>
@@ -51,8 +51,8 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 						<span 
 							className={cls({
 								"p-2 cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap": true,
-								"bg-green-100 font-medium": game.awayScore! > game.homeScore!,
-								"bg-red-100": game.homeScore! > game.awayScore!,
+								"bg-green font-medium": game.awayScore! > game.homeScore!,
+								"bg-red": game.homeScore! > game.awayScore!,
 							})} 
 							onClick={() => onTeamClicked?.(currentRound, gameIdx, "away")}
 						>

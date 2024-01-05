@@ -11,7 +11,7 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #EDEDE9;
+  @apply bg-background;
 }
 
 * {
@@ -25,7 +25,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar-foreground);
-  @apply rounded border border-solid border-violet-200;
+  @apply rounded border border-solid border-violet;
 }
 
 ::-webkit-scrollbar-track {

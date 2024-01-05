@@ -76,7 +76,7 @@ export default function Dashboard() {
 			</header>
 			<div className="min-h-[100svh] px-16 py-12">
 				<h1 className="mb-16 text-4xl font-bold">
-          Welcome, <span className="text-purple-500">{user?.name}!</span>
+          Welcome, <span className="text-violet">{user?.name}!</span>
 				</h1>
 
 				{/* User Leagues */}

@@ -85,8 +85,8 @@ const mapTeamToRowData = (tableTeam: Table[number]): {
 							cls({
 								"h-2 w-2 rounded-full": true,
 								"bg-slate-300": result === "DRAW",
-								"bg-green-400": result === "WIN",
-								"bg-red-400": result === "LOSS",
+								"bg-green": result === "WIN",
+								"bg-red": result === "LOSS",
 							})
 						}/>
 				))}
@@ -176,10 +176,10 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 									"w-full": colData.fullWidth,
 									"text-left": colData.align === "left",
 									"bg-primary-dark": colIdx === sortColumnIdx,
-									"bg-green-100": idx < PROMOTION_SPOTS,
-									"bg-green-200": idx < PROMOTION_SPOTS && colIdx === sortColumnIdx,
-									"bg-red-100": idx > teams.length - 1 - RELEGATION_SPOTS,
-									"bg-red-200": (idx > teams.length - 1 - RELEGATION_SPOTS) && colIdx === sortColumnIdx,
+									"bg-green": idx < PROMOTION_SPOTS,
+									"bg-green-dark": idx < PROMOTION_SPOTS && colIdx === sortColumnIdx,
+									"bg-red": idx > teams.length - 1 - RELEGATION_SPOTS,
+									"bg-red-dark": (idx > teams.length - 1 - RELEGATION_SPOTS) && colIdx === sortColumnIdx,
 								})}
 							>
 								{colData.element ?? colData.value}

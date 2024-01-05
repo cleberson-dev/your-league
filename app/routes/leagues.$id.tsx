@@ -57,7 +57,7 @@ export default function LeaguePage() {
 			<div className="p-8">
 				<div className="flex justify-between items-center mb-8">
 					<h1 className="font-bold text-3xl">{league.name}</h1>
-					<button className="px-4 py-2 text-sm bg-green-500 text-white rounded" onClick={simulate}>Simulate</button>
+					<button className="px-4 py-2 text-sm bg-green text-white rounded" onClick={simulate}>Simulate</button>
 				</div>
 
 				<div className="grid grid-cols-[85fr_25fr] gap-x-4">

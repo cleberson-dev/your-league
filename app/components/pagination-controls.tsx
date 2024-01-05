@@ -6,13 +6,13 @@ type Props = {
   isPrevious?: boolean;
   isNext?: boolean;
   onPrevious?: () => void; 
-  onNext?: () => void ;
+  onNext?: () => void;
 }
 
 export default function PaginationControls({ onPrevious, onNext, isPrevious, isNext }: Props) {
 	const classes = {
-		button: "h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center transition-colors",
-		disabledButton: "opacity-30 cursor-default hover:bg-gray-300",
+		button: "h-8 w-8 rounded-full bg-gray flex items-center justify-center transition-colors",
+		disabledButton: "opacity-30 cursor-default hover:bg-gray",
 		enabledButton: "hover:bg-gray-200",
 	};
 
