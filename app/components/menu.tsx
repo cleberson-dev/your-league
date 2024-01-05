@@ -5,7 +5,6 @@ import {
 	ArrowLongLeftIcon,
 	ArrowLongRightIcon,
 	ArrowRightStartOnRectangleIcon,
-	ArrowRightEndOnRectangleIcon,
 	HomeIcon,
 	TableCellsIcon,
 	HeartIcon,
@@ -15,10 +14,6 @@ import {
 } from "@heroicons/react/16/solid";
 
 import { useTheme } from "~/contexts/Theme.context";
-
-type MenuProps = {
-	isLoggedIn: boolean;
-};
 
 type MenuItemProps = {
 	href: string;
@@ -46,7 +41,7 @@ const MenuItem = ({ href, label, Icon, onClick, collapsed }: MenuItemProps) => {
 	);
 };
 
-export default function Menu({ isLoggedIn }: MenuProps) {
+export default function Menu() {
 	const [isCollapsed, setIsCollapsed] = useState(true);
 	const { theme, toggleTheme } = useTheme();
 
@@ -71,11 +66,9 @@ export default function Menu({ isLoggedIn }: MenuProps) {
 			onClick: toggleTheme,
 		},
 		{
-			href: isLoggedIn ? "/logout" : "/login",
-			icon: isLoggedIn
-				? ArrowRightStartOnRectangleIcon
-				: ArrowRightEndOnRectangleIcon,
-			label: isLoggedIn ? "Logout" : "Login",
+			href: "/logout",
+			icon: ArrowRightStartOnRectangleIcon,
+			label: "Logout",
 		},
 	];
 

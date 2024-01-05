@@ -53,7 +53,7 @@ export default function LeaguePage() {
 
 	return (
 		<div className="relative pl-10">
-			<Menu isLoggedIn={false} />
+			<Menu />
 			<div className="p-8">
 				<div className="flex justify-between items-center mb-8">
 					<h1 className="font-bold text-3xl">{league.name}</h1>

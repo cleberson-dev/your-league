@@ -94,7 +94,7 @@ export default function Dashboard() {
 				</div>
 			</div>
 
-			<Menu isLoggedIn />
+			<Menu />
 		</>
 	);
 }
