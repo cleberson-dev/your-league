@@ -7,18 +7,18 @@ import {
   ArrowRightStartOnRectangleIcon,
   HomeIcon,
   TableCellsIcon,
-  HeartIcon,
   CalendarDaysIcon,
   SunIcon,
   MoonIcon,
 } from "@heroicons/react/16/solid";
 
 import { useTheme } from "~/contexts/Theme.context";
+import CrestIcon from "~/icons/crest.icon";
 
 type MenuItemProps = {
 	href: string;
 	label: string;
-	Icon: typeof SunIcon;
+	Icon: (props: React.SVGAttributes<SVGElement>) => React.ReactNode;
 	onClick?: () => void;
 	collapsed: boolean;
 };
@@ -54,7 +54,7 @@ export default function Menu() {
     },
     { href: "/dashboard", icon: HomeIcon, label: "Home" },
     { href: "/tables", icon: TableCellsIcon, label: "Tables" },
-    { href: "/teams", icon: HeartIcon, label: "Teams" },
+    { href: "/teams", icon: CrestIcon, label: "Teams" },
     { href: "/fixtures", icon: CalendarDaysIcon, label: "Fixtures" },
   ];
 
