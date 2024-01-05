@@ -10,6 +10,7 @@ import * as service from "~/utils/service.server";
 import CreateLeagueModal from "~/components/create-league.modal";
 import CreateTeamModal from "~/components/create-team.modal";
 import { useModal } from "~/contexts/Modal.context";
+import Menu from "~/components/menu";
 
 export const meta = () => ({
 	title: "Dashboard | Your League",
@@ -64,17 +65,10 @@ export default function Dashboard() {
 
 	return (
 		<>
-			<header className="fixed top-0 flex w-full justify-end p-2">
-				<form action="/logout" method="POST">
-					<button
-						type="submit"
-						className="rounded p-2 text-xs font-medium text-red-500 transition-colors hover:bg-red-500 hover:text-white"
-					>
-            Logout
-					</button>
-				</form>
+			<header className="fixed top-0 flex w-full justify-center items-center p-4">
+				<h1 className="lowercase text-xs">Your league</h1>
 			</header>
-			<div className="min-h-[100svh] px-16 py-12">
+			<div className="min-h-[100svh] px-16 py-12 pl-20">
 				<h1 className="mb-16 text-4xl font-bold">
           Welcome, <span className="text-violet">{user?.name}!</span>
 				</h1>
@@ -99,6 +93,8 @@ export default function Dashboard() {
 					<TeamsList teams={teams} />
 				</div>
 			</div>
+
+			<Menu isLoggedIn />
 		</>
 	);
 }

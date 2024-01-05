@@ -127,7 +127,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 
 	return (
 		<table className="w-full table-auto shadow">
-			<thead className="bg-primary-dark dark:bg-dark text-sm text-black/50 dark:text-black/75 select-none">
+			<thead className="bg-primary-dark dark:bg-dark text-sm text-black/50 dark:text-white/50 select-none">
 				<tr className="font-black lowercase">
 					{tableHeaders.map((header, idx) => (
 						<th
@@ -162,7 +162,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 				{table.map((team, idx) => (
 					<tr
 						className={cls({
-							"border-b border-solid border-black/5": true,
+							"border-b border-solid border-black/5 dark:border-white/5": true,
 						})}
 						key={team.team.name}
 					>

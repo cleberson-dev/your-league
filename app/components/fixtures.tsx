@@ -19,7 +19,7 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 
 	return (
 		<div className="text-center bg-primary dark:bg-dark/50 shadow self-start">
-			<div className="flex items-center bg-primary-dark dark:bg-dark text-black/50 p-2 rounded-t select-none">
+			<div className="flex items-center bg-primary-dark dark:bg-dark text-black/50 dark:text-white/50 p-2 rounded-t select-none">
 				<button className="disabled:opacity-10" onClick={goPrevRound} disabled={currentRound === 0}>
 					<ChevronLeftIcon width={16} height={16} />
 				</button>
@@ -32,7 +32,7 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 			<ul className="text-sm">
 				{fixtures[currentRound].map((game, gameIdx) => (
 					<li key={gameIdx} className={cls({
-						"grid grid-cols-[1fr_3rem_1fr] items-center hover:bg-primary-dark/30 transition-colors": true,
+						"grid grid-cols-[1fr_3rem_1fr] items-center hover:bg-primary-dark/30 dark:hover:bg-dark transition-colors": true,
 						"bg-slate-100 dark:bg-dark/50": game.finished,
 					})}>
 						<span 
