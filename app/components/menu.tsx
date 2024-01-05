@@ -52,7 +52,7 @@ export default function Menu() {
       icon: isCollapsed ? ArrowLongRightIcon : ArrowLongLeftIcon,
       label: isCollapsed ? "Expand" : "Collapse",
     },
-    { href: "/", icon: HomeIcon, label: "Home" },
+    { href: "/dashboard", icon: HomeIcon, label: "Home" },
     { href: "/tables", icon: TableCellsIcon, label: "Tables" },
     { href: "/teams", icon: HeartIcon, label: "Teams" },
     { href: "/fixtures", icon: CalendarDaysIcon, label: "Fixtures" },
