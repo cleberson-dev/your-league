@@ -10,7 +10,7 @@ import registerSchema from "~/schemas/register.schema";
 
 const classes = {
   title: "text-5xl font-black mb-6",
-  form: "relative flex h-full bg-white shadow flex-col items-center justify-center gap-y-4 text-sm",
+  form: "relative flex h-full bg-white dark:bg-dark shadow flex-col items-center justify-center gap-y-4 text-sm",
   formGroup: "flex flex-col gap-y-1",
   fieldErrorMessage: "text-red-500",
 };
