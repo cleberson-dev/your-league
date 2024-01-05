@@ -11,9 +11,9 @@ type Props = {
 
 export default function PaginationControls({ onPrevious, onNext, isPrevious, isNext }: Props) {
 	const classes = {
-		button: "h-8 w-8 rounded-full bg-gray flex items-center justify-center transition-colors",
-		disabledButton: "opacity-30 cursor-default hover:bg-gray",
-		enabledButton: "hover:bg-gray-200",
+		button: "h-8 w-8 rounded-full bg-gray dark:bg-dark flex items-center justify-center transition-colors",
+		disabledButton: "opacity-30 cursor-default hover:bg-gray dark:hover:bg-dark",
+		enabledButton: "hover:bg-gray-200 dark:hover:bg-white/20",
 	};
 
 	return (
