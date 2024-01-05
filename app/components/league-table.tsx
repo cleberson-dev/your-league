@@ -3,8 +3,8 @@
 import { useState } from "react";
 import cls from "classnames";
 import { ArrowLongUpIcon, ArrowLongDownIcon } from "@heroicons/react/16/solid";
+import TeamLogo from "~/components/team-logo";
 import League, { Fixtures, Table, Team } from "~/entities/League.entity";
-import TeamLogo from "./team-logo";
 import { getTeamPercentage } from "~/utils";
 
 const PROMOTION_SPOTS = 4;
@@ -192,7 +192,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 		if (isInRelegationSpot(rowIdx)) return "Relegated";
 		
 		return undefined;
-	}
+	};
 
 	return (
 		<table className="w-full table-auto shadow">
