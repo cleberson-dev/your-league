@@ -195,7 +195,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 	};
 
 	return (
-		<table className="w-full table-auto shadow">
+		<table className="w-full table-auto shadow select-none">
 			<thead className="select-none bg-primary-dark text-sm text-black/50 dark:bg-dark dark:text-white/50">
 				<tr className="font-black lowercase">
 					{tableHeaders.map((header, colIdx) => (
@@ -226,10 +226,10 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 					))}
 				</tr>
 			</thead>
-			<tbody className="bg-primary text-center text-sm text-black dark:bg-dark/50 dark:text-white">
+			<tbody className="text-center text-sm text-black  dark:text-white">
 				{table.map((team, rowIdx) => (
 					<tr
-						className="border-b border-solid border-black/5 dark:border-white/5"
+						className="group border-b border-solid border-black/5 dark:border-white/5 bg-primary dark:bg-dark/50 hover:bg-primary-dark dark:hover:bg-dark/60 transition-colors"
 						key={team.team.name}
 						title={getTableRowTitle(rowIdx)}
 					>
@@ -237,15 +237,14 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 							<td
 								key={colData.key}
 								className={cls({
-									"min-w-14 py-4 first:pl-6 last:pr-6": true,
+									"min-w-14 py-4 first:pl-6 last:pr-6 ": true,
 									"px-4": colData.showHorizontalPadding,
 									"font-bold": colData.bold,
 									"w-full": colData.fullWidth,
 									"text-left": colData.align === "left",
-									"bg-primary-dark dark:bg-darker/60":
-										isHighlightedSortColumn(colIdx),
-									"bg-green/10": isInPromotionSpot(rowIdx),
-									"bg-red/10": isInRelegationSpot(rowIdx),
+									"bg-primary-dark dark:bg-darker/60": isHighlightedSortColumn(colIdx),
+									"bg-green/10 group-hover:bg-green/20": isInPromotionSpot(rowIdx),
+									"bg-red/10 group-hover:bg-red/20": isInRelegationSpot(rowIdx),
 									"bg-green/30 dark:bg-green/20":
 										isInPromotionSpot(rowIdx) &&
 										isHighlightedSortColumn(colIdx),
