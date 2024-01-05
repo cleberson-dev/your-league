@@ -158,7 +158,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 					))}
 				</tr>
 			</thead>
-			<tbody className="bg-primary text-center text-sm">
+			<tbody className="bg-primary text-black text-center text-sm">
 				{table.map((team, idx) => (
 					<tr
 						className={cls({
