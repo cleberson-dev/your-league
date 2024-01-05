@@ -5,11 +5,10 @@ const fromRoot = (p) => path.join(__dirname, p);
 module.exports = {
 	mode: "jit",
 	content: [fromRoot("./app/**/*.+(js|ts|tsx|mdx|md)")],
-	darkMode: "media",
+	darkMode: "class",
 	theme: {
 		extend: {
 			colors: {
-				background: "#EDEDE9",
 				gray: "#D9D9D9",
 				violet: "#8338EC",
 				primary: {
@@ -18,6 +17,9 @@ module.exports = {
 				},
 				green: "#8AC926",
 				red: "#DF2935",
+				dark: "#2B2D42",
+				darker: "#001219",
+				light: "#EDEDE9",
 			},
 		},
 	},

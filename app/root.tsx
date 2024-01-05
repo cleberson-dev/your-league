@@ -16,6 +16,7 @@ import * as React from "react";
 
 import globalStylesUrl from "~/styles/global.css";
 import { ModalContextProvider } from "./contexts/Modal.context";
+import { ThemeContextProvider, useTheme } from "./contexts/Theme.context";
 
 export const links: LinksFunction = () => {
 	return [
@@ -41,13 +42,15 @@ export const meta: MetaFunction = () => {
 
 export default function App() {
 	return (
-		<Document>
-			<ModalContextProvider>
-				<Layout>
-					<Outlet />
-				</Layout>
-			</ModalContextProvider>
-		</Document>
+		<ThemeContextProvider>
+			<Document>
+				<ModalContextProvider>
+					<Layout>
+						<Outlet />
+					</Layout>
+				</ModalContextProvider>
+			</Document>
+		</ThemeContextProvider>
 	);
 }
 
@@ -58,8 +61,10 @@ function Document({
   children: React.ReactNode;
   title?: string;
 }) {
+	const { theme } = useTheme();
+
 	return (
-		<html lang="en">
+		<html lang="en" className={theme}>
 			<head>
 				<meta charSet="utf-8" />
 				<meta
@@ -70,7 +75,7 @@ function Document({
 				<Meta />
 				<Links />
 			</head>
-			<body>
+			<body className="bg-light dark:bg-darker dark:text-white">
 				{children}
 				<RouteChangeAnnouncement />
 				<ScrollRestoration />
