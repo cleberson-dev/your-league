@@ -18,8 +18,8 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 	const goNextRound = () => setCurrentRound(currentRound + 1);
 
 	return (
-		<div className="text-center bg-primary shadow self-start">
-			<div className="flex items-center bg-primary-dark text-black/50 p-2 rounded-t select-none">
+		<div className="text-center bg-primary dark:bg-dark/50 shadow self-start">
+			<div className="flex items-center bg-primary-dark dark:bg-dark text-black/50 p-2 rounded-t select-none">
 				<button className="disabled:opacity-10" onClick={goPrevRound} disabled={currentRound === 0}>
 					<ChevronLeftIcon width={16} height={16} />
 				</button>
@@ -33,13 +33,13 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 				{fixtures[currentRound].map((game, gameIdx) => (
 					<li key={gameIdx} className={cls({
 						"grid grid-cols-[1fr_3rem_1fr] items-center hover:bg-primary-dark/30 transition-colors": true,
-						"bg-slate-100": game.finished,
+						"bg-slate-100 dark:bg-dark/50": game.finished,
 					})}>
 						<span 
 							className={cls({
 								"p-2 cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap": true,
-								"bg-green font-medium": game.homeScore! > game.awayScore!,
-								"bg-red": game.awayScore! > game.homeScore!,
+								"bg-green/10 font-medium": game.homeScore! > game.awayScore!,
+								"bg-red/10": game.awayScore! > game.homeScore!,
 							})} 
 							onClick={() => onTeamClicked?.(currentRound, gameIdx, "home")}
 						>
@@ -51,8 +51,8 @@ export default function Fixtures({ fixtures, teams, onTeamClicked }: Props) {
 						<span 
 							className={cls({
 								"p-2 cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap": true,
-								"bg-green font-medium": game.awayScore! > game.homeScore!,
-								"bg-red": game.homeScore! > game.awayScore!,
+								"bg-green/10 font-medium": game.awayScore! > game.homeScore!,
+								"bg-red/10": game.homeScore! > game.awayScore!,
 							})} 
 							onClick={() => onTeamClicked?.(currentRound, gameIdx, "away")}
 						>
