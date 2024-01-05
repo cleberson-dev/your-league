@@ -9,7 +9,6 @@ import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
 import League from "~/entities/League.entity";
-import Menu from "~/components/menu";
 
 export const meta: MetaFunction = ({ data }) => ({
   title: `${data.league.name} | Your League`,
@@ -53,7 +52,6 @@ export default function LeaguePage() {
 
   return (
     <div className="relative pl-10">
-      <Menu />
       <div className="p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="font-bold text-3xl">{league.name}</h1>

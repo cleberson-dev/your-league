@@ -10,7 +10,6 @@ import * as service from "~/utils/service.server";
 import CreateLeagueModal from "~/components/create-league.modal";
 import CreateTeamModal from "~/components/create-team.modal";
 import { useModal } from "~/contexts/Modal.context";
-import Menu from "~/components/menu";
 
 export const meta = () => ({
   title: "Dashboard | Your League",
@@ -93,8 +92,6 @@ export default function Dashboard() {
           <TeamsList teams={teams} />
         </div>
       </div>
-
-      <Menu />
     </>
   );
 }
