@@ -42,7 +42,7 @@ export default function Menu({ isLoggedIn }: MenuProps) {
 
 	return (
 		<menu className="fixed left-0 top-0 h-[100svh] bg-slate-50 text-gray-500 shadow text-xs z-40">
-			<ul className="flex h-full flex-col">
+			<ul className="flex flex-col h-full">
 				<div className="flex-grow">
 					{links.map((link) => (
 						<li
