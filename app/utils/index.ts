@@ -10,3 +10,7 @@ export const randomizeArray = <T>(arr: T[]): T[] => {
 
 	return randomArr;
 };
+
+export const getTeamPercentage = (points: number, gamesPlayed: number) => {
+	return points / (gamesPlayed * 3);
+};
