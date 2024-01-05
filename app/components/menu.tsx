@@ -4,6 +4,9 @@ import {
 	ArrowRightStartOnRectangleIcon,
 	ArrowRightEndOnRectangleIcon,
 	HomeIcon,
+	TableCellsIcon,
+	HeartIcon,
+	CalendarDaysIcon,
 } from "@heroicons/react/16/solid";
 import { Link } from "@remix-run/react";
 import cls from "classnames";
@@ -24,6 +27,9 @@ export default function Menu({ isLoggedIn }: MenuProps) {
 			label: isCollapsed ? "Expand" : "Collapse",
 		},
 		{ href: "/", Icon: HomeIcon, label: "Home" },
+		{ href: "/tables", Icon: TableCellsIcon, label: "Tables"  },
+		{ href: "/teams", Icon: HeartIcon, label: "Teams"  },
+		{ href: "/fixtures", Icon: CalendarDaysIcon, label: "Fixtures"  },
 	];
 
 	const bottomLinks = [
@@ -43,6 +49,7 @@ export default function Menu({ isLoggedIn }: MenuProps) {
 							key={link.href}
 							className="group transition-colors hover:bg-gradient-to-r hover:from-indigo-500 hover:to-indigo-400"
 							onClick={link.onClick}
+							title={link.label}
 						>
 							<Link
 								to={link.href}
