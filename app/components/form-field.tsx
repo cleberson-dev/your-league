@@ -10,16 +10,16 @@ type FormFieldProps = React.PropsWithChildren<{
  * Display a form field with label and error message
  */
 export default function FormField({
-	label,
-	error,
-	children,
-	className = "",
+  label,
+  error,
+  children,
+  className = "",
 }: FormFieldProps) {
-	return (
-		<label className={"flex flex-col " + className}>
-			{label && <span>{label}</span>}
-			{children}
-			<ErrorMessage error={error} className="ml-2" />
-		</label>
-	);
+  return (
+    <label className={"flex flex-col " + className}>
+      {label && <span>{label}</span>}
+      {children}
+      <ErrorMessage error={error} className="ml-2" />
+    </label>
+  );
 }

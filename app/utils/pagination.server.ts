@@ -14,29 +14,29 @@ export interface Paginated<Item> {
  * @returns Everything needed to paginate a loader
  */
 export async function paginateLoader<Item>({
-	request,
-	getItems,
-	getTotal,
-	itemsPerPage = defaultItemsPerPage,
+  request,
+  getItems,
+  getTotal,
+  itemsPerPage = defaultItemsPerPage,
 }: {
   request: Request;
   getItems: (page: number, itemsPerPage: number) => Promise<Item[]>;
   getTotal: () => Promise<number>;
   itemsPerPage?: number;
 }): Promise<Paginated<Item>> {
-	const url = new URL(request.url);
-	const page = url.searchParams.get("p");
-	const pageNumber = page && Number(page) > 0 ? Number(page) - 1 : 0;
+  const url = new URL(request.url);
+  const page = url.searchParams.get("p");
+  const pageNumber = page && Number(page) > 0 ? Number(page) - 1 : 0;
 
-	const [items, totalItems] = await Promise.all([
-		getItems(pageNumber, itemsPerPage),
-		getTotal(),
-	]);
+  const [items, totalItems] = await Promise.all([
+    getItems(pageNumber, itemsPerPage),
+    getTotal(),
+  ]);
 
-	return {
-		items: items ?? [],
-		page: pageNumber + 1,
-		totalItems,
-		itemsPerPage,
-	};
+  return {
+    items: items ?? [],
+    page: pageNumber + 1,
+    totalItems,
+    itemsPerPage,
+  };
 }

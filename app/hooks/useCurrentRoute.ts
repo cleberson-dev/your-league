@@ -5,6 +5,6 @@ import { useMatches } from "@remix-run/react";
  * @returns the current route
  */
 export default function useCurrentRoute(): string | undefined {
-	const matches = useMatches();
-	return matches[matches.length - 1]?.pathname;
+  const matches = useMatches();
+  return matches[matches.length - 1]?.pathname;
 }

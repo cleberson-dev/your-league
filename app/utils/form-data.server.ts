@@ -4,62 +4,62 @@ import qs, { IParseOptions } from "qs";
 // Taken from here : https://github.com/ljharb/qs/issues/91#issuecomment-522289267
 // Added support for dates
 function newDecoder(
-	parseNumbers = true,
-	parseDates = true,
-	parseBool = true,
-	ignoreNull = true,
-	ignoreEmptyString = true
+  parseNumbers = true,
+  parseDates = true,
+  parseBool = true,
+  ignoreNull = true,
+  ignoreEmptyString = true
 ) {
-	const decoder: IParseOptions["decoder"] = (str, decoder, charset) => {
-		const strWithoutPlus = str.replace(/\+/g, " ");
-		if (charset === "iso-8859-1") {
-			// unescape never throws, no try...catch needed:
-			return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
-		}
+  const decoder: IParseOptions["decoder"] = (str, decoder, charset) => {
+    const strWithoutPlus = str.replace(/\+/g, " ");
+    if (charset === "iso-8859-1") {
+      // unescape never throws, no try...catch needed:
+      return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
+    }
 
-		if (parseNumbers && /^(\d+|\d*\.\d+)$/.test(str)) {
-			return parseFloat(str);
-		}
+    if (parseNumbers && /^(\d+|\d*\.\d+)$/.test(str)) {
+      return parseFloat(str);
+    }
 
-		if (ignoreEmptyString && str.length === 0) {
-			return;
-		}
+    if (ignoreEmptyString && str.length === 0) {
+      return;
+    }
 
-		const keywords = {
-			null: ignoreNull ? undefined : null,
-			undefined,
-		};
+    const keywords = {
+      null: ignoreNull ? undefined : null,
+      undefined,
+    };
 
-		if (str in keywords) {
-			//@ts-expect-error - I know we're supposed to return a string, but we need this and it works
-			return keywords[str];
-		}
+    if (str in keywords) {
+      //@ts-expect-error - I know we're supposed to return a string, but we need this and it works
+      return keywords[str];
+    }
 
-		const boolKeywords = {
-			true: true,
-			false: false,
-		};
+    const boolKeywords = {
+      true: true,
+      false: false,
+    };
 
-		if (parseBool && str in boolKeywords) {
-			//@ts-expect-error - I know we're supposed to return a string, but we need this and it works
-			return boolKeywords[str];
-		}
+    if (parseBool && str in boolKeywords) {
+      //@ts-expect-error - I know we're supposed to return a string, but we need this and it works
+      return boolKeywords[str];
+    }
 
-		if (
-			parseDates &&
+    if (
+      parseDates &&
       /^\d{4}[/-](0?[1-9]|1[012])[/-](0?[1-9]|[12][0-9]|3[01])$/.test(str)
-		) {
-			return new Date(str);
-		}
+    ) {
+      return new Date(str);
+    }
 
-		try {
-			return decodeURIComponent(strWithoutPlus);
-		} catch (e) {
-			return strWithoutPlus;
-		}
-	};
+    try {
+      return decodeURIComponent(strWithoutPlus);
+    } catch (e) {
+      return strWithoutPlus;
+    }
+  };
 
-	return decoder;
+  return decoder;
 }
 
 const customDecoder = newDecoder();
@@ -70,10 +70,10 @@ const customDecoder = newDecoder();
  * @returns an object representing the form data
  */
 async function getObjectFromFormData(request: Request) {
-	const formData = await request.formData();
-	const formDataEntries = [...formData.entries()] as string[][];
-	const queryParams = new URLSearchParams(formDataEntries).toString();
-	return qs.parse(queryParams, { decoder: customDecoder });
+  const formData = await request.formData();
+  const formDataEntries = [...formData.entries()] as string[][];
+  const queryParams = new URLSearchParams(formDataEntries).toString();
+  return qs.parse(queryParams, { decoder: customDecoder });
 }
 
 /**
@@ -83,12 +83,12 @@ async function getObjectFromFormData(request: Request) {
  * @returns a promise that resolves to the parsed object or error
  */
 export function safeParseFormData<T extends z.ZodRawShape>(
-	request: Request,
-	validator: z.ZodObject<T>
+  request: Request,
+  validator: z.ZodObject<T>
 ) {
-	return getObjectFromFormData(request).then((formData) =>
-		validator.safeParse(formData)
-	);
+  return getObjectFromFormData(request).then((formData) =>
+    validator.safeParse(formData)
+  );
 }
 
 /**
@@ -98,12 +98,12 @@ export function safeParseFormData<T extends z.ZodRawShape>(
  * @returns a promise that resolves to the parsed object
  */
 export function parseFormData<T extends z.ZodRawShape>(
-	request: Request,
-	validator: z.ZodObject<T>
+  request: Request,
+  validator: z.ZodObject<T>
 ) {
-	return getObjectFromFormData(request.clone()).then((formData) =>
-		validator.parse(formData)
-	);
+  return getObjectFromFormData(request.clone()).then((formData) =>
+    validator.parse(formData)
+  );
 }
 
 /**
@@ -118,11 +118,11 @@ export async function getFormAction<
     [string, ...string[]]
   >
 >(request: Request, availableActions: Actions): Promise<Actions[number]> {
-	// Wtf, calling formData() actually consume the request body
-	// thus the second time we call it (inside safeParseFormData)
-	// it just returns an empty object. This is why we clone the request
-	const formData = await request.clone().formData();
-	const rawAction = formData.get("_action")?.toString();
-	const parsedResult: Actions[number] = z.enum(availableActions).parse(rawAction);
-	return parsedResult;
+  // Wtf, calling formData() actually consume the request body
+  // thus the second time we call it (inside safeParseFormData)
+  // it just returns an empty object. This is why we clone the request
+  const formData = await request.clone().formData();
+  const rawAction = formData.get("_action")?.toString();
+  const parsedResult: Actions[number] = z.enum(availableActions).parse(rawAction);
+  return parsedResult;
 }

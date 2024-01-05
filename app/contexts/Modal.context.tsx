@@ -1,10 +1,10 @@
 import {
-	MouseEventHandler,
-	createContext,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
+  MouseEventHandler,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import cls from "classnames";
 
@@ -17,82 +17,82 @@ type ModalContextValues = {
 };
 
 const ModalContext = createContext<ModalContextValues>({
-	isHidden: false,
-	showModal: () => {},
-	hideModal: () => {},
-	destroyModal: () => {},
-	setModal: () => {},
+  isHidden: false,
+  showModal: () => {},
+  hideModal: () => {},
+  destroyModal: () => {},
+  setModal: () => {},
 });
 
 export const useModal = () => useContext(ModalContext);
 
 export const ModalContextProvider = ({
-	children,
+  children,
 }: {
   children: React.ReactNode;
 }) => {
-	const [content, setContent] = useState<React.ReactNode | null>(null);
-	const [isHidden, setIsHidden] = useState<boolean>(false);
+  const [content, setContent] = useState<React.ReactNode | null>(null);
+  const [isHidden, setIsHidden] = useState<boolean>(false);
 
-	const showModal = () => setIsHidden(true);
-	const hideModal = () => setIsHidden(false);
+  const showModal = () => setIsHidden(true);
+  const hideModal = () => setIsHidden(false);
 
-	const destroyModal = () => {
-		setContent(null);
-		setIsHidden(false);
-	};
+  const destroyModal = () => {
+    setContent(null);
+    setIsHidden(false);
+  };
 
-	const setModal = (newContent: React.ReactNode) => {
-		setContent(newContent);
-		setIsHidden(false);
-	};
+  const setModal = (newContent: React.ReactNode) => {
+    setContent(newContent);
+    setIsHidden(false);
+  };
 
-	const modalContainerRef = useRef<HTMLDivElement>(null);
+  const modalContainerRef = useRef<HTMLDivElement>(null);
 
-	const modalContainerClickHandler: MouseEventHandler<HTMLDivElement> = (e) => {
-		if (e.target === modalContainerRef.current) {
-			destroyModal();
-		}
-	};
+  const modalContainerClickHandler: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (e.target === modalContainerRef.current) {
+      destroyModal();
+    }
+  };
 
-	useEffect(() => {
-		const close = (e: KeyboardEvent) => {
-			if (isHidden || !content) return;
+  useEffect(() => {
+    const close = (e: KeyboardEvent) => {
+      if (isHidden || !content) return;
       
-			if (e.key === "Escape") {
-				destroyModal();
-			}
-		};
+      if (e.key === "Escape") {
+        destroyModal();
+      }
+    };
 
-		window.addEventListener("keydown", close);
-		return () => window.removeEventListener("keydown", close);
-	}, [content, isHidden]);
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [content, isHidden]);
 
-	return (
-		<ModalContext.Provider
-			value={{
-				isHidden,
-				setModal,
-				showModal,
-				hideModal,
-				destroyModal,
-			}}
-		>
-			{children}
+  return (
+    <ModalContext.Provider
+      value={{
+        isHidden,
+        setModal,
+        showModal,
+        hideModal,
+        destroyModal,
+      }}
+    >
+      {children}
 
-			{content && (
-				<div
-					ref={modalContainerRef}
-					onClick={modalContainerClickHandler}
-					className={cls({
-						"absolute left-0 top-0 z-20 flex h-[100svh] w-full items-center justify-center bg-black/10":
+      {content && (
+        <div
+          ref={modalContainerRef}
+          onClick={modalContainerClickHandler}
+          className={cls({
+            "absolute left-0 top-0 z-20 flex h-[100svh] w-full items-center justify-center bg-black/10":
               true,
-						invisible: isHidden,
-					})}
-				>
-					{content}
-				</div>
-			)}
-		</ModalContext.Provider>
-	);
+            invisible: isHidden,
+          })}
+        >
+          {content}
+        </div>
+      )}
+    </ModalContext.Provider>
+  );
 };
