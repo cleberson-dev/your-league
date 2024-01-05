@@ -10,6 +10,42 @@ import { getTeamPercentage } from "~/utils";
 const PROMOTION_SPOTS = 4;
 const RELEGATION_SPOTS = 4;
 
+type SpecialSpotColors = "green" | "blue" | "red" | "orange"; // Supported ones because of tailwind static nature
+
+type SpecialSpot = {
+	type: string;
+	label: string;
+	color: SpecialSpotColors; 
+	positions: number[]; // zero-based positions, it should be used .at method instead of bracket notation
+}
+
+const specialSpots: SpecialSpot[] = [
+	{
+		type: "promotion",
+		label: "Promoted",
+		color: "green",
+		positions: [0, 1, 2, 3],
+	},
+	{
+		type: "relegation",
+		label: "Relegated",
+		color: "red",
+		positions: [16, 17, 18, 19],
+	},
+	{
+		type: "special",
+		label: "Special",
+		color: "orange",
+		positions: [10],
+	},
+];
+
+const spotColorsArray: SpecialSpotColors[] = Array.from({ 
+	length: 20, 
+	...Object.fromEntries(specialSpots.map(spot => spot.positions.map(pos => [pos, spot.color])).flat()) 
+});
+
+
 const pointsPerResult: Record<"WIN" | "DRAW" | "LOSS", number> = {
 	WIN: 3,
 	DRAW: 1,
@@ -182,7 +218,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 	const SortIcon =
 		sortColumnOrder === "asc" ? ArrowLongUpIcon : ArrowLongDownIcon;
 
-	const isInPromotionSpot = (rowIdx: number) => rowIdx < PROMOTION_SPOTS;
+	const isInPromotionSpot = (position: number) => position < PROMOTION_SPOTS;
 	const isInRelegationSpot = (rowIdx: number) =>
 		rowIdx >= teams.length - RELEGATION_SPOTS;
 	const isHighlightedSortColumn = (colIdx: number) => colIdx === sortColumnIdx;
@@ -243,8 +279,9 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 									"w-full": colData.fullWidth,
 									"text-left": colData.align === "left",
 									"bg-primary-dark dark:bg-darker/60": isHighlightedSortColumn(colIdx),
-									"bg-green/10 group-hover:bg-green/20": isInPromotionSpot(rowIdx),
-									"bg-red/10 group-hover:bg-red/20": isInRelegationSpot(rowIdx),
+									"bg-green/10 group-hover:bg-green/20": spotColorsArray[rowIdx] === "green",
+									"bg-red/10 group-hover:bg-red/20": spotColorsArray[rowIdx] === "red",
+									"bg-orange-500/10 group-hover:bg-orange-500/20": spotColorsArray[rowIdx] === "orange",
 									"bg-green/30 dark:bg-green/20":
 										isInPromotionSpot(rowIdx) &&
 										isHighlightedSortColumn(colIdx),
