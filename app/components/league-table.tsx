@@ -176,10 +176,10 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 									"w-full": colData.fullWidth,
 									"text-left": colData.align === "left",
 									"bg-primary-dark": colIdx === sortColumnIdx,
-									"bg-green": idx < PROMOTION_SPOTS,
-									"bg-green-dark": idx < PROMOTION_SPOTS && colIdx === sortColumnIdx,
-									"bg-red": idx > teams.length - 1 - RELEGATION_SPOTS,
-									"bg-red-dark": (idx > teams.length - 1 - RELEGATION_SPOTS) && colIdx === sortColumnIdx,
+									"bg-green/10": idx < PROMOTION_SPOTS,
+									"bg-red/10": idx > teams.length - 1 - RELEGATION_SPOTS,
+									"bg-green/30": idx < PROMOTION_SPOTS && colIdx === sortColumnIdx,
+									"bg-red/30": (idx > teams.length - 1 - RELEGATION_SPOTS) && colIdx === sortColumnIdx,
 								})}
 							>
 								{colData.element ?? colData.value}
