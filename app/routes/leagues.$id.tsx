@@ -56,32 +56,16 @@ export default function LeaguePage() {
   );
 
   const simulateAll = () => {
-    // setSimulatedFixtures(
-    //   simulatedFixtures.map((round) =>
-    //     round.map((game) => ({
-    //       ...game,
-    //       homeScore: Math.round(Math.random() * 3),
-    //       awayScore: Math.round(Math.random() * 3),
-    //       finished: true,
-    //     }))
-    //   )
-    // );
+    methods.setValue(
+      "fixtures",
+      league.fixtures.map((round) =>
+        round.map(() => ({
+          home: Math.round(Math.random() * 3),
+          away: Math.round(Math.random() * 3),
+        }))
+      )
+    );
   };
-
-  // const simulateGame = (
-  // roundIdx: number,
-  // gameIdx: number,
-  // homeScore: number,
-  // awayScore: number
-  // ) => {
-  // setSimulatedFixtures(
-  //   simulatedFixtures.map((oldRound, oldRoundIdx) =>
-  //     oldRoundIdx === roundIdx
-  //       ? oldRound.map((oldGame, oldGameIdx) => gameIdx === oldGameIdx ? { ...oldGame, homeScore, awayScore, finished: true } : oldGame)
-  //       : oldRound
-  //   )
-  // );
-  // };
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -119,7 +103,8 @@ export default function LeaguePage() {
             </button>
             <button
               className={cls({
-                "rounded bg-blue-500 px-4 py-2 text-sm text-white transition-opacity hover:opacity-80 dark:text-black": true,
+                "rounded bg-blue-500 px-4 py-2 text-sm text-white transition-opacity hover:opacity-80 dark:text-black":
+                  true,
                 "bg-red": isInSimulation,
               })}
               onClick={() => setIsInSimulation(!isInSimulation)}
@@ -130,20 +115,15 @@ export default function LeaguePage() {
         </div>
 
         <div className="grid grid-cols-[85fr_25fr] gap-x-4">
-          <LeagueTable fixtures={isInSimulation ? simulatedFixtures : league.fixtures} teams={league.teams} />
+          <LeagueTable
+            fixtures={isInSimulation ? simulatedFixtures : league.fixtures}
+            teams={league.teams}
+          />
           <FormProvider {...methods}>
             <Fixtures
               inSimulation={isInSimulation}
               fixtures={isInSimulation ? simulatedFixtures : league.fixtures}
               teams={league.teams}
-              // onTeamClicked={(roundIdx, gameIdx, homeOrAway) => {
-              //   simulateGame(
-              //     roundIdx,
-              //     gameIdx,
-              //     homeOrAway === "home" ? 3 : 0,
-              //     homeOrAway === "away" ? 3 : 0
-              //   );
-              // }}
             />
           </FormProvider>
         </div>

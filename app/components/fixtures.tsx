@@ -10,20 +10,10 @@ import TableFixtureScoreInput from "./table-fixture-score-input";
 type Props = {
   fixtures: Fixtures;
   teams: Team[];
-  onTeamClicked?: (
-    roundIdx: number,
-    gameIdx: number,
-    homeOrAway: "home" | "away"
-  ) => void;
   inSimulation: boolean;
 };
 
-export default function Fixtures({
-  fixtures,
-  teams,
-  onTeamClicked,
-  inSimulation,
-}: Props) {
+export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
   const [currentRound, setCurrentRound] = useState(0);
 
   const goPrevRound = () => setCurrentRound(currentRound - 1);
@@ -65,14 +55,11 @@ export default function Fixtures({
           >
             <span
               className={cls({
-                "cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap p-2":
-                  true,
-                "bg-green/10 font-medium": game.finished && game.homeScore! > game.awayScore!,
+                "overflow-hidden text-ellipsis whitespace-nowrap p-2": true,
+                "bg-green/10 font-medium":
+                  game.finished && game.homeScore! > game.awayScore!,
                 "bg-red/10": game.finished && game.awayScore! > game.homeScore!,
               })}
-              onClick={() =>
-                !inSimulation && onTeamClicked?.(currentRound, gameIdx, "home")
-              }
             >
               {teams[game.homeTeam!].name}
             </span>
@@ -97,14 +84,11 @@ export default function Fixtures({
             </span>
             <span
               className={cls({
-                "cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap p-2":
-                  true,
-                "bg-green/10 font-medium": game.finished && game.awayScore! > game.homeScore!,
+                "overflow-hidden text-ellipsis whitespace-nowrap p-2": true,
+                "bg-green/10 font-medium":
+                  game.finished && game.awayScore! > game.homeScore!,
                 "bg-red/10": game.finished && game.homeScore! > game.awayScore!,
               })}
-              onClick={() =>
-                !inSimulation && onTeamClicked?.(currentRound, gameIdx, "away")
-              }
             >
               {teams[game.awayTeam!].name}
             </span>
