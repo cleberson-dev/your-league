@@ -130,7 +130,7 @@ export default function LeaguePage() {
         </div>
 
         <div className="grid grid-cols-[85fr_25fr] gap-x-4">
-          <LeagueTable fixtures={simulatedFixtures} teams={league.teams} />
+          <LeagueTable fixtures={isInSimulation ? simulatedFixtures : league.fixtures} teams={league.teams} />
           <FormProvider {...methods}>
             <Fixtures
               inSimulation={isInSimulation}
