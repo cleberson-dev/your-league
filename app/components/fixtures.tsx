@@ -64,23 +64,21 @@ export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
               {teams[game.homeTeam!].name}
             </span>
             <span className="flex items-center justify-center gap-x-2">
-              {inSimulation ? (
-                <>
-                  <TableFixtureScoreInput
-                    {...register(`fixtures.${currentRound}.${gameIdx}.home`)}
-                  />
-                  <span>x</span>
-                  <TableFixtureScoreInput
-                    {...register(`fixtures.${currentRound}.${gameIdx}.away`)}
-                  />
-                </>
-              ) : (
-                <>
-                  <span>{game.homeScore || ""}</span>
-                  <span>x</span>
-                  <span>{game.awayScore || ""}</span>
-                </>
-              )}
+              <span className={cls({ hidden: inSimulation })}>
+                {game.homeScore || ""}
+              </span>
+              <TableFixtureScoreInput
+                className={cls({ hidden: !inSimulation })}
+                {...register(`fixtures.${currentRound}.${gameIdx}.home`)}
+              />
+              <span>x</span>
+              <span className={cls({ hidden: inSimulation })}>
+                {game.awayScore || ""}
+              </span>
+              <TableFixtureScoreInput
+                className={cls({ hidden: !inSimulation })}
+                {...register(`fixtures.${currentRound}.${gameIdx}.away`)}
+              />
             </span>
             <span
               className={cls({

@@ -2,14 +2,19 @@ import { forwardRef } from "react";
 
 type Props = React.InputHTMLAttributes<HTMLInputElement>;
 
-const TableFixtureScoreInput = forwardRef<HTMLInputElement, Props>((props, ref) => (
-  <input
-    maxLength={2}
-    className="bg-transparent w-6 p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border-t-0 border-x-0 text-center" 
-    {...props} 
-    ref={ref} 
-  />
-));
+const TableFixtureScoreInput = forwardRef<HTMLInputElement, Props>(
+  ({ className, ...props }, ref) => (
+    <input
+      type="number"
+      className={
+        "w-6 border-x-0 border-t-0 bg-transparent p-0 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none " +
+        className
+      }
+      {...props}
+      ref={ref}
+    />
+  )
+);
 
 TableFixtureScoreInput.displayName = "TableFixtureScoreInput";
 

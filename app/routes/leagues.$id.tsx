@@ -79,14 +79,21 @@ export default function LeaguePage() {
   });
   const formFixtures = methods.watch("fixtures");
   const simulatedFixtures = league.fixtures.map((round, roundIdx) =>
-    round.map((game, gameIdx) => ({
-      ...game,
-      homeScore: +formFixtures![roundIdx]![gameIdx].home!,
-      awayScore: +formFixtures![roundIdx]![gameIdx].away!,
-      finished:
-        !!formFixtures![roundIdx]![gameIdx].home &&
-        !!formFixtures![roundIdx]![gameIdx].away,
-    }))
+    round.map((game, gameIdx) => {
+      const formGame = formFixtures![roundIdx]![gameIdx]!;
+      const homeScore = formGame.home as number | string | undefined;
+      const awayScore = formGame.away as number | string | undefined;
+      const scores = [homeScore, awayScore];
+
+      if (scores.some(score => score === "" || score === undefined || +score < 0 || +score > 99)) return game;
+
+      return {
+        ...game,
+        homeScore: homeScore as number,
+        awayScore: awayScore as number,
+        finished: true,
+      };
+    })
   );
   const [isInSimulation, setIsInSimulation] = useState(false);
 
