@@ -14,10 +14,27 @@ type Props = {
 };
 
 export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
-  const [currentRound, setCurrentRound] = useState(0);
+  const [currentRound, setCurrentRound] = useState<number | null>(0);
 
-  const goPrevRound = () => setCurrentRound(currentRound - 1);
-  const goNextRound = () => setCurrentRound(currentRound + 1);
+  const goPrevRound = () => {
+    const currentRoundNumber = currentRound as number;
+    setCurrentRound(null);
+
+    // DON'T LOOK AT IT. IT WAS MY DOG
+    setTimeout(() => {
+      setCurrentRound(currentRoundNumber - 1);
+    });
+  };
+
+  const goNextRound = () => {
+    const currentRoundNumber = currentRound as number;
+    setCurrentRound(null);
+
+    // DON'T LOOK AT IT. IT WAS MY CAT
+    setTimeout(() => {
+      setCurrentRound(currentRoundNumber + 1);
+    });
+  };
 
   const { register } = useFormContext();
 
@@ -32,7 +49,7 @@ export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
           <ChevronLeftIcon width={16} height={16} />
         </button>
         <h1 className="flex-grow text-sm font-black lowercase">
-          Round {currentRound + 1}
+          Round {currentRound! + 1}
         </h1>
         <button
           className="disabled:opacity-10"
@@ -44,7 +61,7 @@ export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
       </div>
 
       <ul className="text-sm">
-        {fixtures[currentRound].map((game, gameIdx) => (
+        {currentRound !== null && fixtures[currentRound].map((game, gameIdx) => (
           <li
             key={gameIdx}
             className={cls({
