@@ -67,8 +67,8 @@ export default function Fixtures({
               className={cls({
                 "cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap p-2":
                   true,
-                "bg-green/10 font-medium": game.homeScore! > game.awayScore!,
-                "bg-red/10": game.awayScore! > game.homeScore!,
+                "bg-green/10 font-medium": game.finished && game.homeScore! > game.awayScore!,
+                "bg-red/10": game.finished && game.awayScore! > game.homeScore!,
               })}
               onClick={() =>
                 !inSimulation && onTeamClicked?.(currentRound, gameIdx, "home")
@@ -99,8 +99,8 @@ export default function Fixtures({
               className={cls({
                 "cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap p-2":
                   true,
-                "bg-green/10 font-medium": game.awayScore! > game.homeScore!,
-                "bg-red/10": game.homeScore! > game.awayScore!,
+                "bg-green/10 font-medium": game.finished && game.awayScore! > game.homeScore!,
+                "bg-red/10": game.finished && game.homeScore! > game.awayScore!,
               })}
               onClick={() =>
                 !inSimulation && onTeamClicked?.(currentRound, gameIdx, "away")
