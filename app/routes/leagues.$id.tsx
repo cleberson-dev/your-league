@@ -65,6 +65,7 @@ export default function LeaguePage() {
         }))
       )
     );
+    setIsInSimulation(true);
   };
 
   const methods = useForm({
