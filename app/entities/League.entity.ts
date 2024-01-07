@@ -112,6 +112,11 @@ export default class League {
             game.awayTeam = gameOfPreviousRound.awayTeam! > 1 ? gameOfPreviousRound.awayTeam! - 1 : endIdx;
           }
         }
+
+        // A team should play one round at home and the next one away, and so forth. 
+        if (roundIdx % 2 !== 0) {
+          [game.homeTeam, game.awayTeam] = [game.awayTeam, game.homeTeam];
+        }
       }
     }
   }
