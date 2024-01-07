@@ -5,6 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import cls from "classnames";
 import { Fixtures, Team } from "~/entities/League.entity";
 import { useFormContext } from "react-hook-form";
+import TableFixtureScoreInput from "./table-fixture-score-input";
 
 type Props = {
   fixtures: Fixtures;
@@ -29,9 +30,6 @@ export default function Fixtures({
   const goNextRound = () => setCurrentRound(currentRound + 1);
 
   const { register } = useFormContext();
-
-  const scoreInputClassnames =
-    "w-16 text-black [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
 
   return (
     <div className="self-start bg-primary text-center shadow dark:bg-dark/50">
@@ -60,7 +58,7 @@ export default function Fixtures({
           <li
             key={gameIdx}
             className={cls({
-              "grid grid-cols-[1fr_3rem_1fr] items-center transition-colors hover:bg-primary-dark/30 dark:hover:bg-dark":
+              "grid grid-cols-[1fr_4rem_1fr] items-center transition-colors hover:bg-primary-dark/30 dark:hover:bg-dark":
                 true,
               "bg-slate-100 dark:bg-dark/50": game.finished,
             })}
@@ -78,16 +76,24 @@ export default function Fixtures({
             >
               {teams[game.homeTeam!].name}
             </span>
-            <span>
-              {inSimulation && (
-                <div className="flex items-center">
-                  <input type="number" className={scoreInputClassnames} {...register(`fixtures.${currentRound}.${gameIdx}.home`)} /> x{" "}
-                  <input type="number" className={scoreInputClassnames} {...register(`fixtures.${currentRound}.${gameIdx}.away`)} />
-                </div>
+            <span className="flex items-center justify-center gap-x-2">
+              {inSimulation ? (
+                <>
+                  <TableFixtureScoreInput
+                    {...register(`fixtures.${currentRound}.${gameIdx}.home`)}
+                  />
+                  <span>x</span>
+                  <TableFixtureScoreInput
+                    {...register(`fixtures.${currentRound}.${gameIdx}.away`)}
+                  />
+                </>
+              ) : (
+                <>
+                  <span>{game.homeScore || ""}</span>
+                  <span>x</span>
+                  <span>{game.awayScore || ""}</span>
+                </>
               )}
-              {!inSimulation && game.finished
-                ? `${game.homeScore} x ${game.awayScore}`
-                : "x"}
             </span>
             <span
               className={cls({
