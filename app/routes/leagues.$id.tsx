@@ -12,6 +12,7 @@ import League from "~/entities/League.entity";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import cls from "classnames";
 
 const gameSchema = yup.object({
   home: yup.number().min(0),
@@ -103,10 +104,6 @@ export default function LeaguePage() {
     }))
   );
   const [isInSimulation, setIsInSimulation] = useState(false);
-  const enterInSimulationMode = () => {
-    setIsInSimulation(true);
-    console.log({ values: methods.getValues().fixtures });
-  };
 
   return (
     <div className="relative pl-10">
@@ -121,10 +118,13 @@ export default function LeaguePage() {
               Simulate
             </button>
             <button
-              className="rounded bg-blue-500 px-4 py-2 text-sm text-white transition-opacity hover:opacity-80 dark:text-black"
-              onClick={enterInSimulationMode}
+              className={cls({
+                "rounded bg-blue-500 px-4 py-2 text-sm text-white transition-opacity hover:opacity-80 dark:text-black": true,
+                "bg-red": isInSimulation,
+              })}
+              onClick={() => setIsInSimulation(!isInSimulation)}
             >
-              Enter in Simulation
+              {isInSimulation ? "Exit Simulation" : "Enter in Simulation"}
             </button>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function LeaguePage() {
           <FormProvider {...methods}>
             <Fixtures
               inSimulation={isInSimulation}
-              fixtures={simulatedFixtures}
+              fixtures={isInSimulation ? simulatedFixtures : league.fixtures}
               teams={league.teams}
               // onTeamClicked={(roundIdx, gameIdx, homeOrAway) => {
               //   simulateGame(
