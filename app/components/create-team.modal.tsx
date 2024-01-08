@@ -2,6 +2,7 @@ import { useForm, Form } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "./button";
 import createTeamSchema from "~/schemas/create-team.schema";
+import Input from "./input";
 
 type Props = {
   onClose: () => void;
@@ -19,25 +20,23 @@ export default function CreateTeamModal({ onClose }: Props) {
   return (
     <Form
       encType="multipart/form-data"
-      className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow"
+      className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow dark:bg-dark"
       control={control}
     >
       <input readOnly name="actionType" value="createTeam" className="hidden" />
 
       <h1 className="mb-8 text-2xl font-bold">Create your team</h1>
       <div className="flex flex-grow flex-col gap-y-8">
-        <div>
+        <div className="flex flex-col gap-y-1">
           <label className="block">Name</label>
-          <input
-            className="w-60 rounded border border-solid border-black/10"
-            autoComplete="off"
-            {...register("name")}
-          />
+          <Input autoComplete="off" {...register("name")} />
+          {errors.name && (
+            <p className="text-red">
+              <small>{errors.name.message}</small>
+            </p>
+          )}
         </div>
-        {errors.name && (
-          <span className="text-xs text-red-500">{errors.name.message}</span>
-        )}
-        <div>
+        <div className="flex flex-col gap-y-1">
           <label className="block">Logo</label>
           <input
             type="file"
@@ -45,7 +44,9 @@ export default function CreateTeamModal({ onClose }: Props) {
             {...register("logo")}
           />
           {errors.logo && (
-            <span className="text-xs text-red-500">{errors.logo.message}</span>
+            <p className="text-red">
+              <small>{errors.logo.message}</small>
+            </p>
           )}
         </div>
       </div>

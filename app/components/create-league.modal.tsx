@@ -7,6 +7,7 @@ import { Team } from "~/entities/League.entity";
 
 import Button from "~/components/button";
 import createLeagueSchema from "~/schemas/create-league.schema";
+import Input from "./input";
 
 type Props = {
   teams: Team[];
@@ -47,22 +48,21 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
 
   return (
     <form
-      className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow"
+      className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow dark:bg-dark"
       onSubmit={handleSubmit(onSubmit)}
     >
       <h1 className="mb-10 text-2xl font-bold">Create your league</h1>
       <div className="flex flex-grow flex-col gap-y-8 overflow-auto">
-        <div>
+        <div className="flex flex-col gap-y-1">
           <label className="block">Name</label>
-          <input
-            className="w-60 rounded border border-solid border-black/10"
-            {...register("name")}
-          />
+          <Input {...register("name")} />
           {errors.name && (
-            <span className="text-red-500">{errors.name.message}</span>
+            <p className="text-red">
+              <small>{errors.name.message}</small>
+            </p>
           )}
         </div>
-        <div>
+        <div className="flex flex-col gap-y-1">
           <label className="block">Teams ({teamsCount} added)</label>
           <div className="mb-2 flex flex-col gap-y-2">
             <Controller
@@ -92,7 +92,9 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
             />
 
             {errors.teams && (
-              <span className="text-red-500">{errors.teams.message}</span>
+              <p className="text-red">
+                <small>{errors.teams.message}</small>
+              </p>
             )}
           </div>
         </div>
