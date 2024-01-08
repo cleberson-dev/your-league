@@ -65,7 +65,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <header className="fixed top-0 flex w-full justify-center items-center p-3 bg-white">
+      <header className="fixed top-0 flex w-full justify-center items-center p-3 bg-white dark:bg-dark">
         <Logo className="h-6" />
       </header>
       <div className="min-h-[100svh] px-16 py-12 pl-20 pt-20">
