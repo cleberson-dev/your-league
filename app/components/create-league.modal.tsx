@@ -2,6 +2,7 @@ import CreatableSelect from "react-select/creatable";
 import { useFetcher } from "@remix-run/react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import cls from "classnames";
 
 import { Team } from "~/entities/League.entity";
 
@@ -12,6 +13,16 @@ import Input from "./input";
 type Props = {
   teams: Team[];
   onClose: () => void;
+};
+
+const classes = {
+  control: "p-2 rounded text-sm border border-solid border-slate-200 bg-slate-100 dark:bg-darker/50 dark:border-darker/60 dark:text-white",
+  valueContainer: "gap-2",
+  menuList: "bg-slate-100 dark:bg-darker/50",
+  option: "p-2 text-sm hover:bg-slate-200 dark:hover:bg-violet",
+  multiValue: "rounded gap-x-2 bg-violet text-white",
+  multiValueLabel: "py-1 pl-2",
+  multiValueRemove: "p-1 rounded-r hover:bg-red",
 };
 
 export default function CreateLeagueModal({ teams, onClose }: Props) {
@@ -47,13 +58,14 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
     onClose();
   };
 
-  const classes = "bg-darker";
+  
 
   return (
     <form
       className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow dark:bg-dark"
       onSubmit={handleSubmit(onSubmit)}
     >
+      <div className={cls(["hidden", Object.values(classes).join(" ")])} />
       <h1 className="mb-10 text-2xl font-bold">Create your league</h1>
       <div className="flex flex-grow flex-col gap-y-8 overflow-auto">
         <div className="flex flex-col gap-y-1">
@@ -75,10 +87,13 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
                 <CreatableSelect
                   unstyled
                   classNames={{
-                    valueContainer: () => "dark:bg-darker/50 dark:text-white px-2 py-2 rounded",
-                    multiValue: () => "dark:bg-dark p-1",
-                    menuList: () => "dark:bg-darker/50",
-                    option: () => "p-4 hover:bg-red hover:dark:text-black"
+                    control: () => classes.control,
+                    valueContainer: () => classes.valueContainer,
+                    multiValue: () => classes.multiValue,
+                    menuList: () => classes.menuList,
+                    option: () => classes.option,
+                    multiValueRemove: () => classes.multiValueRemove,
+                    multiValueLabel: () => classes.multiValueLabel,
                   }}
                   isMulti
                   ref={field.ref}
