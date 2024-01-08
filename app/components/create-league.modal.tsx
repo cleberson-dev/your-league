@@ -47,6 +47,8 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
     onClose();
   };
 
+  const classes = "bg-darker";
+
   return (
     <form
       className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow dark:bg-dark"
@@ -71,6 +73,13 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
               control={control}
               render={({ field }) => (
                 <CreatableSelect
+                  unstyled
+                  classNames={{
+                    valueContainer: () => "dark:bg-darker/50 dark:text-white px-2 py-2 rounded",
+                    multiValue: () => "dark:bg-dark p-1",
+                    menuList: () => "dark:bg-darker/50",
+                    option: () => "p-4 hover:bg-red hover:dark:text-black"
+                  }}
                   isMulti
                   ref={field.ref}
                   name={field.name}
