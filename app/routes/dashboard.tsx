@@ -55,17 +55,17 @@ export const action = async ({ request }: { request: Request }) => {
 
 export default function Dashboard() {
   const { user, teams, leagues } = useLoaderData<typeof loader>();
-  const { setModal, destroyModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const openCreateLeagueModal = () =>
-    setModal(<CreateLeagueModal teams={teams} onClose={destroyModal} />);
+    showModal(<CreateLeagueModal teams={teams} onClose={hideModal} />);
 
   const openCreateTeamModal = () =>
-    setModal(<CreateTeamModal onClose={destroyModal} />);
+    showModal(<CreateTeamModal onClose={hideModal} />);
 
   return (
     <>
-      <header className="fixed top-0 flex w-full justify-center items-center p-3 bg-white dark:bg-dark">
+      <header className="fixed top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark">
         <Logo className="h-6" />
       </header>
       <div className="min-h-[100svh] px-16 py-12 pl-20 pt-20">

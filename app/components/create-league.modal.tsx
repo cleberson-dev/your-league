@@ -44,6 +44,7 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
       formData.append(key, val);
     });
     fetcher.submit(formData, { action: "/dashboard", method: "POST" });
+    onClose();
   };
 
   return (
