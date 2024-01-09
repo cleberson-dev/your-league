@@ -90,7 +90,7 @@ export default function Dashboard() {
             <h1 className="text-2xl font-bold">Your teams</h1>
             <Button onClick={openCreateTeamModal}>+ Create a new Team</Button>
           </div>
-          <TeamsList teams={teams} />
+          <TeamsList teams={teams} removable />
         </div>
       </div>
     </>
