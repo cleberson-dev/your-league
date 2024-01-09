@@ -86,3 +86,15 @@ export const createLeague = async (request: Request, formData: FormData) => {
   return redirect(`/leagues/${league.id}`);
 };
  
+
+export const removeTeam = async (id: string) => {
+  await db.team.delete({
+    where: { id },
+  });
+};
+
+export const removeLeague = async (id: string) => {
+  await db.league.delete({
+    where: { id },
+  });
+};
