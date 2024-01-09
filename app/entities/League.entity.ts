@@ -1,3 +1,5 @@
+import { getTeamResult } from "~/utils";
+
 export type Team = {
   id: string;
   name: string;
@@ -20,7 +22,7 @@ const POINTS_PER_DRAW = 1;
 export type Table = {
   position?: number;
   team: Team;
-  games: Game[];
+  games: (Game & { result: "WIN" | "LOSS" | "DRAW" })[];
   points: number;
   wins: number;
   losses: number;
@@ -154,7 +156,7 @@ export default class League {
         const home = table[game.homeTeam!];
         const away = table[game.awayTeam!];
 
-        home.games.unshift(game);
+        home.games.unshift({...game, result: getTeamResult(home.team, game, teams)});
         home.points += homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
         home.wins += homeWin;
         home.losses += awayWin;
@@ -163,7 +165,7 @@ export default class League {
         home.goalsConceived += game.awayScore!;
         home.goalsDifference += game.homeScore! - game.awayScore!;
 
-        away.games.unshift(game);
+        away.games.unshift({...game, result: getTeamResult(away.team, game, teams)});
         away.points += awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
         away.wins += awayWin;
         away.losses += homeWin;

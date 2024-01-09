@@ -5,23 +5,8 @@ import TeamLogo from "./team-logo";
 
 type TeamFormBulletsProps = {
   team: Team;
-  results: Game[];
+  results: (Game & { result: "WIN" | "LOSS" | "DRAW" })[];
   leagueTeams: Team[];
-};
-
-const getTeamResult = (team: Team, game: Game, leagueTeams: Team[]) => {
-  const isHome = team.id === leagueTeams[game.homeTeam!].id;
-
-  if (isHome) {
-    if (game.homeScore! > game.awayScore!) return "WIN";
-    if (game.homeScore! < game.awayScore!) return "LOSS";
-    return "DRAW";
-  }
-
-  if (game.awayScore! > game.homeScore!) return "WIN";
-  if (game.awayScore! < game.homeScore!) return "LOSS";
-
-  return "DRAW";
 };
 
 export default function TeamFormBullets({
@@ -39,10 +24,9 @@ export default function TeamFormBullets({
           key={idx}
           className={cls({
             "h-2 w-2 rounded-full": true,
-            "bg-green": getTeamResult(team, result, leagueTeams) === "WIN",
-            "bg-slate-300 dark:bg-slate-600":
-              getTeamResult(team, result, leagueTeams) === "DRAW",
-            "bg-red": getTeamResult(team, result, leagueTeams) === "LOSS",
+            "bg-green": result.result === "WIN",
+            "bg-slate-300 dark:bg-slate-600": result.result === "DRAW",
+            "bg-red": result.result === "LOSS",
           })}
         />
       ))}
@@ -59,10 +43,10 @@ export default function TeamFormBullets({
                   "font-bold": team.id === leagueTeams[result.homeTeam!].id,
                   "text-green":
                     team.id === leagueTeams[result.homeTeam!].id &&
-                    getTeamResult(team, result, leagueTeams) === "WIN",
+                    result.result === "WIN",
                   "text-red":
                     team.id === leagueTeams[result.homeTeam!].id &&
-                    getTeamResult(team, result, leagueTeams) === "LOSS",
+                    result.result === "LOSS",
                 })}
               >
                 {leagueTeams[result.homeTeam!].name}
@@ -83,10 +67,10 @@ export default function TeamFormBullets({
                   "font-bold": team.id === leagueTeams[result.awayTeam!].id,
                   "text-green":
                     team.id === leagueTeams[result.awayTeam!].id &&
-                    getTeamResult(team, result, leagueTeams) === "WIN",
+                    result.result === "WIN",
                   "text-red":
                     team.id === leagueTeams[result.awayTeam!].id &&
-                    getTeamResult(team, result, leagueTeams) === "LOSS",
+                    result.result === "LOSS",
                 })}
               >
                 {leagueTeams[result.awayTeam!].name}

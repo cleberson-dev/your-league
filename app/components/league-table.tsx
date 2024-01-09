@@ -50,11 +50,11 @@ const spotColorsArray: SpecialSpotColors[] = Array.from({
   ),
 });
 
-// const pointsPerResult: Record<"WIN" | "DRAW" | "LOSS", number> = {
-//   WIN: 3,
-//   DRAW: 1,
-//   LOSS: 0,
-// };
+const pointsPerResult: Record<"WIN" | "DRAW" | "LOSS", number> = {
+  WIN: 3,
+  DRAW: 1,
+  LOSS: 0,
+};
 
 type Props = {
   fixtures: Fixtures;
@@ -175,18 +175,17 @@ export default function LeagueTable({ fixtures, teams }: Props) {
       const rowDataB = mapTeamToRowData(b, teams)[sortColumnIdx]!;
 
       // TODO: Handle Strings as well because it'll mess up in the future
-      const valueA = rowDataA.value as number | undefined;
-      const valueB = rowDataB.value as number | undefined;
+      let valueA = rowDataA.value as number | undefined;
+      let valueB = rowDataB.value as number | undefined;
 
       const key = rowDataA.key;
       if (key === "form") {
-        return 1;
-        // valueA = a.results
-        //   .slice(0, 5)
-        //   .reduce((acc, result) => acc + pointsPerResult[result], 0);
-        // valueB = b.results
-        //   .slice(0, 5)
-        //   .reduce((acc, result) => acc + pointsPerResult[result], 0);
+        valueA = a.games
+          .slice(0, 5)
+          .reduce((acc, game) => acc + pointsPerResult[game.result], 0);
+        valueB = b.games
+          .slice(0, 5)
+          .reduce((acc, game) => acc + pointsPerResult[game.result], 0);
       }
 
       if (valueA === undefined || valueB === undefined) return 0;
