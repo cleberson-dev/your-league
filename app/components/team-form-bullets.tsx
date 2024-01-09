@@ -1,6 +1,7 @@
 import cls from "classnames";
 import { Tooltip } from "react-tooltip";
 import { Team, Game } from "~/entities/League.entity";
+import TeamLogo from "./team-logo";
 
 type TeamFormBulletsProps = {
   team: Team;
@@ -46,12 +47,12 @@ export default function TeamFormBullets({
         />
       ))}
       <Tooltip id={"team-form-" + team.id}>
-        <h1>Results</h1>
+        <h1 className="mb-2">{team.name}&apos;s Results</h1>
         <ul>
           {results.map((result, idx) => (
             <li
               key={idx}
-              className="grid grid-cols-3 items-center gap-x-2 text-center"
+              className="grid grid-cols-[1fr_1rem_3rem_1rem_1fr] items-center gap-x-2 text-center"
             >
               <span
                 className={cls({
@@ -66,9 +67,17 @@ export default function TeamFormBullets({
               >
                 {leagueTeams[result.homeTeam!].name}
               </span>
+              <TeamLogo
+                className="h-4 w-4"
+                team={leagueTeams[result.homeTeam!]}
+              />
               <span>
                 {result.homeScore} x {result.awayScore}
               </span>
+              <TeamLogo
+                className="h-4 w-4"
+                team={leagueTeams[result.awayTeam!]}
+              />
               <span
                 className={cls({
                   "font-bold": team.id === leagueTeams[result.awayTeam!].id,
