@@ -54,7 +54,7 @@ export default function CreateTeamModal({ onClose }: Props) {
         <Button type="submit" disabled={!isValid}>
           Create
         </Button>
-        <Button type="button" onClick={onClose}>
+        <Button type="button" variant="neutral" onClick={onClose}>
           Close
         </Button>
       </div>
