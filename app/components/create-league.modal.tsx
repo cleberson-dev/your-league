@@ -128,7 +128,7 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
         <Button type="submit" disabled={!isValid}>
           Create
         </Button>
-        <Button type="button" onClick={onClose}>
+        <Button type="button" variant="neutral" onClick={onClose}>
           Close
         </Button>
       </div>
