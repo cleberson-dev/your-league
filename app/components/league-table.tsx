@@ -50,11 +50,11 @@ const spotColorsArray: SpecialSpotColors[] = Array.from({
   ),
 });
 
-const pointsPerResult: Record<"WIN" | "DRAW" | "LOSS", number> = {
-  WIN: 3,
-  DRAW: 1,
-  LOSS: 0,
-};
+// const pointsPerResult: Record<"WIN" | "DRAW" | "LOSS", number> = {
+//   WIN: 3,
+//   DRAW: 1,
+//   LOSS: 0,
+// };
 
 type Props = {
   fixtures: Fixtures;
@@ -97,7 +97,8 @@ const tableHeaders = [
 ];
 
 const mapTeamToRowData = (
-  tableTeam: Table[number]
+  tableTeam: Table[number],
+  leagueTeams: Team[],
 ): {
   key: string;
   element?: React.ReactNode;
@@ -124,7 +125,7 @@ const mapTeamToRowData = (
     showHorizontalPadding: true,
   },
   { key: "points", value: tableTeam.points, bold: true },
-  { key: "played", value: tableTeam.games },
+  { key: "played", value: tableTeam.games.length },
   { key: "wins", value: tableTeam.wins },
   { key: "draws", value: tableTeam.draws },
   { key: "losses", value: tableTeam.losses },
@@ -146,8 +147,8 @@ const mapTeamToRowData = (
   {
     key: "percentage",
     value:
-      tableTeam.games > 0
-        ? Math.round(100 * getTeamPercentage(tableTeam.points, tableTeam.games))
+      tableTeam.games.length > 0
+        ? Math.round(100 * getTeamPercentage(tableTeam.points, tableTeam.games.length))
         : 0,
     showHorizontalPadding: true,
   },
@@ -156,7 +157,7 @@ const mapTeamToRowData = (
     showHorizontalPadding: true,
     element: (
       <div className="w-16">
-        <TeamFormBullets team={tableTeam.team} results={tableTeam.results.slice(0, 5).reverse()} />
+        <TeamFormBullets team={tableTeam.team} results={tableTeam.games.slice(0, 5).reverse()} leagueTeams={leagueTeams} />
       </div>
     ),
   },
@@ -170,21 +171,22 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 
   if (sortColumnIdx !== null) {
     table = table.sort((a, b) => {
-      const rowDataA = mapTeamToRowData(a)[sortColumnIdx]!;
-      const rowDataB = mapTeamToRowData(b)[sortColumnIdx]!;
+      const rowDataA = mapTeamToRowData(a, teams)[sortColumnIdx]!;
+      const rowDataB = mapTeamToRowData(b, teams)[sortColumnIdx]!;
 
       // TODO: Handle Strings as well because it'll mess up in the future
-      let valueA = rowDataA.value as number | undefined;
-      let valueB = rowDataB.value as number | undefined;
+      const valueA = rowDataA.value as number | undefined;
+      const valueB = rowDataB.value as number | undefined;
 
       const key = rowDataA.key;
       if (key === "form") {
-        valueA = a.results
-          .slice(0, 5)
-          .reduce((acc, result) => acc + pointsPerResult[result], 0);
-        valueB = b.results
-          .slice(0, 5)
-          .reduce((acc, result) => acc + pointsPerResult[result], 0);
+        return 1;
+        // valueA = a.results
+        //   .slice(0, 5)
+        //   .reduce((acc, result) => acc + pointsPerResult[result], 0);
+        // valueB = b.results
+        //   .slice(0, 5)
+        //   .reduce((acc, result) => acc + pointsPerResult[result], 0);
       }
 
       if (valueA === undefined || valueB === undefined) return 0;
@@ -257,7 +259,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
             key={team.team.name}
             title={getTableRowTitle(rowIdx)}
           >
-            {mapTeamToRowData(team).map((colData, colIdx) => (
+            {mapTeamToRowData(team, teams).map((colData, colIdx) => (
               <td
                 key={colData.key}
                 className={cls({

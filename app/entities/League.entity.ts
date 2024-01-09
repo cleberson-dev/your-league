@@ -6,7 +6,7 @@ export type Team = {
 
 export type Fixtures = Round[];
 type Round = Game[]; 
-type Game = {
+export type Game = {
   homeTeam: number | null;
   awayTeam: number | null;
   homeScore?: number;
@@ -17,20 +17,17 @@ type Game = {
 const POINTS_PER_WIN = 3;
 const POINTS_PER_DRAW = 1;
 
-type TeamResult = "WIN" | "DRAW" | "LOSS";
-
 export type Table = {
   position?: number;
   team: Team;
+  games: Game[];
   points: number;
-  games: number;
   wins: number;
   losses: number;
   draws: number;
   goalsScored: number;
   goalsConceived: number;
   goalsDifference: number;
-  results: TeamResult[];
 }[];
 
 const GAMES_AGAINST_EACH_OTHER = 2; // Right now it's 2 games against each other;
@@ -136,7 +133,7 @@ export default class League {
   static getTable(fixtures: Fixtures, teams: Team[]) {
     const table: Table = teams.map((team) => ({
       team,
-      games: 0,
+      games: [],
       points: 0,
       wins: 0,
       losses: 0,
@@ -157,9 +154,7 @@ export default class League {
         const home = table[game.homeTeam!];
         const away = table[game.awayTeam!];
 
-        const [homeResult, awayResult] = League.getTeamResult(game);
-        
-        home.games += 1;
+        home.games.unshift(game);
         home.points += homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
         home.wins += homeWin;
         home.losses += awayWin;
@@ -167,9 +162,8 @@ export default class League {
         home.goalsScored += game.homeScore!;
         home.goalsConceived += game.awayScore!;
         home.goalsDifference += game.homeScore! - game.awayScore!;
-        home.results.unshift(homeResult);
 
-        away.games += 1;
+        away.games.unshift(game);
         away.points += awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
         away.wins += awayWin;
         away.losses += homeWin;
@@ -177,21 +171,10 @@ export default class League {
         away.goalsScored += game.awayScore!;
         away.goalsConceived += game.homeScore!;
         away.goalsDifference += game.awayScore! - game.homeScore!;
-        away.results.unshift(awayResult);
       });
     });
     return table
       .sort((b, a) => a.points - b.points || a.wins - b.wins || a.goalsDifference - b.goalsDifference)
       .map((team, idx) => ({...team, position: idx + 1 }));
-  }
-
-  static getTeamResult(game: Game): [TeamResult, TeamResult] {
-    const homeWin = game.homeScore! > game.awayScore!;
-    const awayWin = game.awayScore! > game.homeScore!;
-
-    if (homeWin) return ["WIN", "LOSS"];
-    if (awayWin) return ["LOSS", "WIN"];
-    
-    return ["DRAW", "DRAW"];
   }
 }
