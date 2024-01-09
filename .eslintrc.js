@@ -37,6 +37,5 @@ module.exports = {
     "build",
     "public/build",
     "tailwind.config.js",
-    "app/root.tsx",
   ],
 };
