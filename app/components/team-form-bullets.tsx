@@ -1,12 +1,18 @@
 import cls from "classnames";
+import { Tooltip } from "react-tooltip";
+import { Team } from "~/entities/League.entity";
 
 type TeamFormBulletsProps = {
+  team: Team;
   results: ("WIN" | "DRAW" | "LOSS")[];
 };
 
-export default function TeamFormBullets({ results }: TeamFormBulletsProps) {
+export default function TeamFormBullets({
+  results,
+  team,
+}: TeamFormBulletsProps) {
   return (
-    <div className="flex items-center justify-center gap-x-1">
+    <div className="flex items-center justify-center gap-x-1" data-tooltip-id={"team-form-" + team.id}>
       {results.map((result, idx) => (
         <div
           key={idx}
@@ -18,6 +24,12 @@ export default function TeamFormBullets({ results }: TeamFormBulletsProps) {
           })}
         />
       ))}
+      <Tooltip id={"team-form-" + team.id}>
+        <div>
+          <h1>Hello</h1>
+          <h1>Results here</h1>
+        </div>
+      </Tooltip>
     </div>
   );
 }

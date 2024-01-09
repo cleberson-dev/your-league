@@ -36,6 +36,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.2",
     "react-select": "^5.8.0",
+    "react-tooltip": "^5.25.1",
     "remix": "^1.6.8",
     "remix-utils": "^3.3.0",
     "superjson": "^1.9.1",

@@ -156,7 +156,7 @@ const mapTeamToRowData = (
     showHorizontalPadding: true,
     element: (
       <div className="w-16">
-        <TeamFormBullets results={tableTeam.results.slice(0, 5).reverse()} />
+        <TeamFormBullets team={tableTeam.team} results={tableTeam.results.slice(0, 5).reverse()} />
       </div>
     ),
   },
