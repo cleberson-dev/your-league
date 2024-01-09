@@ -6,6 +6,7 @@ import { ArrowLongUpIcon, ArrowLongDownIcon } from "@heroicons/react/16/solid";
 import TeamLogo from "~/components/team-logo";
 import League, { Fixtures, Table, Team } from "~/entities/League.entity";
 import { getTeamPercentage } from "~/utils";
+import TeamFormBullets from "./team-form-bullets";
 
 const PROMOTION_SPOTS = 4;
 const RELEGATION_SPOTS = 4;
@@ -154,21 +155,8 @@ const mapTeamToRowData = (
     key: "form",
     showHorizontalPadding: true,
     element: (
-      <div className="flex w-16 items-center justify-center gap-x-1">
-        {tableTeam.results
-          .slice(0, 5)
-          .reverse()
-          .map((result, idx) => (
-            <div
-              key={idx}
-              className={cls({
-                "h-2 w-2 rounded-full": true,
-                "bg-green": result === "WIN",
-                "bg-slate-300 dark:bg-slate-600": result === "DRAW",
-                "bg-red": result === "LOSS",
-              })}
-            />
-          ))}
+      <div className="w-16">
+        <TeamFormBullets results={tableTeam.results.slice(0, 5).reverse()} />
       </div>
     ),
   },
