@@ -27,7 +27,7 @@ export default function LeaguesList({ leagues, removable }: Props) {
   return (
     <>
       <PaginationControls isNext />
-      <ul className="mt-5 flex gap-x-7">
+      <ul className="mt-5 flex gap-x-7 overflow-auto">
         {leagues.map((league) => (
           <li key={league.id} className="relative">
             {removable && (
