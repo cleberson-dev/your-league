@@ -65,12 +65,11 @@ const tableHeaders = [
   {
     key: "position",
     label: "Pos",
-    initialSortingOrder: "asc" as "asc" | "desc",
   },
   { key: "logo", label: "", sortable: false },
   { key: "team", label: "Team", align: "left", sortable: false },
   { key: "points", label: "Points", sortable: true },
-  { key: "played", label: "Played", sortable: false },
+  { key: "played", label: "Played", sortable: true },
   { key: "wins", label: "Wins", sortable: true },
   { key: "draws", label: "Draws", sortable: true },
   { key: "losses", label: "Losses", sortable: true },
@@ -165,7 +164,7 @@ const mapTeamToRowData = (
 
 export default function LeagueTable({ fixtures, teams }: Props) {
   const [sortColumnIdx, setSortColumnIdx] = useState<number | null>(null);
-  const [sortColumnOrder, setSortColumnOrder] = useState<"asc" | "desc">("asc");
+  const [sortColumnOrder, setSortColumnOrder] = useState<"asc" | "desc" | null>("asc");
 
   let table = League.getTable(fixtures, teams);
 
@@ -194,14 +193,20 @@ export default function LeagueTable({ fixtures, teams }: Props) {
     });
   }
 
-  const sortColumn = (colIdx: number, initialSortingOrder?: "asc" | "desc") => {
+  const sortColumn = (colIdx: number) => {
     if (colIdx === sortColumnIdx) {
-      setSortColumnOrder(sortColumnOrder === "asc" ? "desc" : "asc");
+      const orders: ("asc" | "desc" | null)[] = ["desc", "asc", null];
+      const nextOrderIdx = (orders.findIndex(order => order === sortColumnOrder) + 1) % orders.length;
+      const nextOrder = orders[nextOrderIdx];
+      
+      if (nextOrder === null) setSortColumnIdx(null);
+
+      setSortColumnOrder(nextOrder);
       return;
     }
 
     setSortColumnIdx(colIdx);
-    setSortColumnOrder(initialSortingOrder ?? "desc");
+    setSortColumnOrder("desc");
   };
 
   const SortIcon =
@@ -237,7 +242,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
               })}
               onClick={
                 header.sortable
-                  ? () => sortColumn(colIdx, header.initialSortingOrder)
+                  ? () => sortColumn(colIdx)
                   : undefined
               }
             >
