@@ -73,7 +73,7 @@ export const ModalContextProvider = ({
           ref={modalContainerRef}
           onClick={modalContainerClickHandler}
           className={cls({
-            "absolute left-0 top-0 z-20 flex h-[100svh] w-full items-center justify-center bg-black/10":
+            "fixed left-0 top-0 z-40 flex h-[100svh] w-full items-center justify-center bg-black/10":
               true,
             hidden: isHidden,
           })}
