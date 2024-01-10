@@ -5,7 +5,6 @@ import cls from "classnames";
 import { ArrowLongUpIcon, ArrowLongDownIcon } from "@heroicons/react/16/solid";
 import TeamLogo from "~/components/team-logo";
 import League, { Fixtures, Table, Team } from "~/entities/League.entity";
-import { getTeamPercentage } from "~/utils";
 import TeamFormBullets from "./team-form-bullets";
 
 const PROMOTION_SPOTS = 4;
@@ -54,12 +53,6 @@ const spotsArray: { label: string; color: SpecialSpotColors }[] = Array.from({
       .flat()
   ),
 });
-
-const pointsPerResult: Record<"WIN" | "DRAW" | "LOSS", number> = {
-  WIN: 3,
-  DRAW: 1,
-  LOSS: 0,
-};
 
 type Props = {
   fixtures: Fixtures;
@@ -153,7 +146,7 @@ const mapTeamToRowData = (
     value:
       tableTeam.games.length > 0
         ? Math.round(
-          100 * getTeamPercentage(tableTeam.points, tableTeam.games.length)
+          100 * League.getTeamPercentage(tableTeam.points, tableTeam.games.length)
         )
         : 0,
     showHorizontalPadding: true,
@@ -194,10 +187,10 @@ export default function LeagueTable({ fixtures, teams }: Props) {
       if (key === "form") {
         valueA = a.games
           .slice(0, 5)
-          .reduce((acc, game) => acc + pointsPerResult[game.result], 0);
+          .reduce((acc, game) => acc + League.POINTS_PER_RESULT[game.result], 0);
         valueB = b.games
           .slice(0, 5)
-          .reduce((acc, game) => acc + pointsPerResult[game.result], 0);
+          .reduce((acc, game) => acc + League.POINTS_PER_RESULT[game.result], 0);
       }
 
       if (valueA === undefined || valueB === undefined) return 0;

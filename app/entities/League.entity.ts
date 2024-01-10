@@ -1,4 +1,4 @@
-import { getTeamResult } from "~/utils";
+type Result = "WIN" | "DRAW" | "LOSS";
 
 export type Team = {
   id: string;
@@ -7,7 +7,9 @@ export type Team = {
 }
 
 export type Fixtures = Round[];
-type Round = Game[]; 
+
+export type Round = Game[];
+
 export type Game = {
   homeTeam: number | null;
   awayTeam: number | null;
@@ -16,13 +18,10 @@ export type Game = {
   finished?: boolean;
 }
 
-const POINTS_PER_WIN = 3;
-const POINTS_PER_DRAW = 1;
-
 export type Table = {
   position?: number;
   team: Team;
-  games: (Game & { result: "WIN" | "LOSS" | "DRAW" })[];
+  games: (Game & { result: Result })[];
   points: number;
   wins: number;
   losses: number;
@@ -32,14 +31,20 @@ export type Table = {
   goalsDifference: number;
 }[];
 
-const GAMES_AGAINST_EACH_OTHER = 2; // Right now it's 2 games against each other;
-
 export default class League {
   constructor(
     public name: string,
     public teams: Team[],
     public fixtures: Fixtures,
   ) {}
+
+  static readonly GAMES_AGAINST_EACH_OTHER = 2; // Right now it's 2 games against each other;
+
+  static readonly POINTS_PER_RESULT: Record<Result, number> = {
+    WIN: 3,
+    DRAW: 1,
+    LOSS: 0,
+  };
 
   static create(name: string, teams: Team[]): League {
     if (teams.length % 2 !== 0) throw new Error("The number of teams should be even!");
@@ -55,7 +60,7 @@ export default class League {
   }
 
   get numberOfRounds() {
-    return (this.numberOfTeams - 1) * GAMES_AGAINST_EACH_OTHER; 
+    return (this.numberOfTeams - 1) * League.GAMES_AGAINST_EACH_OTHER; 
   }
 
   get numberOfGamesPerRound() {
@@ -64,8 +69,8 @@ export default class League {
 
   private static _createFixtures(teams: Team[]): Fixtures {
     const numberOfTeams = teams.length;
-    const numberOfRounds = (numberOfTeams - 1) * GAMES_AGAINST_EACH_OTHER;
-    const numberOfGamesPerRound = numberOfTeams / GAMES_AGAINST_EACH_OTHER;
+    const numberOfRounds = (numberOfTeams - 1) * League.GAMES_AGAINST_EACH_OTHER;
+    const numberOfGamesPerRound = numberOfTeams / League.GAMES_AGAINST_EACH_OTHER;
 
     const fixtures: Fixtures = [];
     for (let roundIdx = 0; roundIdx < numberOfRounds; roundIdx += 1) {
@@ -80,8 +85,8 @@ export default class League {
 
   private static _fillFixtures(fixtures: Fixtures, teams: Team[]) {
     const numberOfTeams = teams.length;
-    const numberOfRounds = (numberOfTeams - 1) * GAMES_AGAINST_EACH_OTHER;
-    const numberOfGamesPerRound = numberOfTeams / GAMES_AGAINST_EACH_OTHER;
+    const numberOfRounds = (numberOfTeams - 1) * League.GAMES_AGAINST_EACH_OTHER;
+    const numberOfGamesPerRound = numberOfTeams / League.GAMES_AGAINST_EACH_OTHER;
     
     for (let roundIdx = 0; roundIdx < numberOfRounds; roundIdx += 1) {
       const round = fixtures[roundIdx];
@@ -131,6 +136,10 @@ export default class League {
     });
   }
 
+  static getTeamPercentage(points: number, gamesPlayed: number) {
+    return points / (gamesPlayed * 3);
+  }
+
   // Generated in real-time (but think about performance later)
   static getTable(fixtures: Fixtures, teams: Team[]) {
     const table: Table = teams.map((team) => ({
@@ -145,31 +154,27 @@ export default class League {
       goalsDifference: 0,
       results: [],
     }));
+
     fixtures.forEach(round => {
       round.forEach(game => {
         if (!game.finished) return;
 
-        const draw = game.homeScore! === game.awayScore! ? 1 : 0;
-        const homeWin = game.homeScore! > game.awayScore! ? 1 : 0;
-        const awayWin = game.awayScore! > game.homeScore! ? 1 : 0;
-
         const home = table[game.homeTeam!];
         const away = table[game.awayTeam!];
 
-        home.games.unshift({...game, result: getTeamResult(home.team, game, teams)});
-        home.points += homeWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
-        home.wins += homeWin;
-        home.losses += awayWin;
-        home.draws += draw;
+        [home, away].forEach(team => {
+          const result = League.getTeamResult(team.team, game, teams);
+          team.games.unshift({ ...game, result });
+          team.points += League.POINTS_PER_RESULT[result];
+          team.wins += +(result === "WIN");
+          team.losses += +(result === "LOSS");
+          team.draws += +(result === "DRAW");
+        });
+
         home.goalsScored += game.homeScore!;
         home.goalsConceived += game.awayScore!;
         home.goalsDifference += game.homeScore! - game.awayScore!;
 
-        away.games.unshift({...game, result: getTeamResult(away.team, game, teams)});
-        away.points += awayWin * POINTS_PER_WIN + draw * POINTS_PER_DRAW;
-        away.wins += awayWin;
-        away.losses += homeWin;
-        away.draws += draw;
         away.goalsScored += game.awayScore!;
         away.goalsConceived += game.homeScore!;
         away.goalsDifference += game.awayScore! - game.homeScore!;
@@ -178,5 +183,20 @@ export default class League {
     return table
       .sort((b, a) => a.points - b.points || a.wins - b.wins || a.goalsDifference - b.goalsDifference)
       .map((team, idx) => ({...team, position: idx + 1 }));
+  }
+
+  static getTeamResult(team: Team, game: Game, leagueTeams: Team[]) {
+    const isHome = team.id === leagueTeams[game.homeTeam!].id;
+  
+    if (isHome) {
+      if (game.homeScore! > game.awayScore!) return "WIN";
+      if (game.homeScore! < game.awayScore!) return "LOSS";
+      return "DRAW";
+    }
+  
+    if (game.awayScore! > game.homeScore!) return "WIN";
+    if (game.awayScore! < game.homeScore!) return "LOSS";
+  
+    return "DRAW";
   }
 }
