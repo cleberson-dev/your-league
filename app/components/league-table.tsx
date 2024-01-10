@@ -41,11 +41,16 @@ const specialSpots: SpecialSpot[] = [
   },
 ];
 
-const spotColorsArray: SpecialSpotColors[] = Array.from({
+const spotsArray: { label: string; color: SpecialSpotColors }[] = Array.from({
   length: 20,
   ...Object.fromEntries(
     specialSpots
-      .map((spot) => spot.positions.map((pos) => [pos, spot.color]))
+      .map((spot) =>
+        spot.positions.map((pos) => [
+          pos,
+          { color: spot.color, label: spot.label },
+        ])
+      )
       .flat()
   ),
 });
@@ -97,7 +102,7 @@ const tableHeaders = [
 
 const mapTeamToRowData = (
   tableTeam: Table[number],
-  leagueTeams: Team[],
+  leagueTeams: Team[]
 ): {
   key: string;
   element?: React.ReactNode;
@@ -147,7 +152,9 @@ const mapTeamToRowData = (
     key: "percentage",
     value:
       tableTeam.games.length > 0
-        ? Math.round(100 * getTeamPercentage(tableTeam.points, tableTeam.games.length))
+        ? Math.round(
+          100 * getTeamPercentage(tableTeam.points, tableTeam.games.length)
+        )
         : 0,
     showHorizontalPadding: true,
   },
@@ -156,7 +163,11 @@ const mapTeamToRowData = (
     showHorizontalPadding: true,
     element: (
       <div className="w-16">
-        <TeamFormBullets team={tableTeam.team} results={tableTeam.games.slice(0, 5).reverse()} leagueTeams={leagueTeams} />
+        <TeamFormBullets
+          team={tableTeam.team}
+          results={tableTeam.games.slice(0, 5).reverse()}
+          leagueTeams={leagueTeams}
+        />
       </div>
     ),
   },
@@ -164,7 +175,9 @@ const mapTeamToRowData = (
 
 export default function LeagueTable({ fixtures, teams }: Props) {
   const [sortColumnIdx, setSortColumnIdx] = useState<number | null>(null);
-  const [sortColumnOrder, setSortColumnOrder] = useState<"asc" | "desc" | null>("asc");
+  const [sortColumnOrder, setSortColumnOrder] = useState<"asc" | "desc" | null>(
+    "asc"
+  );
 
   let table = League.getTable(fixtures, teams);
 
@@ -196,9 +209,11 @@ export default function LeagueTable({ fixtures, teams }: Props) {
   const sortColumn = (colIdx: number) => {
     if (colIdx === sortColumnIdx) {
       const orders: ("asc" | "desc" | null)[] = ["desc", "asc", null];
-      const nextOrderIdx = (orders.findIndex(order => order === sortColumnOrder) + 1) % orders.length;
+      const nextOrderIdx =
+        (orders.findIndex((order) => order === sortColumnOrder) + 1) %
+        orders.length;
       const nextOrder = orders[nextOrderIdx];
-      
+
       if (nextOrder === null) setSortColumnIdx(null);
 
       setSortColumnOrder(nextOrder);
@@ -217,13 +232,6 @@ export default function LeagueTable({ fixtures, teams }: Props) {
     rowIdx >= teams.length - RELEGATION_SPOTS;
   const isHighlightedSortColumn = (colIdx: number) => colIdx === sortColumnIdx;
 
-  const getTableRowTitle = (rowIdx: number) => {
-    if (isInPromotionSpot(rowIdx)) return "Promoted";
-    if (isInRelegationSpot(rowIdx)) return "Relegated";
-
-    return undefined;
-  };
-
   return (
     <table className="w-full table-auto select-none shadow">
       <thead className="select-none bg-primary-dark text-sm text-black/50 dark:bg-dark dark:text-white/50">
@@ -240,11 +248,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
                 "text-left": header.align === "left",
                 "cursor-pointer": header.sortable,
               })}
-              onClick={
-                header.sortable
-                  ? () => sortColumn(colIdx)
-                  : undefined
-              }
+              onClick={header.sortable ? () => sortColumn(colIdx) : undefined}
             >
               <span className="relative">
                 {header.label}
@@ -261,7 +265,7 @@ export default function LeagueTable({ fixtures, teams }: Props) {
           <tr
             className="group border-b border-solid border-black/5 bg-primary transition-colors hover:bg-primary-dark dark:border-white/5 dark:bg-dark/50 dark:hover:bg-dark/60"
             key={team.team.name}
-            title={getTableRowTitle(rowIdx)}
+            title={spotsArray[rowIdx]?.label}
           >
             {mapTeamToRowData(team, teams).map((colData, colIdx) => (
               <td
@@ -275,11 +279,11 @@ export default function LeagueTable({ fixtures, teams }: Props) {
                   "bg-primary-dark dark:bg-darker/60":
                     isHighlightedSortColumn(colIdx),
                   "bg-green/10 group-hover:bg-green/20":
-                    spotColorsArray[rowIdx] === "green",
+                    spotsArray[rowIdx]?.color === "green",
                   "bg-red/10 group-hover:bg-red/20":
-                    spotColorsArray[rowIdx] === "red",
+                    spotsArray[rowIdx]?.color === "red",
                   "bg-orange-500/10 group-hover:bg-orange-500/20":
-                    spotColorsArray[rowIdx] === "orange",
+                    spotsArray[rowIdx]?.color === "orange",
                   "bg-green/30 dark:bg-green/20":
                     isInPromotionSpot(rowIdx) &&
                     isHighlightedSortColumn(colIdx),
