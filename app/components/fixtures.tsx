@@ -10,10 +10,40 @@ import TableFixtureScoreInput from "./table-fixture-score-input";
 type Props = {
   fixtures: Fixtures;
   teams: Team[];
-  inSimulation: boolean;
+  isInSimulation: boolean;
 };
 
-export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
+const className = {
+  container: "self-start bg-primary text-center shadow dark:bg-dark/50",
+  header:
+    "flex select-none items-center rounded-t bg-primary-dark p-2 text-black/50 dark:bg-dark dark:text-white/50",
+  headerTitle: "flex-grow text-sm font-black lowercase",
+  paginationButton: "disabled:opacity-10",
+  list: "text-sm",
+  listItem: (isGameFinished: boolean = false) =>
+    cls({
+      "grid grid-cols-[1fr_4rem_1fr] items-center transition-colors hover:bg-primary-dark/30 dark:hover:bg-dark":
+        true,
+      "bg-slate-100 dark:bg-dark/50": isGameFinished,
+    }),
+  teamName: (
+    isGameFinished: boolean = false,
+    teamScore: number,
+    opponentScore: number
+  ) =>
+    cls({
+      "overflow-hidden text-ellipsis whitespace-nowrap p-2": true,
+      "bg-green/10 font-medium": isGameFinished && teamScore > opponentScore,
+      "bg-red/10": isGameFinished && opponentScore > teamScore,
+    }),
+  gameScores: "flex items-center justify-center gap-x-2",
+  teamScore: (isInSimulation: boolean = false) =>
+    cls({ hidden: isInSimulation }),
+  teamScoreInput: (isInSimulation: boolean = false) =>
+    cls({ hidden: !isInSimulation }),
+};
+
+export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
   const [currentRound, setCurrentRound] = useState<number | null>(0);
 
   const goPrevRound = () => {
@@ -39,20 +69,18 @@ export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
   const { register } = useFormContext();
 
   return (
-    <div className="self-start bg-primary text-center shadow dark:bg-dark/50">
-      <div className="flex select-none items-center rounded-t bg-primary-dark p-2 text-black/50 dark:bg-dark dark:text-white/50">
+    <div className={className.container}>
+      <div className={className.header}>
         <button
-          className="disabled:opacity-10"
+          className={className.paginationButton}
           onClick={goPrevRound}
           disabled={currentRound === 0}
         >
           <ChevronLeftIcon width={16} height={16} />
         </button>
-        <h1 className="flex-grow text-sm font-black lowercase">
-          Round {currentRound! + 1}
-        </h1>
+        <h1 className={className.headerTitle}>Round {currentRound! + 1}</h1>
         <button
-          className="disabled:opacity-10"
+          className={className.paginationButton}
           onClick={goNextRound}
           disabled={currentRound === fixtures.length - 1}
         >
@@ -60,55 +88,47 @@ export default function Fixtures({ fixtures, teams, inSimulation }: Props) {
         </button>
       </div>
 
-      <ul className="text-sm">
-        {currentRound !== null && fixtures[currentRound].map((game, gameIdx) => (
-          <li
-            key={gameIdx}
-            className={cls({
-              "grid grid-cols-[1fr_4rem_1fr] items-center transition-colors hover:bg-primary-dark/30 dark:hover:bg-dark":
-                true,
-              "bg-slate-100 dark:bg-dark/50": game.finished,
-            })}
-          >
-            <span
-              className={cls({
-                "overflow-hidden text-ellipsis whitespace-nowrap p-2": true,
-                "bg-green/10 font-medium":
-                  game.finished && game.homeScore! > game.awayScore!,
-                "bg-red/10": game.finished && game.awayScore! > game.homeScore!,
-              })}
-            >
-              {teams[game.homeTeam!].name}
-            </span>
-            <span className="flex items-center justify-center gap-x-2">
-              <span className={cls({ hidden: inSimulation })}>
-                {game.homeScore || ""}
+      <ul className={className.list}>
+        {currentRound !== null &&
+          fixtures[currentRound].map((game, gameIdx) => (
+            <li key={gameIdx} className={className.listItem(game.finished)}>
+              <span
+                className={className.teamName(
+                  game.finished,
+                  game.homeScore!,
+                  game.awayScore!
+                )}
+              >
+                {teams[game.homeTeam!].name}
               </span>
-              <TableFixtureScoreInput
-                className={cls({ hidden: !inSimulation })}
-                {...register(`fixtures.${currentRound}.${gameIdx}.home`)}
-              />
-              <span>x</span>
-              <span className={cls({ hidden: inSimulation })}>
-                {game.awayScore || ""}
+              <span className={className.gameScores}>
+                <span className={className.teamScore(isInSimulation)}>
+                  {game.homeScore || ""}
+                </span>
+                <TableFixtureScoreInput
+                  className={className.teamScoreInput(isInSimulation)}
+                  {...register(`fixtures.${currentRound}.${gameIdx}.home`)}
+                />
+                <span>x</span>
+                <span className={className.teamScore(isInSimulation)}>
+                  {game.awayScore || ""}
+                </span>
+                <TableFixtureScoreInput
+                  className={className.teamScoreInput(isInSimulation)}
+                  {...register(`fixtures.${currentRound}.${gameIdx}.away`)}
+                />
               </span>
-              <TableFixtureScoreInput
-                className={cls({ hidden: !inSimulation })}
-                {...register(`fixtures.${currentRound}.${gameIdx}.away`)}
-              />
-            </span>
-            <span
-              className={cls({
-                "overflow-hidden text-ellipsis whitespace-nowrap p-2": true,
-                "bg-green/10 font-medium":
-                  game.finished && game.awayScore! > game.homeScore!,
-                "bg-red/10": game.finished && game.homeScore! > game.awayScore!,
-              })}
-            >
-              {teams[game.awayTeam!].name}
-            </span>
-          </li>
-        ))}
+              <span
+                className={className.teamName(
+                  game.finished,
+                  game.awayScore!,
+                  game.homeScore!
+                )}
+              >
+                {teams[game.awayTeam!].name}
+              </span>
+            </li>
+          ))}
       </ul>
     </div>
   );

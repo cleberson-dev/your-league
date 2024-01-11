@@ -129,7 +129,7 @@ export default function LeaguePage() {
           />
           <FormProvider {...methods}>
             <Fixtures
-              inSimulation={isInSimulation}
+              isInSimulation={isInSimulation}
               fixtures={isInSimulation ? simulatedFixtures : league.fixtures}
               teams={league.teams}
             />
