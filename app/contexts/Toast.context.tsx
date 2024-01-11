@@ -24,7 +24,7 @@ export default function ToastContextProvider({
   return (
     <ToastContext.Provider value={{ toast }}>
       {content && (
-        <div className="z-50 rounded bg-white text-black p-4 shadow absolute right-4 top-2" role="alert">
+        <div className="z-50 text-sm rounded bg-white text-black p-4 shadow absolute right-4 top-2" role="alert">
           {content}
         </div>
       )}
