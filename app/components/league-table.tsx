@@ -146,7 +146,8 @@ const mapTeamToRowData = (
     value:
       tableTeam.games.length > 0
         ? Math.round(
-          100 * League.getTeamPercentage(tableTeam.points, tableTeam.games.length)
+          100 *
+            League.getTeamPercentage(tableTeam.points, tableTeam.games.length)
         )
         : 0,
     showHorizontalPadding: true,
@@ -165,6 +166,59 @@ const mapTeamToRowData = (
     ),
   },
 ];
+
+const className = {
+  table: "w-full table-auto select-none shadow",
+  tableHeader:
+    "select-none bg-primary-dark text-sm text-black/50 dark:bg-dark dark:text-white/50 font-black lowercase",
+  tableHeaderCell: (
+    showHorizontalPadding: boolean,
+    isTopLeftCell: boolean,
+    isTopRightCell: boolean,
+    align: "left" | "center" | "right" = "center",
+    sortable: boolean = false
+  ) =>
+    cls({
+      "py-4 font-black first:pl-6 last:pr-6 hover:text-black dark:hover:text-violet":
+        true,
+      "px-4": showHorizontalPadding,
+      "rounded-tl-xl": isTopLeftCell,
+      "rounded-tr-xl": isTopRightCell,
+      "text-left": align === "left",
+      "text-center": align === "center",
+      "text-right": align === "right",
+      "cursor-pointer": sortable,
+    }),
+  sortIcon: "absolute -right-3 top-[2px] h-3 w-3",
+  tableBody: "text-center text-sm text-black  dark:text-white",
+  tableBodyRow:
+    "group border-b border-solid border-black/5 bg-primary transition-colors hover:bg-primary-dark dark:border-white/5 dark:bg-dark/50 dark:hover:bg-dark/60",
+  tableBodyRowCell: (
+    showHorizontalPadding: boolean = false,
+    bold: boolean = false,
+    fullWidth: boolean = false,
+    align: "left" | "center" | "right" = "center",
+    isRegularHighlighted: boolean = false,
+    spotColor?: string,
+    isPromotionHighlighted: boolean = false,
+    isRelegationHighlighted: boolean = false,
+  ) =>
+    cls({
+      "min-w-14 py-4 first:pl-6 last:pr-6 ": true,
+      "px-4": showHorizontalPadding,
+      "font-bold": bold,
+      "w-full": fullWidth,
+      "text-left": align === "left",
+      "text-center": align === "center",
+      "text-right": align === "right",
+      "bg-primary-dark dark:bg-darker/60": isRegularHighlighted,
+      "bg-green/10 group-hover:bg-green/20": spotColor === "green",
+      "bg-red/10 group-hover:bg-red/20": spotColor === "red",
+      "bg-orange-500/10 group-hover:bg-orange-500/20": spotColor === "orange",
+      "bg-green/30 dark:bg-green/20": isPromotionHighlighted,
+      "bg-red/30 dark:bg-red/20": isRelegationHighlighted,
+    }),
+};
 
 export default function LeagueTable({ fixtures, teams }: Props) {
   const [sortColumnIdx, setSortColumnIdx] = useState<number | null>(null);
@@ -187,10 +241,16 @@ export default function LeagueTable({ fixtures, teams }: Props) {
       if (key === "form") {
         valueA = a.games
           .slice(0, 5)
-          .reduce((acc, game) => acc + League.POINTS_PER_RESULT[game.result], 0);
+          .reduce(
+            (acc, game) => acc + League.POINTS_PER_RESULT[game.result],
+            0
+          );
         valueB = b.games
           .slice(0, 5)
-          .reduce((acc, game) => acc + League.POINTS_PER_RESULT[game.result], 0);
+          .reduce(
+            (acc, game) => acc + League.POINTS_PER_RESULT[game.result],
+            0
+          );
       }
 
       if (valueA === undefined || valueB === undefined) return 0;
@@ -226,64 +286,51 @@ export default function LeagueTable({ fixtures, teams }: Props) {
   const isHighlightedSortColumn = (colIdx: number) => colIdx === sortColumnIdx;
 
   return (
-    <table className="w-full table-auto select-none shadow">
-      <thead className="select-none bg-primary-dark text-sm text-black/50 dark:bg-dark dark:text-white/50">
-        <tr className="font-black lowercase">
+    <table className={className.table}>
+      <thead className={className.tableHeader}>
+        <tr>
           {tableHeaders.map((header, colIdx) => (
             <th
               key={header.key}
-              className={cls({
-                "py-4 font-black first:pl-6 last:pr-6 hover:text-black dark:hover:text-violet":
-                  true,
-                "px-4": !header.hideHorizontalPadding,
-                "rounded-tl-xl": colIdx === 0,
-                "rounded-tr-xl": colIdx === tableHeaders.length - 1,
-                "text-left": header.align === "left",
-                "cursor-pointer": header.sortable,
-              })}
+              className={className.tableHeaderCell(
+                !header.hideHorizontalPadding,
+                colIdx === 0,
+                colIdx === tableHeaders.length - 1,
+                header.align as "left" | "center" | "right",
+                header.sortable
+              )}
               onClick={header.sortable ? () => sortColumn(colIdx) : undefined}
             >
               <span className="relative">
                 {header.label}
                 {isHighlightedSortColumn(colIdx) && (
-                  <SortIcon className="absolute -right-3 top-[2px] h-3 w-3" />
+                  <SortIcon className={className.sortIcon} />
                 )}
               </span>
             </th>
           ))}
         </tr>
       </thead>
-      <tbody className="text-center text-sm text-black  dark:text-white">
+      <tbody className={className.tableBody}>
         {table.map((team, rowIdx) => (
           <tr
-            className="group border-b border-solid border-black/5 bg-primary transition-colors hover:bg-primary-dark dark:border-white/5 dark:bg-dark/50 dark:hover:bg-dark/60"
+            className={className.tableBodyRow}
             key={team.team.name}
             title={spotsArray[rowIdx]?.label}
           >
             {mapTeamToRowData(team, teams).map((colData, colIdx) => (
               <td
                 key={colData.key}
-                className={cls({
-                  "min-w-14 py-4 first:pl-6 last:pr-6 ": true,
-                  "px-4": colData.showHorizontalPadding,
-                  "font-bold": colData.bold,
-                  "w-full": colData.fullWidth,
-                  "text-left": colData.align === "left",
-                  "bg-primary-dark dark:bg-darker/60":
-                    isHighlightedSortColumn(colIdx),
-                  "bg-green/10 group-hover:bg-green/20":
-                    spotsArray[rowIdx]?.color === "green",
-                  "bg-red/10 group-hover:bg-red/20":
-                    spotsArray[rowIdx]?.color === "red",
-                  "bg-orange-500/10 group-hover:bg-orange-500/20":
-                    spotsArray[rowIdx]?.color === "orange",
-                  "bg-green/30 dark:bg-green/20":
-                    isInPromotionSpot(rowIdx) &&
-                    isHighlightedSortColumn(colIdx),
-                  "bg-red/30 dark:bg-red/20":
-                    isInRelegationSpot(rowIdx) &&
-                    isHighlightedSortColumn(colIdx),
-                })}
+                className={className.tableBodyRowCell(
+                  colData.showHorizontalPadding,
+                  colData.bold,
+                  colData.fullWidth,
+                  colData.align,
+                  isHighlightedSortColumn(colIdx),
+                  spotsArray[rowIdx]?.color,
+                  isInPromotionSpot(rowIdx) && isHighlightedSortColumn(colIdx),
+                  isInRelegationSpot(rowIdx) && isHighlightedSortColumn(colIdx)
+                )}
               >
                 {colData.element ?? colData.value}
               </td>
