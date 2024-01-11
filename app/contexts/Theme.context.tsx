@@ -8,6 +8,7 @@ type ThemeContextValues = {
 };
 
 const DEFAULT_THEME = "light";
+const THEME_KEY = "theme";
 
 const ThemeContext = createContext<ThemeContextValues>({
   theme: DEFAULT_THEME,
@@ -25,12 +26,12 @@ export const ThemeContextProvider = ({
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
 
-    localStorage.setItem("theme", newTheme);
+    localStorage.setItem(THEME_KEY, newTheme);
     setTheme(newTheme);
   };
 
   useEffect(() => {
-    setTheme((localStorage.getItem("theme") ?? DEFAULT_THEME) as Themes);
+    setTheme((localStorage.getItem(THEME_KEY) ?? DEFAULT_THEME) as Themes);
   }, []);
 
   return (
