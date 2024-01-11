@@ -19,6 +19,8 @@ export default function ToastContextProvider({
 
   const toast = (content: string) => {
     setContent(content);
+
+    setTimeout(() => setContent(null), 5000);
   };
 
   return (
