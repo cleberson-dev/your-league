@@ -3,7 +3,7 @@ import LeagueCard from "./league-card";
 import PaginationControls from "./pagination-controls";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import { useModal } from "~/contexts/Modal.context";
-import ConfirmationModal from "./confirmation.modal";
+import RemoveConfirmationModal from "./remove-confirmation.modal";
 
 type Props = {
   leagues: {
@@ -40,7 +40,7 @@ export default function LeaguesList({ leagues, removable }: Props) {
                         method="DELETE"
                         action={`/api/leagues/${league.id}`}
                       >
-                        <ConfirmationModal onClose={hideModal} />
+                        <RemoveConfirmationModal onClose={hideModal} />
                       </Form>
                     )
                   }
