@@ -7,8 +7,9 @@ import cls from "classnames";
 import { Team } from "~/entities/League.entity";
 
 import Button from "~/components/button";
+import Input from "~/components/input";
 import createLeagueSchema from "~/schemas/create-league.schema";
-import Input from "./input";
+import ErrorMessage from "./error-message";
 
 type Props = {
   teams: Team[];
@@ -16,13 +17,24 @@ type Props = {
 };
 
 const classes = {
-  control: "p-2 rounded text-sm border border-solid border-slate-200 bg-slate-100 dark:bg-darker/50 dark:border-darker/60 dark:text-white",
+  control:
+    "p-2 rounded text-sm border border-solid border-slate-200 bg-slate-100 dark:bg-darker/50 dark:border-darker/60 dark:text-white",
   valueContainer: "gap-2",
   menuList: "bg-slate-100 dark:bg-darker/50",
   option: "p-2 text-sm hover:bg-slate-200 dark:hover:bg-violet",
   multiValue: "rounded gap-x-2 bg-violet text-white",
   multiValueLabel: "py-1 pl-2",
   multiValueRemove: "p-1 rounded-r hover:bg-red",
+};
+
+const className = {
+  form: "flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow dark:bg-dark",
+  title: "mb-10 text-2xl font-bold",
+  formFields: "flex flex-grow flex-col gap-y-8 overflow-auto",
+  formGroup: "flex flex-col gap-y-1",
+  label: "block",
+  actionButtons: "flex justify-end gap-x-2",
+  teamsSelectContainer: "mb-2 flex flex-col gap-y-2",
 };
 
 export default function CreateLeagueModal({ teams, onClose }: Props) {
@@ -58,28 +70,21 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
     onClose();
   };
 
-  
-
   return (
-    <form
-      className="flex h-3/4 w-3/4 flex-col rounded bg-white p-8 shadow dark:bg-dark"
-      onSubmit={handleSubmit(onSubmit)}
-    >
+    <form className={className.form} onSubmit={handleSubmit(onSubmit)}>
+      {/* React Select classes, so the compiler can bring desired classes */}
       <div className={cls(["hidden", Object.values(classes).join(" ")])} />
-      <h1 className="mb-10 text-2xl font-bold">Create your league</h1>
-      <div className="flex flex-grow flex-col gap-y-8 overflow-auto">
-        <div className="flex flex-col gap-y-1">
-          <label className="block">Name</label>
+
+      <h1 className={className.title}>Create your league</h1>
+      <div className={className.formFields}>
+        <div className={className.formGroup}>
+          <label className={className.label}>Name</label>
           <Input {...register("name")} />
-          {errors.name && (
-            <p className="text-red">
-              <small>{errors.name.message}</small>
-            </p>
-          )}
+          <ErrorMessage message={errors.name?.message} />
         </div>
-        <div className="flex flex-col gap-y-1">
-          <label className="block">Teams ({teamsCount} added)</label>
-          <div className="mb-2 flex flex-col gap-y-2">
+        <div className={className.formGroup}>
+          <label className={className.label}>Teams ({teamsCount} added)</label>
+          <div className={className.teamsSelectContainer}>
             <Controller
               name="teams"
               control={control}
@@ -115,16 +120,11 @@ export default function CreateLeagueModal({ teams, onClose }: Props) {
                 />
               )}
             />
-
-            {errors.teams && (
-              <p className="text-red">
-                <small>{errors.teams.message}</small>
-              </p>
-            )}
+            <ErrorMessage message={errors.teams?.message} />
           </div>
         </div>
       </div>
-      <div className="flex justify-end gap-x-2">
+      <div className={className.actionButtons}>
         <Button type="submit" disabled={!isValid}>
           Create
         </Button>
