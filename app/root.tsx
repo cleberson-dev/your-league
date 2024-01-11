@@ -18,12 +18,9 @@ import globalStylesUrl from "~/styles/global.css";
 import { ModalContextProvider } from "./contexts/Modal.context";
 import { ThemeContextProvider, useTheme } from "./contexts/Theme.context";
 import Menu from "./components/menu";
+import ToastContextProvider from "./contexts/Toast.context";
 
-const MENU_BLACKLIST = [
-  "/login", 
-  "/register",
-  "/",
-];
+const MENU_BLACKLIST = ["/login", "/register", "/"];
 
 export const links: LinksFunction = () => {
   return [
@@ -51,11 +48,13 @@ export default function App() {
   return (
     <ThemeContextProvider>
       <Document>
-        <ModalContextProvider>
-          <Layout>
-            <Outlet />
-          </Layout>
-        </ModalContextProvider>
+        <ToastContextProvider>
+          <ModalContextProvider>
+            <Layout>
+              <Outlet />
+            </Layout>
+          </ModalContextProvider>
+        </ToastContextProvider>
       </Document>
     </ThemeContextProvider>
   );

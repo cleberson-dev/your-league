@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Button from "~/components/button";
 import { CloudArrowUpIcon } from "@heroicons/react/16/solid";
+import { useToast } from "~/contexts/Toast.context";
 
 const gameSchema = yup.object({
   home: yup.number().min(0).nullable(),
@@ -108,6 +109,7 @@ export default function LeaguePage() {
     })
   );
   const [isInSimulation, setIsInSimulation] = useState(false);
+  const { toast } = useToast();
 
   const onSubmit: Parameters<typeof methods.handleSubmit>[0] = (values) => {
     fetcher.submit(values as { fixtures: IFixtures }, {
@@ -116,6 +118,8 @@ export default function LeaguePage() {
       action: `/api/leagues/${loaderData.league.id}`,
     });
     setIsInSimulation(false);
+    toast("Saved!");
+
   };
 
   const resetFixtures = () => {
