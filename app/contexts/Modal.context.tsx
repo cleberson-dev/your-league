@@ -1,10 +1,10 @@
 import {
-  MouseEventHandler,
   createContext,
   useContext,
   useEffect,
   useRef,
   useState,
+  MouseEventHandler,
 } from "react";
 import cls from "classnames";
 
@@ -22,11 +22,7 @@ const ModalContext = createContext<ModalContextValues>({
 
 export const useModal = () => useContext(ModalContext);
 
-export const ModalContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const ModalContextProvider = ({ children }: React.PropsWithChildren) => {
   const [content, setContent] = useState<React.ReactNode | null>(null);
   const [isHidden, setIsHidden] = useState<boolean>(false);
 
