@@ -138,23 +138,19 @@ export default function LeaguePage() {
           <div className="flex gap-x-2">
             {isInSimulation && (
               <>
-                <Button variant="neutral" type="button" onClick={resetFixtures}>
+                <Button variant="neutral" onClick={resetFixtures}>
                   Reset
                 </Button>
-                <Button variant="success" type="button" onClick={simulateAll}>
+                <Button variant="success" onClick={simulateAll}>
                   Simulate All
                 </Button>
-                <Button
-                  variant="info"
-                  type="submit"
-                >
+                <Button variant="info" type="submit">
                   <CloudArrowUpIcon className="mr-2 inline-block h-4 w-4" />
                   Save
                 </Button>
               </>
             )}
             <Button
-              type="button"
               variant={isInSimulation ? "error" : "standard"}
               onClick={() => setIsInSimulation(!isInSimulation)}
             >

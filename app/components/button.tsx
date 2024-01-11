@@ -29,6 +29,7 @@ const getClassNameByVariant = (variant: ButtonVariants) => {
 export default function Button({
   className,
   variant = "standard",
+  type = "button",
   ...props
 }: Props) {
   return (
@@ -39,6 +40,7 @@ export default function Button({
         className,
         getClassNameByVariant(variant)
       )}
+      type={type}
     >
       {props.children}
     </button>
