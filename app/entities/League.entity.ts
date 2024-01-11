@@ -1,4 +1,4 @@
-type Result = "WIN" | "DRAW" | "LOSS";
+export type Result = "WIN" | "DRAW" | "LOSS";
 
 export type Team = {
   id: string;
