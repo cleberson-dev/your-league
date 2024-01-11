@@ -1,11 +1,17 @@
 import { createContext, useContext, useState } from "react";
 import cls from "classnames";
-
-type ToastContextValues = {
-  toast: (content: string) => void;
-};
+import {
+  InformationCircleIcon,
+  XCircleIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/16/solid";
 
 type ToastTypes = "info" | "success" | "error" | "warning";
+
+type ToastContextValues = {
+  toast: (content: string, type: ToastTypes) => void;
+};
 
 const defaultValues: ToastContextValues = {
   toast: () => {},
@@ -28,17 +34,35 @@ export default function ToastContextProvider({
     setTimeout(() => setContent(null), 5000);
   };
 
+  const Icon = {
+    success: CheckCircleIcon,
+    error: XCircleIcon,
+    warning: ExclamationTriangleIcon,
+    info: InformationCircleIcon,
+  }[type];
+
   return (
     <ToastContext.Provider value={{ toast }}>
       {content && (
         <div
           role="alert"
           className={cls({
-            "absolute right-4 top-2 z-50 rounded bg-white p-4 text-sm text-black shadow":
+            "absolute right-4 top-2 z-50 flex items-center gap-x-2 rounded bg-white p-4 text-sm text-black shadow":
               true,
             hidden: !content,
           })}
         >
+          <Icon
+            className={cls(
+              {
+                info: "text-blue-500",
+                warning: "text-yellow-400",
+                error: "text-red",
+                success: "text-green",
+              }[type],
+              "h-5 w-5"
+            )}
+          />
           {content}
           <div
             className={cls(

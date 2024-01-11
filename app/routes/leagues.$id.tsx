@@ -118,7 +118,7 @@ export default function LeaguePage() {
       action: `/api/leagues/${loaderData.league.id}`,
     });
     setIsInSimulation(false);
-    toast("Saved!");
+    toast("Saved!", "success");
 
   };
 
