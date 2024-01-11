@@ -48,24 +48,6 @@ export const loader = async ({
   }
 };
 
-export const action = async ({
-  request,
-  params,
-}: {
-  request: Request;
-  params: { [key: string]: string };
-}) => {
-  const id = params.id;
-
-  if (request.method === "POST") {
-    console.log({ id });
-    const formData = await request.formData();
-    console.log(...formData.keys());
-
-    return { ok: true };
-  }
-};
-
 export default function LeaguePage() {
   const loaderData = useLoaderData();
   const league = new League(
