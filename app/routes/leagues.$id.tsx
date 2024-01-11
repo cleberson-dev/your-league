@@ -94,7 +94,7 @@ export default function LeaguePage() {
     mode: "onBlur",
     defaultValues: {
       fixtures: league.fixtures.map((round) =>
-        round.map(() => ({ home: null, away: null }))
+        round.map((game) => ({ home: game.homeScore ?? null, away: game.awayScore ?? null }))
       ),
     },
   });
