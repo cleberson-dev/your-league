@@ -1,7 +1,6 @@
 type Props = React.SVGAttributes<SVGElement>;
 
 export default function CrestIcon(props: Props) {
-  console.log({ props });
   return (
     <svg
       viewBox="0 0 1538.5 1870.5"
