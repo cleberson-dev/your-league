@@ -13,6 +13,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Button from "~/components/button";
+import { CloudArrowUpIcon } from "@heroicons/react/16/solid";
 
 const gameSchema = yup.object({
   home: yup.number().min(0),
@@ -103,6 +104,8 @@ export default function LeaguePage() {
   );
   const [isInSimulation, setIsInSimulation] = useState(false);
 
+  const onSave = () => {};
+
   return (
     <div className="relative pl-10">
       <div className="p-8">
@@ -118,6 +121,12 @@ export default function LeaguePage() {
             >
               {isInSimulation ? "Exit Simulation" : "Enter in Simulation"}
             </Button>
+            {isInSimulation && (
+              <Button variant="info" onClick={onSave}>
+                <CloudArrowUpIcon className="mr-2 inline-block h-4 w-4" />
+                Save
+              </Button>
+            )}
           </div>
         </div>
 
