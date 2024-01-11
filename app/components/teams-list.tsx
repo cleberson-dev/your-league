@@ -3,7 +3,7 @@ import PaginationControls from "./pagination-controls";
 import TeamCard from "./team-card";
 import { TrashIcon } from "@heroicons/react/16/solid";
 import { useModal } from "~/contexts/Modal.context";
-import ConfirmationModal from "./confirmation.modal";
+import RemoveConfirmationModal from "./remove-confirmation.modal";
 import { Form } from "@remix-run/react";
 
 type Props = {
@@ -34,7 +34,7 @@ export default function TeamsList({ teams, removable }: Props) {
                   onClick={() =>
                     showModal(
                       <Form method="DELETE" action={`/api/teams/${team.id}`}>
-                        <ConfirmationModal onClose={hideModal} />
+                        <RemoveConfirmationModal onClose={hideModal} />
                       </Form>
                     )
                   }
