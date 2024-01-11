@@ -130,6 +130,7 @@ export default function LeaguePage() {
       encType: "application/json",
       action: `/api/leagues/${loaderData.league.id}`,
     });
+    setIsInSimulation(false);
   };
 
   return (
