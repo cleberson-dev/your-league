@@ -103,7 +103,7 @@ export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
               </span>
               <span className={className.gameScores}>
                 <span className={className.teamScore(isInSimulation)}>
-                  {game.homeScore || ""}
+                  {game.homeScore ?? ""}
                 </span>
                 <TableFixtureScoreInput
                   className={className.teamScoreInput(isInSimulation)}
@@ -111,7 +111,7 @@ export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
                 />
                 <span>x</span>
                 <span className={className.teamScore(isInSimulation)}>
-                  {game.awayScore || ""}
+                  {game.awayScore ?? ""}
                 </span>
                 <TableFixtureScoreInput
                   className={className.teamScoreInput(isInSimulation)}
