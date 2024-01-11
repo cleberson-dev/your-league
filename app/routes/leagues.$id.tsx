@@ -12,7 +12,7 @@ import League from "~/entities/League.entity";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import cls from "classnames";
+import Button from "~/components/button";
 
 const gameSchema = yup.object({
   home: yup.number().min(0),
@@ -85,7 +85,13 @@ export default function LeaguePage() {
       const awayScore = formGame.away as number | string | undefined;
       const scores = [homeScore, awayScore];
 
-      if (scores.some(score => score === "" || score === undefined || +score < 0 || +score > 99)) return game;
+      if (
+        scores.some(
+          (score) =>
+            score === "" || score === undefined || +score < 0 || +score > 99
+        )
+      )
+        return game;
 
       return {
         ...game,
@@ -103,22 +109,15 @@ export default function LeaguePage() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">{league.name}</h1>
           <div className="flex gap-x-2">
-            <button
-              className="rounded bg-green px-4 py-2 text-sm text-white transition-opacity hover:opacity-80 dark:text-black"
-              onClick={simulateAll}
-            >
+            <Button variant="success" onClick={simulateAll}>
               Simulate
-            </button>
-            <button
-              className={cls({
-                "rounded bg-blue-500 px-4 py-2 text-sm text-white transition-opacity hover:opacity-80 dark:text-black":
-                  true,
-                "bg-red": isInSimulation,
-              })}
+            </Button>
+            <Button
+              variant={isInSimulation ? "error" : "standard"}
               onClick={() => setIsInSimulation(!isInSimulation)}
             >
               {isInSimulation ? "Exit Simulation" : "Enter in Simulation"}
-            </button>
+            </Button>
           </div>
         </div>
 
