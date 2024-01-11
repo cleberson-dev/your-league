@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import cls from "classnames";
 
 type ToastContextValues = {
   toast: (content: string) => void;
@@ -25,11 +26,18 @@ export default function ToastContextProvider({
 
   return (
     <ToastContext.Provider value={{ toast }}>
-      {content && (
-        <div className="z-50 text-sm rounded bg-white text-black p-4 shadow absolute right-4 top-2" role="alert">
-          {content}
-        </div>
-      )}
+      {content && <div
+        role="alert"
+        className={cls({
+          "absolute right-4 top-2 z-50 rounded bg-white p-4 text-sm text-black shadow":
+            true,
+          hidden: !content,
+        })}
+      >
+        {content}
+        <div className="absolute bottom-0 w-full h-1 bg-black left-0 animate-progress"></div>
+      </div>}
+      
       {children}
     </ToastContext.Provider>
   );
