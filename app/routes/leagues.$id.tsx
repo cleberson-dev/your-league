@@ -110,7 +110,7 @@ export default function LeaguePage() {
           <h1 className="text-3xl font-bold">{league.name}</h1>
           <div className="flex gap-x-2">
             <Button variant="success" onClick={simulateAll}>
-              Simulate
+              Simulate All
             </Button>
             <Button
               variant={isInSimulation ? "error" : "standard"}
