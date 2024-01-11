@@ -1,4 +1,4 @@
-// It's not a dashboard, but I couldn't figure out a name hihi
+// It's not a dashboard, but I couldn't figure out a name ><
 
 import { useLoaderData } from "@remix-run/react";
 import Button from "~/components/button";
@@ -15,6 +15,17 @@ import Logo from "~/components/logo";
 export const meta = () => ({
   title: "Dashboard | Your League",
 });
+
+const className = {
+  header: "fixed top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark",
+  logo: "h-6",
+  content: "min-h-[100svh] px-16 py-12 pl-20 pt-20",
+  title: "mb-16 text-4xl font-bold",
+  userName: "text-violet",
+  sectionTitle: "text-2xl font-bold",
+  userLeaguesContainer: "mb-16",
+  sectionHeader: "mb-2 flex items-center justify-between",
+};
 
 export const loader = async ({ request }: { request: Request }) => {
   const userId = await requireUserId(request);
@@ -65,18 +76,18 @@ export default function Dashboard() {
 
   return (
     <>
-      <header className="fixed top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark">
-        <Logo className="h-6" />
+      <header className={className.header}>
+        <Logo className={className.logo} />
       </header>
-      <div className="min-h-[100svh] px-16 py-12 pl-20 pt-20">
-        <h1 className="mb-16 text-4xl font-bold">
-          Welcome, <span className="text-violet">{user?.name}!</span>
+      <div className={className.content}>
+        <h1 className={className.title}>
+          Welcome, <span className={className.userName}>{user?.name}!</span>
         </h1>
 
         {/* User Leagues */}
-        <div className="mb-16">
-          <div className="mb-2 flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Your leagues</h1>
+        <div className={className.userLeaguesContainer}>
+          <div className={className.sectionHeader}>
+            <h1 className={className.sectionTitle}>Your leagues</h1>
             <Button onClick={openCreateLeagueModal}>
               + Create a new League
             </Button>
@@ -86,8 +97,8 @@ export default function Dashboard() {
 
         {/* User Teams */}
         <div>
-          <div className="mb-2 flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Your teams</h1>
+          <div className={className.sectionHeader}>
+            <h1 className={className.sectionTitle}>Your teams</h1>
             <Button onClick={openCreateTeamModal}>+ Create a new Team</Button>
           </div>
           <TeamsList teams={teams} removable />
