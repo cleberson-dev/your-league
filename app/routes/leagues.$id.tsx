@@ -8,7 +8,7 @@ import LeagueTable from "~/components/league-table";
 import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
-import League from "~/entities/League.entity";
+import League, { Fixtures as IFixtures } from "~/entities/League.entity";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -76,7 +76,10 @@ export default function LeaguePage() {
     mode: "onBlur",
     defaultValues: {
       fixtures: league.fixtures.map((round) =>
-        round.map((game) => ({ home: game.homeScore ?? null, away: game.awayScore ?? null }))
+        round.map((game) => ({
+          home: game.homeScore ?? null,
+          away: game.awayScore ?? null,
+        }))
       ),
     },
   });
@@ -107,7 +110,7 @@ export default function LeaguePage() {
   const [isInSimulation, setIsInSimulation] = useState(false);
 
   const onSubmit: Parameters<typeof methods.handleSubmit>[0] = (values) => {
-    fetcher.submit(values as any, {
+    fetcher.submit(values as { fixtures: IFixtures }, {
       method: "PATCH",
       encType: "application/json",
       action: `/api/leagues/${loaderData.league.id}`,
