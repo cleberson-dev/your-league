@@ -118,15 +118,41 @@ export default function LeaguePage() {
     setIsInSimulation(false);
   };
 
+  const resetFixtures = () => {
+    methods.setValue(
+      "fixtures",
+      league.fixtures.map((round) =>
+        round.map(() => ({
+          home: null,
+          away: null,
+        }))
+      )
+    );
+  };
+
   return (
     <form className="relative pl-10" onSubmit={methods.handleSubmit(onSubmit)}>
       <div className="p-8">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">{league.name}</h1>
           <div className="flex gap-x-2">
-            <Button variant="success" onClick={simulateAll}>
-              Simulate All
-            </Button>
+            {isInSimulation && (
+              <>
+                <Button variant="neutral" type="button" onClick={resetFixtures}>
+                  Reset
+                </Button>
+                <Button variant="success" type="button" onClick={simulateAll}>
+                  Simulate All
+                </Button>
+                <Button
+                  variant="info"
+                  type="submit"
+                >
+                  <CloudArrowUpIcon className="mr-2 inline-block h-4 w-4" />
+                  Save
+                </Button>
+              </>
+            )}
             <Button
               type="button"
               variant={isInSimulation ? "error" : "standard"}
@@ -134,16 +160,6 @@ export default function LeaguePage() {
             >
               {isInSimulation ? "Exit Simulation" : "Enter in Simulation"}
             </Button>
-            {isInSimulation && (
-              <Button
-                variant="info"
-                type="submit"
-                disabled={!methods.formState.isValid}
-              >
-                <CloudArrowUpIcon className="mr-2 inline-block h-4 w-4" />
-                Save
-              </Button>
-            )}
           </div>
         </div>
 
