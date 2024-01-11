@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MetaFunction, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 
 import Fixtures from "~/components/fixtures";
 import LeagueTable from "~/components/league-table";
@@ -10,14 +10,14 @@ import { requireUserId } from "~/utils/session.server";
 
 import League from "~/entities/League.entity";
 import { FormProvider, useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import Button from "~/components/button";
 import { CloudArrowUpIcon } from "@heroicons/react/16/solid";
 
 const gameSchema = yup.object({
-  home: yup.number().min(0),
-  away: yup.number().min(0),
+  home: yup.number().min(0).nullable(),
+  away: yup.number().min(0).nullable(),
 });
 const roundSchema = yup.array().of(gameSchema);
 const fixturesSchema = yup.array().of(roundSchema);
@@ -48,6 +48,24 @@ export const loader = async ({
   }
 };
 
+export const action = async ({
+  request,
+  params,
+}: {
+  request: Request;
+  params: { [key: string]: string };
+}) => {
+  const id = params.id;
+
+  if (request.method === "POST") {
+    console.log({ id });
+    const formData = await request.formData();
+    console.log(...formData.keys());
+
+    return { ok: true };
+  }
+};
+
 export default function LeaguePage() {
   const loaderData = useLoaderData();
   const league = new League(
@@ -55,6 +73,8 @@ export default function LeaguePage() {
     loaderData.league.teams,
     loaderData.league.fixtures
   );
+
+  const fetcher = useFetcher();
 
   const simulateAll = () => {
     methods.setValue(
@@ -74,40 +94,46 @@ export default function LeaguePage() {
     mode: "onBlur",
     defaultValues: {
       fixtures: league.fixtures.map((round) =>
-        round.map(() => ({ home: undefined, away: undefined }))
+        round.map(() => ({ home: null, away: null }))
       ),
     },
   });
+
   const formFixtures = methods.watch("fixtures");
   const simulatedFixtures = league.fixtures.map((round, roundIdx) =>
     round.map((game, gameIdx) => {
       const formGame = formFixtures![roundIdx]![gameIdx]!;
-      const homeScore = formGame.home as number | string | undefined;
-      const awayScore = formGame.away as number | string | undefined;
+      const homeScore = formGame.home as number | string | null;
+      const awayScore = formGame.away as number | string | null;
       const scores = [homeScore, awayScore];
 
       if (
         scores.some(
-          (score) =>
-            score === "" || score === undefined || +score < 0 || +score > 99
+          (score) => score === "" || score === null || +score < 0 || +score > 99
         )
       )
         return game;
 
       return {
         ...game,
-        homeScore: homeScore as number,
-        awayScore: awayScore as number,
+        homeScore: +homeScore!,
+        awayScore: +awayScore!,
         finished: true,
       };
     })
   );
   const [isInSimulation, setIsInSimulation] = useState(false);
 
-  const onSave = () => {};
+  const onSubmit: Parameters<typeof methods.handleSubmit>[0] = (values) => {
+    fetcher.submit(values as any, {
+      method: "PATCH",
+      encType: "application/json",
+      action: `/api/leagues/${loaderData.league.id}`,
+    });
+  };
 
   return (
-    <div className="relative pl-10">
+    <form className="relative pl-10" onSubmit={methods.handleSubmit(onSubmit)}>
       <div className="p-8">
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">{league.name}</h1>
@@ -116,13 +142,18 @@ export default function LeaguePage() {
               Simulate All
             </Button>
             <Button
+              type="button"
               variant={isInSimulation ? "error" : "standard"}
               onClick={() => setIsInSimulation(!isInSimulation)}
             >
               {isInSimulation ? "Exit Simulation" : "Enter in Simulation"}
             </Button>
             {isInSimulation && (
-              <Button variant="info" onClick={onSave}>
+              <Button
+                variant="info"
+                type="submit"
+                disabled={!methods.formState.isValid}
+              >
                 <CloudArrowUpIcon className="mr-2 inline-block h-4 w-4" />
                 Save
               </Button>
@@ -144,6 +175,6 @@ export default function LeaguePage() {
           </FormProvider>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

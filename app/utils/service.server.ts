@@ -98,3 +98,11 @@ export const removeLeague = async (id: string) => {
     where: { id },
   });
 };
+
+export const updateLeague = async (id: string, payload: Parameters<typeof db.league.update>[0]["data"]) => {
+  await db.league.update({ where: { id }, data: payload });
+};
+
+export const getLeague = (id: string) => {
+  return db.league.findUnique({ where: { id } });
+};
