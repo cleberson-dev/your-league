@@ -15,6 +15,7 @@ import * as yup from "yup";
 import Button from "~/components/button";
 import { CloudArrowUpIcon } from "@heroicons/react/16/solid";
 import { useToast } from "~/contexts/Toast.context";
+import Breadcrumb from "~/components/breadcrumb";
 
 const gameSchema = yup.object({
   home: yup.number().min(0).nullable(),
@@ -119,7 +120,6 @@ export default function LeaguePage() {
     });
     setIsInSimulation(false);
     toast("Saved!", "success");
-
   };
 
   const resetFixtures = () => {
@@ -137,6 +137,13 @@ export default function LeaguePage() {
   return (
     <form className="relative pl-10" onSubmit={methods.handleSubmit(onSubmit)}>
       <div className="p-8">
+        <Breadcrumb
+          items={[
+            { label: "Dashboard", href: "/dashboard" },
+            { label: "Leagues", href: "/leagues" },
+            { label: league.name },
+          ]}
+        />
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">{league.name}</h1>
           <div className="flex gap-x-2">
