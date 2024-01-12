@@ -165,7 +165,7 @@ export default function LeaguePage() {
               variant={isEditModeEnabled ? "error" : "standard"}
               onClick={() => setIsEditModeEnabled(!isEditModeEnabled)}
             >
-              {isEditModeEnabled ? "Live Mode" : "Edit Mode"}
+              {isEditModeEnabled ? "Exit Edit" : "Enter Edit"}
             </Button>
           </div>
         </div>
