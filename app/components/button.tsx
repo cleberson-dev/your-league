@@ -1,4 +1,7 @@
 import cls from "classnames";
+import { useModal } from "~/contexts/Modal.context";
+import ConfirmationModal from "./confirmation.modal";
+import { MouseEvent } from "react";
 
 const buttonVariants = [
   "standard",
@@ -12,6 +15,7 @@ type ButtonVariants = (typeof buttonVariants)[number];
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariants;
+  confirmAction?: boolean;
 };
 
 const getClassNameByVariant = (variant: ButtonVariants) => {
@@ -30,8 +34,29 @@ export default function Button({
   className,
   variant = "standard",
   type = "button",
+  confirmAction = false,
+  onClick,
   ...props
 }: Props) {
+  const { showModal, hideModal } = useModal();
+
+  const clickHandler = (e: MouseEvent<HTMLButtonElement>) => {
+    if (confirmAction) {
+      showModal(
+        <ConfirmationModal
+          onConfirm={() => {
+            onClick?.(e);
+            hideModal();
+          }}
+          onClose={hideModal}
+        />
+      );
+      return;
+    }
+
+    onClick?.(e);
+  };
+
   return (
     <button
       {...props}
@@ -41,6 +66,7 @@ export default function Button({
         getClassNameByVariant(variant)
       )}
       type={type}
+      onClick={clickHandler}
     >
       {props.children}
     </button>
