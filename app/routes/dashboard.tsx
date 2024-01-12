@@ -11,13 +11,15 @@ import CreateLeagueModal from "~/components/create-league.modal";
 import CreateTeamModal from "~/components/create-team.modal";
 import { useModal } from "~/contexts/Modal.context";
 import Logo from "~/components/logo";
+import Breadcrumb from "~/components/breadcrumb";
 
 export const meta = () => ({
   title: "Dashboard | Your League",
 });
 
 const className = {
-  header: "fixed top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark",
+  header:
+    "fixed top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark",
   logo: "h-6",
   content: "min-h-[100svh] px-16 py-12 pl-20 pt-20",
   title: "mb-16 text-4xl font-bold",
@@ -80,6 +82,7 @@ export default function Dashboard() {
         <Logo className={className.logo} />
       </header>
       <div className={className.content}>
+        <Breadcrumb items={[{ label: "Dashboard" }]} />
         <h1 className={className.title}>
           Welcome, <span className={className.userName}>{user?.name}!</span>
         </h1>
