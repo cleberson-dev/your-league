@@ -149,10 +149,10 @@ export default function LeaguePage() {
           <div className="flex gap-x-2">
             {isEditModeEnabled && (
               <>
-                <Button variant="neutral" onClick={resetFixtures}>
+                <Button variant="neutral" onClick={resetFixtures} confirmAction>
                   Reset
                 </Button>
-                <Button variant="success" onClick={simulateAll}>
+                <Button variant="success" onClick={simulateAll} confirmAction>
                   Simulate All
                 </Button>
                 <Button variant="info" type="submit">
