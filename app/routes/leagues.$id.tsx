@@ -70,7 +70,7 @@ export default function LeaguePage() {
         }))
       )
     );
-    setIsInSimulation(true);
+    setIsEditModeEnabled(true);
   };
 
   const methods = useForm({
@@ -109,7 +109,7 @@ export default function LeaguePage() {
       };
     })
   );
-  const [isInSimulation, setIsInSimulation] = useState(false);
+  const [isEditModeEnabled, setIsEditModeEnabled] = useState(false);
   const { toast } = useToast();
 
   const onSubmit: Parameters<typeof methods.handleSubmit>[0] = (values) => {
@@ -118,7 +118,7 @@ export default function LeaguePage() {
       encType: "application/json",
       action: `/api/leagues/${loaderData.league.id}`,
     });
-    setIsInSimulation(false);
+    setIsEditModeEnabled(false);
     toast("Saved!", "success");
   };
 
@@ -147,7 +147,7 @@ export default function LeaguePage() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-3xl font-bold">{league.name}</h1>
           <div className="flex gap-x-2">
-            {isInSimulation && (
+            {isEditModeEnabled && (
               <>
                 <Button variant="neutral" onClick={resetFixtures}>
                   Reset
@@ -162,23 +162,23 @@ export default function LeaguePage() {
               </>
             )}
             <Button
-              variant={isInSimulation ? "error" : "standard"}
-              onClick={() => setIsInSimulation(!isInSimulation)}
+              variant={isEditModeEnabled ? "error" : "standard"}
+              onClick={() => setIsEditModeEnabled(!isEditModeEnabled)}
             >
-              {isInSimulation ? "Exit Simulation" : "Enter in Simulation"}
+              {isEditModeEnabled ? "Live Mode" : "Edit Mode"}
             </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-[85fr_25fr] gap-x-4">
           <LeagueTable
-            fixtures={isInSimulation ? simulatedFixtures : league.fixtures}
+            fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
             teams={league.teams}
           />
           <FormProvider {...methods}>
             <Fixtures
-              isInSimulation={isInSimulation}
-              fixtures={isInSimulation ? simulatedFixtures : league.fixtures}
+              isInSimulation={isEditModeEnabled}
+              fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
               teams={league.teams}
             />
           </FormProvider>
