@@ -27,14 +27,14 @@ export const createTeam = async (request: Request, formData: FormData) => {
 
   const userId = (await getUserId(request)) as string;
   const createdTeam = await db.team.create({
-    data: { 
-      name, 
-      logoFiletype, 
-      user: { 
-        connect: { 
-          id: userId 
-        } 
-      },  
+    data: {
+      name,
+      logoFiletype,
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
     },
   });
 
@@ -51,17 +51,27 @@ export const createLeague = async (request: Request, formData: FormData) => {
   const userId = (await getUserId(request))!;
 
   const name = formData.get("name") as string;
-  const teams = formData.getAll("teams").map(team => JSON.parse(team as string));
+  const teams = formData
+    .getAll("teams")
+    .map((team) => JSON.parse(team as string));
 
-  if (teams.length % 2 !== 0) return badRequest({ error: "Number of teams must be even" });
-  
+  if (teams.length % 2 !== 0)
+    return badRequest({ error: "Number of teams must be even" });
+
   const teamsSortedRandomly = randomizeArray(teams);
   const league = await db.league.create({
     data: {
       name,
       teams: {
-        connect: teamsSortedRandomly.filter(team => !!team.id).map(team => ({ id: team.id })),
-        create: teamsSortedRandomly.filter(team => !team.id && !!team.name).map(team => ({ name: team.name, user: { connect: { id: userId } } })),
+        connect: teamsSortedRandomly
+          .filter((team) => !!team.id)
+          .map((team) => ({ id: team.id })),
+        create: teamsSortedRandomly
+          .filter((team) => !team.id && !!team.name)
+          .map((team) => ({
+            name: team.name,
+            user: { connect: { id: userId } },
+          })),
       },
       user: {
         connect: {
@@ -80,12 +90,13 @@ export const createLeague = async (request: Request, formData: FormData) => {
   });
 
   const entityLeague = League.create(league.name, league.teams);
-  await db.league.update({ where: { id: league.id }, data: { fixtures: entityLeague.fixtures.map(randomizeArray) } });
-
+  await db.league.update({
+    where: { id: league.id },
+    data: { fixtures: entityLeague.fixtures.map(randomizeArray) },
+  });
 
   return redirect(`/leagues/${league.id}`);
 };
- 
 
 export const removeTeam = async (id: string) => {
   await db.team.delete({
@@ -99,10 +110,19 @@ export const removeLeague = async (id: string) => {
   });
 };
 
-export const updateLeague = async (id: string, payload: Parameters<typeof db.league.update>[0]["data"]) => {
+export const updateLeague = async (
+  id: string,
+  payload: Parameters<typeof db.league.update>[0]["data"]
+) => {
   await db.league.update({ where: { id }, data: payload });
 };
 
 export const getLeague = (id: string) => {
   return db.league.findUnique({ where: { id } });
 };
+
+export const getUserLeagues = (userId: string) =>
+  db.league.findMany({
+    select: { id: true, teams: true, fixtures: true, name: true },
+    where: { userId },
+  });
