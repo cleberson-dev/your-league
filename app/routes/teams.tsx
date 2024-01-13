@@ -1,7 +1,14 @@
+import Breadcrumb from "~/components/breadcrumb";
+
 export default function TeamsPage() {
   return (
     <div>
-      <h1>Teams</h1>
+      <Breadcrumb
+        items={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Teams" },
+        ]}
+      />
     </div>
   );
 }

@@ -1,7 +1,14 @@
+import Breadcrumb from "~/components/breadcrumb";
+
 export default function TablesPage() {
   return (
     <div>
-      <h1>Tables</h1>
+      <Breadcrumb
+        items={[
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Tables" },
+        ]}
+      />
     </div>
   );
 }
