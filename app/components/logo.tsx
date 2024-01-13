@@ -8,7 +8,7 @@ type Props = {
 export default function Logo({ className }: Props) {
   const { theme } = useTheme();
 
-  const logoSrc = theme === "dark" ? "logo-dark.svg" : "logo.svg";
+  const logoSrc = theme === "dark" ? "/logo-dark.svg" : "/logo.svg";
 
   return (
     <Link to="/">
