@@ -126,3 +126,5 @@ export const getUserLeagues = (userId: string) =>
     select: { id: true, teams: true, fixtures: true, name: true },
     where: { userId },
   });
+
+export const getUserTeams = (userId: string) => db.team.findMany({ where: { userId } });
