@@ -19,6 +19,8 @@ import { ModalContextProvider } from "./contexts/Modal.context";
 import { ThemeContextProvider, useTheme } from "./contexts/Theme.context";
 import Menu from "./components/menu";
 import ToastContextProvider from "./contexts/Toast.context";
+import cls from "classnames";
+import Logo from "./components/logo";
 
 const MENU_BLACKLIST = ["/login", "/register", "/"];
 
@@ -98,8 +100,19 @@ function Layout({ children }: React.PropsWithChildren) {
   const shouldShowMenu = !MENU_BLACKLIST.includes(pathname);
 
   return (
-    <div className="remix-app">
-      {shouldShowMenu && <Menu />}
+    <div
+      className={cls("remix-app", {
+        "pb-12 pl-20 pr-16 pt-20": shouldShowMenu,
+      })}
+    >
+      {shouldShowMenu && (
+        <>
+          <header className="fixed left-0 top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark">
+            <Logo className="h-6" />
+          </header>
+          <Menu />
+        </>
+      )}
       {children}
     </div>
   );
