@@ -107,7 +107,7 @@ function Layout({ children }: React.PropsWithChildren) {
     >
       {shouldShowMenu && (
         <>
-          <header className="fixed left-0 top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark">
+          <header className="fixed z-40 left-0 top-0 flex w-full items-center justify-center bg-white p-3 dark:bg-dark">
             <Logo className="h-6" />
           </header>
           <Menu />
