@@ -4,13 +4,22 @@ import { useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import cls from "classnames";
 import { Fixtures, Team } from "~/entities/League.entity";
-import { useFormContext } from "react-hook-form";
-import TableFixtureScoreInput from "./table-fixture-score-input";
 
 type Props = {
   fixtures: Fixtures;
   teams: Team[];
-  isInSimulation: boolean;
+  renderScore?: {
+    home?: (
+      roundIdx: number,
+      gameIdx: number,
+      score?: number
+    ) => React.ReactNode;
+    away?: (
+      roundIdx: number,
+      gameIdx: number,
+      score?: number
+    ) => React.ReactNode;
+  };
 };
 
 const className = {
@@ -37,13 +46,9 @@ const className = {
       "bg-red/10": isGameFinished && opponentScore > teamScore,
     }),
   gameScores: "flex items-center justify-center gap-x-2",
-  teamScore: (isInSimulation: boolean = false) =>
-    cls({ hidden: isInSimulation }),
-  teamScoreInput: (isInSimulation: boolean = false) =>
-    cls({ hidden: !isInSimulation }),
 };
 
-export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
+export default function Fixtures({ fixtures, teams, renderScore }: Props) {
   const [currentRound, setCurrentRound] = useState<number | null>(0);
 
   const goPrevRound = () => {
@@ -66,12 +71,11 @@ export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
     });
   };
 
-  const { register } = useFormContext();
-
   return (
     <div className={className.container}>
       <div className={className.header}>
         <button
+          type="button"
           className={className.paginationButton}
           onClick={goPrevRound}
           disabled={currentRound === 0}
@@ -80,6 +84,7 @@ export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
         </button>
         <h1 className={className.headerTitle}>Round {currentRound! + 1}</h1>
         <button
+          type="button"
           className={className.paginationButton}
           onClick={goNextRound}
           disabled={currentRound === fixtures.length - 1}
@@ -102,21 +107,17 @@ export default function Fixtures({ fixtures, teams, isInSimulation }: Props) {
                 {teams[game.homeTeam!].name}
               </span>
               <span className={className.gameScores}>
-                <span className={className.teamScore(isInSimulation)}>
-                  {game.homeScore ?? ""}
-                </span>
-                <TableFixtureScoreInput
-                  className={className.teamScoreInput(isInSimulation)}
-                  {...register(`fixtures.${currentRound}.${gameIdx}.home`)}
-                />
+                {renderScore?.home ? (
+                  renderScore.home(currentRound, gameIdx, game.homeScore)
+                ) : (
+                  <span>{game.homeScore ?? ""}</span>
+                )}
                 <span>x</span>
-                <span className={className.teamScore(isInSimulation)}>
-                  {game.awayScore ?? ""}
-                </span>
-                <TableFixtureScoreInput
-                  className={className.teamScoreInput(isInSimulation)}
-                  {...register(`fixtures.${currentRound}.${gameIdx}.away`)}
-                />
+                {renderScore?.away ? (
+                  renderScore.away(currentRound, gameIdx, game.awayScore)
+                ) : (
+                  <span>{game.awayScore ?? ""}</span>
+                )}
               </span>
               <span
                 className={className.teamName(

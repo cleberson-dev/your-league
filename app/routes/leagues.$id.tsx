@@ -16,6 +16,7 @@ import Button from "~/components/button";
 import { CloudArrowUpIcon } from "@heroicons/react/16/solid";
 import { useToast } from "~/contexts/Toast.context";
 import Breadcrumb from "~/components/breadcrumb";
+import TableFixtureScoreInput from "~/components/table-fixture-score-input";
 
 const gameSchema = yup.object({
   home: yup.number().min(0).nullable(),
@@ -177,9 +178,24 @@ export default function LeaguePage() {
           />
           <FormProvider {...methods}>
             <Fixtures
-              isInSimulation={isEditModeEnabled}
               fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
               teams={league.teams}
+              renderScore={isEditModeEnabled ? {
+                home: (roundIdx, gameIdx) => (
+                  <TableFixtureScoreInput
+                    {...methods.register(
+                      `fixtures.${roundIdx!}.${gameIdx!}.home`
+                    )}
+                  />
+                ),
+                away: (roundIdx, gameIdx) => (
+                  <TableFixtureScoreInput
+                    {...methods.register(
+                      `fixtures.${roundIdx!}.${gameIdx!}.away`
+                    )}
+                  />
+                ),
+              } : undefined}
             />
           </FormProvider>
         </div>
