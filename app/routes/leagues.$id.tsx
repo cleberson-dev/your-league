@@ -9,7 +9,7 @@ import { db } from "~/utils/db.server";
 import { requireUserId } from "~/utils/session.server";
 
 import League, { Fixtures as IFixtures } from "~/entities/League.entity";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Button from "~/components/button";
@@ -136,8 +136,8 @@ export default function LeaguePage() {
   };
 
   return (
-    <form className="relative pl-10" onSubmit={methods.handleSubmit(onSubmit)}>
-      <div className="p-8">
+    <form className="relative" onSubmit={methods.handleSubmit(onSubmit)}>
+      <div>
         <Breadcrumb
           items={[
             { label: "Dashboard", href: "/dashboard" },
@@ -176,28 +176,30 @@ export default function LeaguePage() {
             fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
             teams={league.teams}
           />
-          <FormProvider {...methods}>
-            <Fixtures
-              fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
-              teams={league.teams}
-              renderScore={isEditModeEnabled ? {
-                home: (roundIdx, gameIdx) => (
-                  <TableFixtureScoreInput
-                    {...methods.register(
-                      `fixtures.${roundIdx!}.${gameIdx!}.home`
-                    )}
-                  />
-                ),
-                away: (roundIdx, gameIdx) => (
-                  <TableFixtureScoreInput
-                    {...methods.register(
-                      `fixtures.${roundIdx!}.${gameIdx!}.away`
-                    )}
-                  />
-                ),
-              } : undefined}
-            />
-          </FormProvider>
+          <Fixtures
+            fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
+            teams={league.teams}
+            renderScore={
+              isEditModeEnabled
+                ? {
+                  home: (roundIdx, gameIdx) => (
+                    <TableFixtureScoreInput
+                      {...methods.register(
+                        `fixtures.${roundIdx!}.${gameIdx!}.home`
+                      )}
+                    />
+                  ),
+                  away: (roundIdx, gameIdx) => (
+                    <TableFixtureScoreInput
+                      {...methods.register(
+                        `fixtures.${roundIdx!}.${gameIdx!}.away`
+                      )}
+                    />
+                  ),
+                }
+                : undefined
+            }
+          />
         </div>
       </div>
     </form>
