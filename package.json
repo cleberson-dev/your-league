@@ -11,7 +11,7 @@
     "dev": "concurrently \"npm:dev:*\"",
     "dev:css": "postcss ./styles/* --dir ./app/styles --watch",
     "dev:remix": "remix dev",
-    "postinstall": "remix setup node",
+    "postinstall": "npx remix setup node",
     "prisma": "npx prisma",
     "lint": "eslint ."
   },
