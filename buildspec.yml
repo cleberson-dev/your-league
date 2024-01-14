@@ -4,16 +4,10 @@ phases:
     commands:
       - echo "🚀 Installing dependencies..."
       - npm install
-      - npx remix setup node
     build:
       commands:
       - echo "🚀 Building remix application..."
       - npm run build
-artifacts:
-  files:
-    - build/**/*
-  discard-paths: yes
-  base-directory: build
 cache:
   paths:
     - node_modules/**/*
