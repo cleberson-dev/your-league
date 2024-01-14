@@ -4,8 +4,9 @@
   "description": "",
   "license": "",
   "sideEffects": false,
-  "main": "public/index.js",
+  "main": "build/index.js",
   "scripts": {
+    "start": "remix-serve build/index.js",
     "build": "yarn build:css && prisma generate && remix build",
     "build:css": "postcss ./styles/* --dir ./app/styles",
     "build:remix": "remix build",
