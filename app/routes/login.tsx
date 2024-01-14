@@ -8,6 +8,7 @@ import Input from "~/components/input";
 
 import { createUserSession, login } from "~/utils/session.server";
 import loginSchema from "~/schemas/login.schema";
+import FormGroup from "~/components/form-group";
 
 const classes = {
   title: "text-5xl font-black mb-6",
@@ -41,24 +42,13 @@ export default function LoginPage() {
         </p>
       </div>
       <form className={classes.form} method="POST">
-        <div className={classes.formGroup}>
-          <label>E-mail</label>
+        <FormGroup label="E-mail" error={errors.email?.message}>
           <Input type="email" {...register("email")} />
-          {errors.email && (
-            <p className={classes.fieldErrorMessage}>
-              <small>{errors.email.message}</small>
-            </p>
-          )}
-        </div>
-        <div className={classes.formGroup}>
-          <label>Password</label>
+        </FormGroup>
+        <FormGroup label="Password" error={errors.password?.message}>
           <Input type="password" {...register("password")} />
-          {errors.password && (
-            <p className={classes.fieldErrorMessage}>
-              <small>{errors.password.message}</small>
-            </p>
-          )}
-        </div>
+        </FormGroup>
+        
         <Button type="submit" disabled={!isValid}>
           Login
         </Button>
