@@ -13,8 +13,6 @@ import FormGroup from "~/components/form-group";
 const classes = {
   title: "text-5xl font-black mb-6",
   form: "relative flex h-full bg-white dark:bg-dark shadow flex-col items-center justify-center gap-y-4 text-sm",
-  formGroup: "flex flex-col gap-y-1",
-  fieldErrorMessage: "text-red",
 };
 
 export default function LoginPage() {
@@ -48,7 +46,7 @@ export default function LoginPage() {
         <FormGroup label="Password" error={errors.password?.message}>
           <Input type="password" {...register("password")} />
         </FormGroup>
-        
+
         <Button type="submit" disabled={!isValid}>
           Login
         </Button>

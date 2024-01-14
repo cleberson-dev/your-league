@@ -3,16 +3,15 @@ import { Link, useActionData } from "@remix-run/react";
 import { ActionFunction } from "@remix-run/server-runtime";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Button from "~/components/button";
 import { createUserSession, register } from "~/utils/session.server";
+import Button from "~/components/button";
 import Input from "~/components/input";
-import registerSchema from "~/schemas/register.schema";
 import FormGroup from "~/components/form-group";
+import registerSchema from "~/schemas/register.schema";
 
 const classes = {
   title: "text-5xl font-black mb-6",
   form: "relative flex h-full bg-white dark:bg-dark shadow flex-col items-center justify-center gap-y-4 text-sm",
-  formGroup: "flex flex-col gap-y-1",
   fieldErrorMessage: "text-red-500",
 };
 
