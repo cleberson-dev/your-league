@@ -50,21 +50,21 @@ export default function Register() {
         </div>
         <div className={classes.formGroup}>
           <label>E-mail</label>
-          <input type="email" {...register("email")} />
+          <Input type="email" {...register("email")} />
           <p className={classes.fieldErrorMessage}>
             <small>{errors.email?.message}</small>
           </p>
         </div>
         <div className={classes.formGroup}>
           <label>Password</label>
-          <input type="password" {...register("password")} />
+          <Input type="password" {...register("password")} />
           <p className={classes.fieldErrorMessage}>
             <small>{errors.password?.message}</small>
           </p>
         </div>
         <div className={classes.formGroup}>
           <label>Confirm your password</label>
-          <input type="password" {...register("passwordConfirmation")} />
+          <Input type="password" {...register("passwordConfirmation")} />
           <p className={classes.fieldErrorMessage}>
             <small>{errors.passwordConfirmation?.message}</small>
           </p>
