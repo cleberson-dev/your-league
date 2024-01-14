@@ -5,7 +5,7 @@
   "license": "",
   "sideEffects": false,
   "scripts": {
-    "build": "yarn build:css && prisma migrate deploy && prisma generate && remix build",
+    "build": "yarn build:css && prisma generate && remix build",
     "build:css": "postcss ./styles/* --dir ./app/styles",
     "build:remix": "remix build",
     "dev": "concurrently \"npm:dev:*\"",
