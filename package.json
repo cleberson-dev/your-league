@@ -4,7 +4,7 @@
   "description": "",
   "license": "",
   "sideEffects": false,
-  "main": "index.js",
+  "main": "public/index.js",
   "scripts": {
     "build": "yarn build:css && prisma generate && remix build",
     "build:css": "postcss ./styles/* --dir ./app/styles",
