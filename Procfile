@@ -1,1 +1,0 @@
-web: ls node_modules/@remix-run/serve/dist && npm run start
