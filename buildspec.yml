@@ -4,11 +4,11 @@ phases:
     commands:
       - echo "🚀 Installing dependencies..."
       - npm i
-    build:
-      commands:
-      - echo "🚀 Building remix application..."
-      - npm run build
-      - ls node_modules/@remix-run/serve/dist
+  build:
+    commands:
+    - echo "🚀 Building remix application..."
+    - npm run build
+    - ls node_modules/@remix-run/serve/dist
 cache:
   paths:
     - node_modules/**/*
