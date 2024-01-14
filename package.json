@@ -15,7 +15,7 @@
     "dev:remix": "remix dev",
     "prisma": "prisma",
     "lint": "eslint .",
-    "setup:node": "remix setup node"
+    "postinstall": "remix setup node"
   },
   "resolutions": {
     "react": "^18.2.0",
@@ -30,6 +30,7 @@
     "@remix-run/serve": "^1.6.8",
     "@remix-run/server-runtime": "^1.6.7",
     "@tailwindcss/forms": "^0.5.2",
+    "@remix-run/dev": "^1.6.8",
     "bcrypt": "^5.1.1",
     "classnames": "^2.3.2",
     "esbuild": "^0.15.5",
@@ -47,7 +48,6 @@
     "zod": "^3.18.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.6.8",
     "@types/bcrypt": "^5.0.2",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.17",

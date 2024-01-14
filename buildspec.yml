@@ -4,7 +4,6 @@ phases:
     commands:
       - echo "🚀 Installing dependencies..."
       - npm i
-      - npm run setup:node
     build:
       commands:
       - echo "🚀 Building remix application..."
