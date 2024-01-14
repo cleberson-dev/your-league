@@ -7,6 +7,7 @@ import Button from "~/components/button";
 import { createUserSession, register } from "~/utils/session.server";
 import Input from "~/components/input";
 import registerSchema from "~/schemas/register.schema";
+import FormGroup from "~/components/form-group";
 
 const classes = {
   title: "text-5xl font-black mb-6",
@@ -41,37 +42,23 @@ export default function Register() {
         </p>
       </div>
       <form className={classes.form} method="POST">
-        <div className={classes.formGroup}>
-          <label>Name</label>
+        <FormGroup label="Name" error={errors.name?.message}>
           <Input {...register("name")} />
-          <p className={classes.fieldErrorMessage}>
-            <small>{errors.name?.message}</small>
-          </p>
-        </div>
-        <div className={classes.formGroup}>
-          <label>E-mail</label>
+        </FormGroup>
+        <FormGroup label="E-mail" error={errors.email?.message}>
           <Input type="email" {...register("email")} />
-          <p className={classes.fieldErrorMessage}>
-            <small>{errors.email?.message}</small>
-          </p>
-        </div>
-        <div className={classes.formGroup}>
-          <label>Password</label>
+        </FormGroup>
+        <FormGroup label="Password" error={errors.password?.message}>
           <Input type="password" {...register("password")} />
-          <p className={classes.fieldErrorMessage}>
-            <small>{errors.password?.message}</small>
-          </p>
-        </div>
-        <div className={classes.formGroup}>
-          <label>Confirm your password</label>
+        </FormGroup>
+        <FormGroup label="Confirm your password" error={errors.passwordConfirmation?.message}>
           <Input type="password" {...register("passwordConfirmation")} />
-          <p className={classes.fieldErrorMessage}>
-            <small>{errors.passwordConfirmation?.message}</small>
-          </p>
-        </div>
+        </FormGroup>
+
         <p className={classes.fieldErrorMessage}>
           <small>{actionData?.error}</small>
         </p>
+
         <Button type="submit" disabled={!isValid}>
           Create
         </Button>
