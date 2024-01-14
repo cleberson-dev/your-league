@@ -8,7 +8,6 @@ phases:
     commands:
     - echo "🚀 Building remix application..."
     - npm run build
-    - ls node_modules/@remix-run/serve/dist
 cache:
   paths:
     - node_modules/**/*
