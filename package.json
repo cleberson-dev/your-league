@@ -14,7 +14,8 @@
     "dev:css": "postcss ./styles/* --dir ./app/styles --watch",
     "dev:remix": "remix dev",
     "prisma": "prisma",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "setup:node": "remix setup node"
   },
   "resolutions": {
     "react": "^18.2.0",
