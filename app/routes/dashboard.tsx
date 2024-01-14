@@ -53,12 +53,12 @@ export const action = async ({ request }: { request: Request }) => {
   const actionType = formData.get("actionType");
 
   switch (actionType) {
-  case "createTeam":
-    return service.createTeam(request, formData);
-  case "createLeague":
-    return service.createLeague(request, formData);
-  default:
-    return { ok: true };
+    case "createTeam":
+      return service.createTeam(request, formData);
+    case "createLeague":
+      return service.createLeague(request, formData);
+    default:
+      return { ok: true };
   }
 };
 
