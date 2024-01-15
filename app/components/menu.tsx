@@ -8,16 +8,23 @@ import {
   CalendarDaysIcon,
   SunIcon,
   MoonIcon,
+  Bars3Icon,
 } from "@heroicons/react/16/solid";
 
 import { useTheme } from "~/contexts/Theme.context";
 import CrestIcon from "~/icons/crest.icon";
 import MenuItem from "./menu-item";
+import cls from "classnames";
 
 const className = {
-  menu: "text-gray-500 fixed left-0 top-0 z-40 h-[100svh] bg-slate-50 text-xs shadow dark:bg-dark",
-  list: "flex h-full flex-col",
-  mainSection: "flex-grow",
+  menu: "z-40 fixed left-0 top-0 text-xs",
+  list: (isCollapsed?: boolean) => cls({
+    "flex-col h-[100svh] text-gray-500 shadow bg-slate-50 dark:bg-dark": true,
+    "flex": !isCollapsed,
+    "hidden lg:flex": isCollapsed,
+  }),
+  mainSection: "lg:flex-grow",
+  button: "p-4 lg:hidden",
 };
 
 export default function Menu() {
@@ -30,6 +37,7 @@ export default function Menu() {
       onClick: () => setIsCollapsed(!isCollapsed),
       icon: isCollapsed ? ArrowLongRightIcon : ArrowLongLeftIcon,
       label: isCollapsed ? "Expand" : "Collapse",
+      className: "hidden lg:block",
     },
     { href: "/dashboard", icon: HomeIcon, label: "Home" },
     { href: "/tables", icon: TableCellsIcon, label: "Tables" },
@@ -53,10 +61,13 @@ export default function Menu() {
 
   return (
     <menu className={className.menu}>
-      <ul className={className.list}>
+      <button className={className.button} onClick={() => setIsCollapsed(!isCollapsed)}>
+        {isCollapsed ? <Bars3Icon className="w-4 h-4" /> : <ArrowLongLeftIcon className="w-4 h-4" />}
+      </button>
+      <ul className={className.list(isCollapsed)}>
         <div className={className.mainSection}>
           {links.map((link) => (
-            <li key={link.href} title={link.label}>
+            <li key={link.href} title={link.label} className={link.className}>
               <MenuItem
                 href={link.href}
                 label={link.label}
