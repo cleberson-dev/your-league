@@ -7,11 +7,11 @@ type Props = {
 };
 
 const className = {
-  card: "relative flex h-36 w-40 select-none flex-col justify-end rounded-3xl border border-solid border-black/5 bg-primary py-4 text-center font-medium text-black/50 dark:bg-dark dark:text-white",
+  card: "relative flex h-28 w-32 lg:h-36 lg:w-40 select-none flex-col justify-end rounded-3xl border border-solid border-black/5 bg-primary py-4 text-center font-medium text-black/50 dark:bg-dark dark:text-white",
   teamLogoContainer:
     "absolute top-0 flex h-full w-full items-center justify-center",
-  teamLogo: "h-12",
-  teamName: "overflow-hidden text-ellipsis text-nowrap text-sm",
+  teamLogo: "h-8 lg:h-12",
+  teamName: "overflow-hidden text-ellipsis text-nowrap text-xs lg:text-sm",
 };
 
 export default function TeamCard({ team }: Props) {

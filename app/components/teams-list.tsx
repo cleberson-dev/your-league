@@ -24,7 +24,7 @@ export default function TeamsList({ teams, removable }: Props) {
   return (
     <>
       <PaginationControls isNext />
-      <ul className="mt-5 flex gap-x-4 overflow-auto">
+      <ul className="mt-5 flex gap-x-2 lg:gap-x-4 overflow-auto">
         {teams.map((team) => (
           <li key={team.id} className="relative">
             {removable && (
@@ -39,7 +39,7 @@ export default function TeamsList({ teams, removable }: Props) {
                     )
                   }
                 >
-                  <TrashIcon width={16} height={16} />
+                  <TrashIcon className="w-3 h-3 lg:w-4 lg:h-4" />
                 </button>
               </div>
             )}
