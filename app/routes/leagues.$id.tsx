@@ -146,7 +146,7 @@ export default function LeaguePage() {
           ]}
         />
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">{league.name}</h1>
+          <h1 className="text-xl lg:text-3xl font-bold">{league.name}</h1>
           <div className="flex gap-x-2">
             {isEditModeEnabled && (
               <>
@@ -171,7 +171,7 @@ export default function LeaguePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-[85fr_25fr] gap-x-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[85fr_25fr] gap-4">
           <LeagueTable
             fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
             teams={league.teams}
