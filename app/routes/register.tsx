@@ -8,6 +8,7 @@ import Button from "~/components/button";
 import Input from "~/components/input";
 import FormGroup from "~/components/form-group";
 import registerSchema from "~/schemas/register.schema";
+import ErrorMessage from "~/components/error-message";
 
 const classes = {
   title: "text-5xl font-black mb-6",
@@ -54,9 +55,7 @@ export default function Register() {
           <Input type="password" {...register("passwordConfirmation")} />
         </FormGroup>
 
-        <p className={classes.fieldErrorMessage}>
-          <small>{actionData?.error}</small>
-        </p>
+        <ErrorMessage message={actionData?.error} />
 
         <Button type="submit" disabled={!isValid}>
           Create

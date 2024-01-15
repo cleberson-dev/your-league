@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link, useActionData } from "@remix-run/react";
 import { badRequest } from "remix-utils";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +9,7 @@ import Input from "~/components/input";
 import { createUserSession, login } from "~/utils/session.server";
 import loginSchema from "~/schemas/login.schema";
 import FormGroup from "~/components/form-group";
+import ErrorMessage from "~/components/error-message";
 
 const classes = {
   title: "text-5xl font-black mb-6",
@@ -16,6 +17,8 @@ const classes = {
 };
 
 export default function LoginPage() {
+  const actionData = useActionData();
+
   const {
     register,
     formState: { errors, isValid },
@@ -46,6 +49,8 @@ export default function LoginPage() {
         <FormGroup label="Password" error={errors.password?.message}>
           <Input type="password" {...register("password")} />
         </FormGroup>
+
+        <ErrorMessage message={actionData?.error} />
 
         <Button type="submit" disabled={!isValid}>
           Login
