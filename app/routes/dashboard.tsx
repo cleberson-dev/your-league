@@ -18,9 +18,9 @@ export const meta = () => ({
 
 const className = {
   content: "min-h-[100svh]",
-  title: "mb-16 text-4xl font-bold",
+  title: "mb-8 lg:mb-16 text-2xl lg:text-4xl font-bold",
   userName: "text-violet",
-  sectionTitle: "text-2xl font-bold",
+  sectionTitle: "text-xl lg:text-2xl font-bold",
   userLeaguesContainer: "mb-16",
   sectionHeader: "mb-2 flex items-center justify-between",
 };
