@@ -1,12 +1,12 @@
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
-import ReactSelect from "react-select";
 import Breadcrumb from "~/components/breadcrumb";
 import LeagueTable from "~/components/league-table";
 import { Fixtures } from "~/entities/League.entity";
 import * as service from "~/utils/service.server";
 import { requireUserId } from "~/utils/session.server";
 import cls from "classnames";
+import Select from "~/components/select";
 
 export const loader = async ({ request }: { request: Request }) => {
   const userId = await requireUserId(request);
@@ -37,8 +37,7 @@ export default function TablesPage() {
       />
 
       <div className={cls(["hidden", Object.values(className).join(" ")])} />
-      <ReactSelect
-        unstyled
+      <Select
         defaultValue={{ label: selectedLeague.name, value: selectedLeague.id }}
         options={leagues.map((league) => ({
           label: league.name,
@@ -50,12 +49,6 @@ export default function TablesPage() {
             leagues.find((league) => league.id === newLeague.value)!
           )
         }
-        classNames={{
-          control: () => className.control,
-          valueContainer: () => className.valueContainer,
-          menuList: () => className.menuList,
-          option: () => className.option,
-        }}
       />
 
       <LeagueTable
