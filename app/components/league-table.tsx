@@ -63,14 +63,15 @@ const tableHeaders = [
   {
     key: "position",
     label: "Pos",
+    shortLabel: "#",
   },
   { key: "logo", label: "", sortable: false },
   { key: "team", label: "Team", align: "left", sortable: false },
-  { key: "points", label: "Points", sortable: true },
-  { key: "played", label: "Played", sortable: true },
-  { key: "wins", label: "Wins", sortable: true },
-  { key: "draws", label: "Draws", sortable: true },
-  { key: "losses", label: "Losses", sortable: true },
+  { key: "points", label: "Points", shortLabel: "P", sortable: true },
+  { key: "played", label: "Played", shortLabel: "G", sortable: true },
+  { key: "wins", label: "Wins", shortLabel: "W", sortable: true, collapseOnSm: true },
+  { key: "draws", label: "Draws", shortLabel: "D", sortable: true, collapseOnSm: true },
+  { key: "losses", label: "Losses", shortLabel: "L", sortable: true, collapseOnSm: true },
   { key: "goalsFor", label: "GF", hideHorizontalPadding: true, sortable: true },
   {
     key: "goalsAgainst",
@@ -90,7 +91,7 @@ const tableHeaders = [
     hideHorizontalPadding: true,
     sortable: true,
   },
-  { key: "form", label: "Form", sortable: true },
+  { key: "form", label: "Form", sortable: true, collapseOnSm: true },
 ];
 
 const mapTeamToRowData = (
@@ -110,7 +111,7 @@ const mapTeamToRowData = (
     key: "logo",
     element: (
       <div className="flex items-center justify-center">
-        <TeamLogo team={tableTeam.team} className="h-5" />
+        <TeamLogo team={tableTeam.team} className="h-4 lg:h-5" />
       </div>
     ),
   },
@@ -170,27 +171,29 @@ const mapTeamToRowData = (
 const className = {
   table: "w-full table-auto select-none shadow",
   tableHeader:
-    "select-none bg-primary-dark text-sm text-black/50 dark:bg-dark dark:text-white/50 font-black lowercase",
+    "select-none bg-primary-dark text-xs lg:text-sm font-bold lg:font-black text-black/50 dark:bg-dark dark:text-white/50 lowercase",
   tableHeaderCell: (
     showHorizontalPadding: boolean,
     isTopLeftCell: boolean,
     isTopRightCell: boolean,
     align: "left" | "center" | "right" = "center",
-    sortable: boolean = false
+    sortable: boolean = false,
+    collapseOnSm: boolean = false,
   ) =>
     cls({
-      "py-4 font-black first:pl-6 last:pr-6 hover:text-black dark:hover:text-violet":
+      "py-1 lg:py-4 first:pl-3 lg:first:pl-6 last:pr-6 hover:text-black dark:hover:text-violet":
         true,
-      "px-4": showHorizontalPadding,
-      "rounded-tl-xl": isTopLeftCell,
-      "rounded-tr-xl": isTopRightCell,
+      "px-2 lg:px-4": showHorizontalPadding,
+      "rounded-tl-md lg:rounded-tl-xl": isTopLeftCell,
+      "rounded-tr-md lg:rounded-tr-xl": isTopRightCell,
       "text-left": align === "left",
       "text-center": align === "center",
       "text-right": align === "right",
       "cursor-pointer": sortable,
+      "collapse lg:visible": collapseOnSm,
     }),
   sortIcon: "absolute -right-3 top-[2px] h-3 w-3",
-  tableBody: "text-center text-sm text-black  dark:text-white",
+  tableBody: "text-center text-sm text-black dark:text-white",
   tableBodyRow:
     "group border-b border-solid border-black/5 bg-primary transition-colors hover:bg-primary-dark dark:border-white/5 dark:bg-dark/50 dark:hover:bg-dark/60",
   tableBodyRowCell: (
@@ -201,11 +204,12 @@ const className = {
     isRegularHighlighted: boolean = false,
     spotColor?: string,
     isPromotionHighlighted: boolean = false,
-    isRelegationHighlighted: boolean = false,
+    isRelegationHighlighted: boolean = false
   ) =>
     cls({
-      "min-w-14 py-4 first:pl-6 last:pr-6 ": true,
-      "px-4": showHorizontalPadding,
+      "min-w-7 lg:min-w-14 py-1 lg:py-4 first:pl-3 lg:first:pl-6 last:pr-6 whitespace-nowrap overflow-hidden text-ellipsis":
+        true,
+      "px-2 lg:px-4": showHorizontalPadding,
       "font-bold": bold,
       "w-full": fullWidth,
       "text-left": align === "left",
@@ -287,6 +291,12 @@ export default function LeagueTable({ fixtures, teams }: Props) {
 
   return (
     <table className={className.table}>
+      {tableHeaders.map((header, headerIdx) => (
+        <col
+          key={headerIdx}
+          className={cls({ "collapse lg:visible": header.collapseOnSm })}
+        ></col>
+      ))}
       <thead className={className.tableHeader}>
         <tr>
           {tableHeaders.map((header, colIdx) => (
@@ -297,12 +307,14 @@ export default function LeagueTable({ fixtures, teams }: Props) {
                 colIdx === 0,
                 colIdx === tableHeaders.length - 1,
                 header.align as "left" | "center" | "right",
-                header.sortable
+                header.sortable,
+                header.collapseOnSm,
               )}
               onClick={header.sortable ? () => sortColumn(colIdx) : undefined}
             >
               <span className="relative">
-                {header.label}
+                <span className={cls({ "hidden lg:inline": header.shortLabel })}>{header.label}</span>
+                {header.shortLabel && <span className="lg:hidden">{header.shortLabel}</span>}
                 {isHighlightedSortColumn(colIdx) && (
                   <SortIcon className={className.sortIcon} />
                 )}
