@@ -51,10 +51,10 @@ export default function FixturesPage() {
         }
       />
 
-      <ul className="text-sm select-none">
+      <ul className="text-sm select-none mt-4">
         {fixtures.map((round, roundIdx) => (
           <div key={roundIdx}>
-            <h1 className="bg-dark py-2 text-center rounded">Round {roundIdx + 1}</h1>
+            <h1 className="bg-primary-dark dark:bg-dark py-2 text-center rounded">Round {roundIdx + 1}</h1>
             {round.map((game, gameIdx) => (
               <li key={gameIdx} className="text-center grid grid-cols-[1fr_3rem_1fr] py-2">
                 <span>{selectedLeague.teams[game.homeTeam!].name}</span>
