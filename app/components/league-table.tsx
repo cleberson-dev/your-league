@@ -49,35 +49,32 @@ export default function LeagueTable({ fixtures, teams }: Props) {
         },
         { key: "logo", label: "", sortable: false },
         { key: "team", label: "Team", align: "left", sortable: false },
-        { key: "points", label: "Points", shortLabel: "P", sortable: true },
-        { key: "played", label: "Played", shortLabel: "G", sortable: true },
-        { key: "wins", label: "Wins", shortLabel: "W", sortable: true, minWidth: "sm" },
-        { key: "draws", label: "Draws", shortLabel: "D", sortable: true, minWidth: "sm" },
-        { key: "losses", label: "Losses", shortLabel: "L", sortable: true, minWidth: "sm" },
+        { key: "points", label: "Points", shortLabel: "P" },
+        { key: "played", label: "Played", shortLabel: "G" },
+        { key: "wins", label: "Wins", shortLabel: "W", minWidth: "sm" },
+        { key: "draws", label: "Draws", shortLabel: "D", minWidth: "sm" },
+        { key: "losses", label: "Losses", shortLabel: "L", minWidth: "sm" },
         {
           key: "goalsFor",
           label: "GF",
-          sortable: true,
           minWidth: "sm",
         },
         {
           key: "goalsAgainst",
           label: "GA",
-          sortable: true,
           minWidth: "sm",
         },
         {
           key: "goalsDifference",
           label: "+/-",
-          sortable: true,
         },
         {
           key: "percentage",
           label: "%",
-          sortable: true,
+        
           minWidth: "sm",
         },
-        { key: "form", label: "Form", sortable: true, minWidth: "sm" },
+        { key: "form", label: "Form", minWidth: "sm" },
       ]}
       specialRows={specialRows}
       data={table.map((tableTeam): DataDef[] => [

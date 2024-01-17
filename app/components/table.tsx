@@ -132,9 +132,7 @@ export default function Table({ headers, data, specialRows }: TableProps) {
               isSorting={headerIdx === sortColumnIdx}
               isTopLeftCell={headerIdx === 0}
               isTopRightCell={headerIdx === headers.length - 1}
-              onClick={
-                header.sortable ? () => sortColumn(headerIdx) : undefined
-              }
+              onClick={[undefined, true].includes(header.sortable) ? () => sortColumn(headerIdx) : undefined}
               sortColumnOrder={sortColumnOrder}
               sortable={header.sortable}
               hidden={isHidden(header)}

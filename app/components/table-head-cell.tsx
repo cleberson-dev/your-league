@@ -16,7 +16,7 @@ type TableHeadCellProps = {
 
 export default function TableHeadCell({
   align,
-  sortable,
+  sortable = true,
   onClick,
   isTopLeftCell,
   isTopRightCell,
