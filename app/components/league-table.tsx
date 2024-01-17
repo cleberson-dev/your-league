@@ -51,41 +51,39 @@ export default function LeagueTable({ fixtures, teams }: Props) {
         { key: "team", label: "Team", align: "left", sortable: false },
         { key: "points", label: "Points", shortLabel: "P", sortable: true },
         { key: "played", label: "Played", shortLabel: "G", sortable: true },
-        { key: "wins", label: "Wins", shortLabel: "W", sortable: true },
-        { key: "draws", label: "Draws", shortLabel: "D", sortable: true },
-        { key: "losses", label: "Losses", shortLabel: "L", sortable: true },
+        { key: "wins", label: "Wins", shortLabel: "W", sortable: true, minWidth: "sm" },
+        { key: "draws", label: "Draws", shortLabel: "D", sortable: true, minWidth: "sm" },
+        { key: "losses", label: "Losses", shortLabel: "L", sortable: true, minWidth: "sm" },
         {
           key: "goalsFor",
           label: "GF",
-          hideHorizontalPadding: true,
           sortable: true,
+          minWidth: "sm",
         },
         {
           key: "goalsAgainst",
           label: "GA",
-          hideHorizontalPadding: true,
           sortable: true,
+          minWidth: "sm",
         },
         {
           key: "goalsDifference",
           label: "+/-",
-          hideHorizontalPadding: true,
           sortable: true,
         },
         {
           key: "percentage",
           label: "%",
-          hideHorizontalPadding: true,
           sortable: true,
+          minWidth: "sm",
         },
-        { key: "form", label: "Form", sortable: true },
+        { key: "form", label: "Form", sortable: true, minWidth: "sm" },
       ]}
       specialRows={specialRows}
       data={table.map((tableTeam): DataDef[] => [
         {
           key: "position",
           value: tableTeam.position,
-          showHorizontalPadding: true,
         },
         {
           key: "logo",
@@ -100,7 +98,6 @@ export default function LeagueTable({ fixtures, teams }: Props) {
           value: tableTeam.team.name,
           align: "left",
           fullWidth: true,
-          showHorizontalPadding: true,
         },
         { key: "points", value: tableTeam.points, bold: true },
         { key: "played", value: tableTeam.games.length },
@@ -110,27 +107,22 @@ export default function LeagueTable({ fixtures, teams }: Props) {
         {
           key: "goalsFor",
           value: tableTeam.goalsScored,
-          showHorizontalPadding: true,
         },
         {
           key: "goalsAgainst",
           value: tableTeam.goalsConceived,
-          showHorizontalPadding: true,
         },
         {
           key: "goalsDifference",
           value: tableTeam.goalsDifference,
-          showHorizontalPadding: true,
         },
         {
           key: "percentage",
           value:
             Math.round(100 * League.getTeamPercentage(tableTeam.points, tableTeam.games.length)),
-          showHorizontalPadding: true,
         },
         {
           key: "form",
-          showHorizontalPadding: true,
           value: tableTeam.games.slice(0, 5).reduce((acc, game) => acc + League.POINTS_PER_RESULT[game.result], 0),
           element: (
             <div className="w-16">

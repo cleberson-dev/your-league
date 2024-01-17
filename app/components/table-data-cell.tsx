@@ -3,7 +3,6 @@ import cls from "classnames";
 export type Colors = "green" | "blue" | "red" | "orange"; // Supported ones because of tailwind static nature
 
 type TableDataCellProps = {
-  showHorizontalPadding?: boolean;
   bold?: boolean;
   fullWidth?: boolean;
   align?: "left" | "center" | "right";
@@ -13,10 +12,10 @@ type TableDataCellProps = {
   value?: string | number;
   tooltipText?: string;
   className?: string;
+  hidden?: boolean;
 };
 
 export default function TableDataCell({
-  showHorizontalPadding,
   bold,
   fullWidth,
   align,
@@ -26,14 +25,16 @@ export default function TableDataCell({
   tooltipText,
   className,
   color,
+  hidden,
 }: TableDataCellProps) {
+  if (hidden) return null;
+
   return (
     <td
       title={tooltipText}
       className={cls(
-        "min-w-7 overflow-hidden text-ellipsis whitespace-nowrap py-1 first:pl-3 last:pr-6 lg:min-w-14 lg:py-4 lg:first:pl-6",
+        "min-w-7 lg:min-w-14 overflow-hidden text-ellipsis whitespace-nowrap px-2 lg:px-4 py-1 lg:py-4",
         {
-          "px-2 lg:px-4": showHorizontalPadding,
           "font-bold": bold,
           "w-full": fullWidth,
           "text-left": align === "left",

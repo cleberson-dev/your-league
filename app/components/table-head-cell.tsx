@@ -4,7 +4,6 @@ import cls from "classnames";
 type TableHeadCellProps = {
   label: string;
   shortLabel?: string;
-  hideHorizontalPadding?: boolean;
   align?: "left" | "center" | "right";
   sortable?: boolean;
   onClick?: () => void;
@@ -12,11 +11,11 @@ type TableHeadCellProps = {
   isTopRightCell?: boolean;
   isSorting?: boolean;
   sortColumnOrder?: "asc" | "desc" | null;
+  hidden?: boolean;
 };
 
 export default function TableHeadCell({
   align,
-  hideHorizontalPadding,
   sortable,
   onClick,
   isTopLeftCell,
@@ -25,22 +24,25 @@ export default function TableHeadCell({
   shortLabel,
   isSorting,
   sortColumnOrder,
+  hidden,
 }: TableHeadCellProps) {
+  if (hidden) return null;
+
   const SortIcon =
     sortColumnOrder === "asc" ? ArrowLongUpIcon : ArrowLongDownIcon;
 
   return (
     <th
       className={cls({
-        "py-1 first:pl-3 last:pr-6 hover:text-black lg:py-4 lg:first:pl-6 dark:hover:text-violet":
+        "py-1 lg:py-4 px-2 lg:px-4 dark:hover:text-violet hover:text-black" :
           true,
-        "px-2 lg:px-4": !hideHorizontalPadding,
         "rounded-tl-md lg:rounded-tl-xl": isTopLeftCell,
         "rounded-tr-md lg:rounded-tr-xl": isTopRightCell,
         "text-left": align === "left",
         "text-center": align === "center",
         "text-right": align === "right",
         "cursor-pointer": sortable,
+        "hidden": hidden,
       })}
       onClick={onClick}
     >

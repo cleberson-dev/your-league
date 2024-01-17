@@ -1,6 +1,17 @@
 import { useState } from "react";
 import TableHeadCell from "~/components/table-head-cell";
 import TableDataCell, { Colors } from "~/components/table-data-cell";
+import useWindowDimensions from "~/hooks/useWindowDimensions";
+
+const breakpoints = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  "2xl": 1536,
+} as const;
+
+type Breakpoints = keyof typeof breakpoints;
 
 const className = {
   table: "w-full table-auto select-none shadow",
@@ -18,14 +29,13 @@ export type HeaderDef = {
   shortLabel?: string;
   sortable?: boolean;
   align?: "left" | "center" | "right";
-  hideHorizontalPadding?: boolean;
+  minWidth?: Breakpoints;
 };
 
 export type DataDef = {
   key: string;
   value?: string | number;
   element?: React.ReactNode;
-  showHorizontalPadding?: boolean;
   align?: "left" | "center" | "right";
   fullWidth?: boolean;
   bold?: boolean;
@@ -105,6 +115,10 @@ export default function Table({ headers, data, specialRows }: TableProps) {
     ),
   }) : [];
 
+  const { width } = useWindowDimensions();
+
+  const isHidden = (header: HeaderDef) => header.minWidth !== undefined && width <= breakpoints[header.minWidth];
+
   return (
     <table className={className.table}>
       <thead className={className.tableHeader}>
@@ -115,7 +129,6 @@ export default function Table({ headers, data, specialRows }: TableProps) {
               label={header.label}
               shortLabel={header.shortLabel}
               align={header.align as "left" | "center" | "right"}
-              hideHorizontalPadding={header.hideHorizontalPadding}
               isSorting={headerIdx === sortColumnIdx}
               isTopLeftCell={headerIdx === 0}
               isTopRightCell={headerIdx === headers.length - 1}
@@ -124,6 +137,7 @@ export default function Table({ headers, data, specialRows }: TableProps) {
               }
               sortColumnOrder={sortColumnOrder}
               sortable={header.sortable}
+              hidden={isHidden(header)}
             />
           ))}
         </tr>
@@ -143,10 +157,10 @@ export default function Table({ headers, data, specialRows }: TableProps) {
                 align={col.align}
                 fullWidth={col.fullWidth}
                 isHighlighted={sortColumnIdx === colIdx}
-                showHorizontalPadding={col.showHorizontalPadding}
                 tooltipText={col.tooltipText || specialRowsArray[rowIdx]?.label}
                 className={col.className}
                 color={specialRowsArray[rowIdx]?.color}
+                hidden={isHidden(headers[colIdx])}
               />
             ))}
           </tr>
