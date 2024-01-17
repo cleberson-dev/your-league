@@ -44,9 +44,9 @@ export default function TableDataCell({
         },
         color && {
           red: "bg-red/10 group-hover:bg-red/20",
-          green: "bg-green/30 dark:bg-green/20",
+          green: "bg-green/10 group-hover:bg-green/20",
           orange: "bg-orange-500/10 group-hover:bg-orange-500/20",
-          blue: "bg-blue-500/10 group-hover:bg-blue/500/20", 
+          blue: "bg-blue-500/10 group-hover:bg-blue-500/20", 
         }[color] || "",
         className
       )}
