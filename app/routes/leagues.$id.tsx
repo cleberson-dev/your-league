@@ -171,7 +171,7 @@ export default function LeaguePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[85fr_25fr] gap-4">
+        <div className="grid grid-cols-1 2xl:grid-cols-[85fr_25fr] gap-4">
           <LeagueTable
             fixtures={isEditModeEnabled ? simulatedFixtures : league.fixtures}
             teams={league.teams}

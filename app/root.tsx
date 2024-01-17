@@ -102,7 +102,7 @@ function Layout({ children }: React.PropsWithChildren) {
   return (
     <div
       className={cls("remix-app", {
-        "p-2 pt-16 lg:p-20 lg:pb-12 lg:pr-8": shouldShowMenu,
+        "p-2 pt-16 md:p-20 md:pb-12 md:pr-8": shouldShowMenu,
       })}
     >
       {shouldShowMenu && (

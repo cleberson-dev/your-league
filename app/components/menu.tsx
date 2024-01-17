@@ -21,10 +21,10 @@ const className = {
   list: (isCollapsed?: boolean) => cls({
     "flex-col h-[100svh] text-gray-500 shadow bg-slate-50 dark:bg-dark": true,
     "flex": !isCollapsed,
-    "hidden lg:flex": isCollapsed,
+    "hidden md:flex": isCollapsed,
   }),
-  mainSection: "lg:flex-grow",
-  button: "p-4 lg:hidden",
+  mainSection: "md:flex-grow",
+  button: "p-4 md:hidden",
 };
 
 export default function Menu() {
@@ -37,7 +37,7 @@ export default function Menu() {
       onClick: () => setIsCollapsed(!isCollapsed),
       icon: isCollapsed ? ArrowLongRightIcon : ArrowLongLeftIcon,
       label: isCollapsed ? "Expand" : "Collapse",
-      className: "hidden lg:block",
+      className: "hidden md:block",
     },
     { href: "/dashboard", icon: HomeIcon, label: "Home" },
     { href: "/tables", icon: TableCellsIcon, label: "Tables" },
