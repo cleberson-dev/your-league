@@ -145,9 +145,9 @@ export default function LeaguePage() {
             { label: league.name },
           ]}
         />
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-y-2">
           <h1 className="text-xl lg:text-3xl font-bold">{league.name}</h1>
-          <div className="flex gap-x-2">
+          <div className="flex flex-row-reverse sm:flex-row gap-x-2">
             {isEditModeEnabled && (
               <>
                 <Button variant="neutral" onClick={resetFixtures} confirmAction>
