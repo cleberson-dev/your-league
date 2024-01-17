@@ -11,5 +11,5 @@ export default function TeamLogo({ team, ...props }: Props) {
     ? `/team-logos/${team.id}.${team.logoFiletype}`
     : DEFAULT_LOGO;
 
-  return <img {...props} src={logoSrc} />;
+  return <img {...props} src={logoSrc} alt={`${team.name}'s Logo`} />;
 }

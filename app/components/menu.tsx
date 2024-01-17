@@ -18,11 +18,12 @@ import cls from "classnames";
 
 const className = {
   menu: "z-40 fixed left-0 top-0 text-xs",
-  list: (isCollapsed?: boolean) => cls({
-    "flex-col h-[100svh] text-gray-500 shadow bg-slate-50 dark:bg-dark": true,
-    "flex": !isCollapsed,
-    "hidden md:flex": isCollapsed,
-  }),
+  list: (isCollapsed?: boolean) =>
+    cls({
+      "flex-col h-[100svh] text-gray-500 shadow bg-slate-50 dark:bg-dark": true,
+      flex: !isCollapsed,
+      "hidden md:flex": isCollapsed,
+    }),
   mainSection: "md:flex-grow",
   button: "p-4 md:hidden",
 };
@@ -61,8 +62,16 @@ export default function Menu() {
 
   return (
     <menu className={className.menu}>
-      <button className={className.button} onClick={() => setIsCollapsed(!isCollapsed)}>
-        {isCollapsed ? <Bars3Icon className="w-4 h-4" /> : <ArrowLongLeftIcon className="w-4 h-4" />}
+      <button
+        className={className.button}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        aria-label={isCollapsed ? "Open menu" : "Close menu"}
+      >
+        {isCollapsed ? (
+          <Bars3Icon className="h-4 w-4" />
+        ) : (
+          <ArrowLongLeftIcon className="h-4 w-4" />
+        )}
       </button>
       <ul className={className.list(isCollapsed)}>
         <div className={className.mainSection}>

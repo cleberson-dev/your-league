@@ -79,6 +79,7 @@ export default function Fixtures({ fixtures, teams, renderScore }: Props) {
           className={className.paginationButton}
           onClick={goPrevRound}
           disabled={currentRound === 0}
+          aria-label="Go to previous round"
         >
           <ChevronLeftIcon width={16} height={16} />
         </button>
@@ -88,6 +89,7 @@ export default function Fixtures({ fixtures, teams, renderScore }: Props) {
           className={className.paginationButton}
           onClick={goNextRound}
           disabled={currentRound === fixtures.length - 1}
+          aria-label="Go to next round"
         >
           <ChevronRightIcon width={16} height={16} />
         </button>

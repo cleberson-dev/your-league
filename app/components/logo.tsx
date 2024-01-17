@@ -11,8 +11,8 @@ export default function Logo({ className }: Props) {
   const logoSrc = theme === "dark" ? "/logo-dark.svg" : "/logo.svg";
 
   return (
-    <Link to="/">
-      <img className={className} src={logoSrc} />
+    <Link to="/" aria-label="Go to Home Page">
+      <img className={className} src={logoSrc} alt="Website's Logo" />
     </Link>
   );
 }
