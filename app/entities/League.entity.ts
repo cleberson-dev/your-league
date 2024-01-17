@@ -137,6 +137,7 @@ export default class League {
   }
 
   static getTeamPercentage(points: number, gamesPlayed: number) {
+    if (gamesPlayed === 0) return 0;
     return points / (gamesPlayed * 3);
   }
 

@@ -1,25 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import cls from "classnames";
-import { ArrowLongUpIcon, ArrowLongDownIcon } from "@heroicons/react/16/solid";
 import TeamLogo from "~/components/team-logo";
-import League, { Fixtures, Table, Team } from "~/entities/League.entity";
+import League, {
+  Fixtures,
+  Table as LeagueTable,
+  Team,
+} from "~/entities/League.entity";
 import TeamFormBullets from "./team-form-bullets";
+import Table, { DataDef, SpecialRow } from "./table";
 
-const PROMOTION_SPOTS = 4;
-const RELEGATION_SPOTS = 4;
-
-type SpecialSpotColors = "green" | "blue" | "red" | "orange"; // Supported ones because of tailwind static nature
-
-type SpecialSpot = {
-  type: string;
-  label: string;
-  color: SpecialSpotColors;
-  positions: number[]; // zero-based positions, it should be used .at method instead of bracket notation
-};
-
-const specialSpots: SpecialSpot[] = [
+const specialRows: SpecialRow[] = [
   {
     type: "promotion",
     label: "Promoted",
@@ -40,316 +30,119 @@ const specialSpots: SpecialSpot[] = [
   },
 ];
 
-const spotsArray: { label: string; color: SpecialSpotColors }[] = Array.from({
-  length: 20,
-  ...Object.fromEntries(
-    specialSpots
-      .map((spot) =>
-        spot.positions.map((pos) => [
-          pos,
-          { color: spot.color, label: spot.label },
-        ])
-      )
-      .flat()
-  ),
-});
-
 type Props = {
   fixtures: Fixtures;
   teams: Team[];
 };
 
-const tableHeaders = [
-  {
-    key: "position",
-    label: "Pos",
-    shortLabel: "#",
-  },
-  { key: "logo", label: "", sortable: false },
-  { key: "team", label: "Team", align: "left", sortable: false },
-  { key: "points", label: "Points", shortLabel: "P", sortable: true },
-  { key: "played", label: "Played", shortLabel: "G", sortable: true },
-  { key: "wins", label: "Wins", shortLabel: "W", sortable: true, collapseOnSm: true },
-  { key: "draws", label: "Draws", shortLabel: "D", sortable: true, collapseOnSm: true },
-  { key: "losses", label: "Losses", shortLabel: "L", sortable: true, collapseOnSm: true },
-  { key: "goalsFor", label: "GF", hideHorizontalPadding: true, sortable: true },
-  {
-    key: "goalsAgainst",
-    label: "GA",
-    hideHorizontalPadding: true,
-    sortable: true,
-  },
-  {
-    key: "goalsDifference",
-    label: "+/-",
-    hideHorizontalPadding: true,
-    sortable: true,
-  },
-  {
-    key: "percentage",
-    label: "%",
-    hideHorizontalPadding: true,
-    sortable: true,
-  },
-  { key: "form", label: "Form", sortable: true, collapseOnSm: true },
-];
-
-const mapTeamToRowData = (
-  tableTeam: Table[number],
-  leagueTeams: Team[]
-): {
-  key: string;
-  element?: React.ReactNode;
-  value?: string | number;
-  showHorizontalPadding?: boolean;
-  align?: "left" | "center" | "right";
-  fullWidth?: boolean;
-  bold?: boolean;
-}[] => [
-  { key: "position", value: tableTeam.position, showHorizontalPadding: true },
-  {
-    key: "logo",
-    element: (
-      <div className="flex items-center justify-center">
-        <TeamLogo team={tableTeam.team} className="h-4 lg:h-5" />
-      </div>
-    ),
-  },
-  {
-    key: "team",
-    value: tableTeam.team.name,
-    align: "left",
-    fullWidth: true,
-    showHorizontalPadding: true,
-  },
-  { key: "points", value: tableTeam.points, bold: true },
-  { key: "played", value: tableTeam.games.length },
-  { key: "wins", value: tableTeam.wins },
-  { key: "draws", value: tableTeam.draws },
-  { key: "losses", value: tableTeam.losses },
-  {
-    key: "goalsFor",
-    value: tableTeam.goalsScored,
-    showHorizontalPadding: true,
-  },
-  {
-    key: "goalsAgainst",
-    value: tableTeam.goalsConceived,
-    showHorizontalPadding: true,
-  },
-  {
-    key: "goalsDifference",
-    value: tableTeam.goalsDifference,
-    showHorizontalPadding: true,
-  },
-  {
-    key: "percentage",
-    value:
-      tableTeam.games.length > 0
-        ? Math.round(
-          100 *
-            League.getTeamPercentage(tableTeam.points, tableTeam.games.length)
-        )
-        : 0,
-    showHorizontalPadding: true,
-  },
-  {
-    key: "form",
-    showHorizontalPadding: true,
-    element: (
-      <div className="w-16">
-        <TeamFormBullets
-          team={tableTeam.team}
-          results={tableTeam.games.slice(0, 5).reverse()}
-          leagueTeams={leagueTeams}
-        />
-      </div>
-    ),
-  },
-];
-
-const className = {
-  table: "w-full table-auto select-none shadow",
-  tableHeader:
-    "select-none bg-primary-dark text-xs lg:text-sm font-bold lg:font-black text-black/50 dark:bg-dark dark:text-white/50 lowercase",
-  tableHeaderCell: (
-    showHorizontalPadding: boolean,
-    isTopLeftCell: boolean,
-    isTopRightCell: boolean,
-    align: "left" | "center" | "right" = "center",
-    sortable: boolean = false,
-    collapseOnSm: boolean = false,
-  ) =>
-    cls({
-      "py-1 lg:py-4 first:pl-3 lg:first:pl-6 last:pr-6 hover:text-black dark:hover:text-violet":
-        true,
-      "px-2 lg:px-4": showHorizontalPadding,
-      "rounded-tl-md lg:rounded-tl-xl": isTopLeftCell,
-      "rounded-tr-md lg:rounded-tr-xl": isTopRightCell,
-      "text-left": align === "left",
-      "text-center": align === "center",
-      "text-right": align === "right",
-      "cursor-pointer": sortable,
-      "collapse lg:visible": collapseOnSm,
-    }),
-  sortIcon: "absolute -right-3 top-[2px] h-3 w-3",
-  tableBody: "text-center text-sm text-black dark:text-white",
-  tableBodyRow:
-    "group border-b border-solid border-black/5 bg-primary transition-colors hover:bg-primary-dark dark:border-white/5 dark:bg-dark/50 dark:hover:bg-dark/60",
-  tableBodyRowCell: (
-    showHorizontalPadding: boolean = false,
-    bold: boolean = false,
-    fullWidth: boolean = false,
-    align: "left" | "center" | "right" = "center",
-    isRegularHighlighted: boolean = false,
-    spotColor?: string,
-    isPromotionHighlighted: boolean = false,
-    isRelegationHighlighted: boolean = false
-  ) =>
-    cls({
-      "min-w-7 lg:min-w-14 py-1 lg:py-4 first:pl-3 lg:first:pl-6 last:pr-6 whitespace-nowrap overflow-hidden text-ellipsis":
-        true,
-      "px-2 lg:px-4": showHorizontalPadding,
-      "font-bold": bold,
-      "w-full": fullWidth,
-      "text-left": align === "left",
-      "text-center": align === "center",
-      "text-right": align === "right",
-      "bg-primary-dark dark:bg-darker/60": isRegularHighlighted,
-      "bg-green/10 group-hover:bg-green/20": spotColor === "green",
-      "bg-red/10 group-hover:bg-red/20": spotColor === "red",
-      "bg-orange-500/10 group-hover:bg-orange-500/20": spotColor === "orange",
-      "bg-green/30 dark:bg-green/20": isPromotionHighlighted,
-      "bg-red/30 dark:bg-red/20": isRelegationHighlighted,
-    }),
-};
 
 export default function LeagueTable({ fixtures, teams }: Props) {
-  const [sortColumnIdx, setSortColumnIdx] = useState<number | null>(null);
-  const [sortColumnOrder, setSortColumnOrder] = useState<"asc" | "desc" | null>(
-    "asc"
-  );
-
-  let table = League.getTable(fixtures, teams);
-
-  if (sortColumnIdx !== null) {
-    table = table.sort((a, b) => {
-      const rowDataA = mapTeamToRowData(a, teams)[sortColumnIdx]!;
-      const rowDataB = mapTeamToRowData(b, teams)[sortColumnIdx]!;
-
-      // TODO: Handle Strings as well because it'll mess up in the future
-      let valueA = rowDataA.value as number | undefined;
-      let valueB = rowDataB.value as number | undefined;
-
-      const key = rowDataA.key;
-      if (key === "form") {
-        valueA = a.games
-          .slice(0, 5)
-          .reduce(
-            (acc, game) => acc + League.POINTS_PER_RESULT[game.result],
-            0
-          );
-        valueB = b.games
-          .slice(0, 5)
-          .reduce(
-            (acc, game) => acc + League.POINTS_PER_RESULT[game.result],
-            0
-          );
-      }
-
-      if (valueA === undefined || valueB === undefined) return 0;
-
-      return sortColumnOrder === "asc" ? valueA - valueB : valueB - valueA;
-    });
-  }
-
-  const sortColumn = (colIdx: number) => {
-    if (colIdx === sortColumnIdx) {
-      const orders: ("asc" | "desc" | null)[] = ["desc", "asc", null];
-      const nextOrderIdx =
-        (orders.findIndex((order) => order === sortColumnOrder) + 1) %
-        orders.length;
-      const nextOrder = orders[nextOrderIdx];
-
-      if (nextOrder === null) setSortColumnIdx(null);
-
-      setSortColumnOrder(nextOrder);
-      return;
-    }
-
-    setSortColumnIdx(colIdx);
-    setSortColumnOrder("desc");
-  };
-
-  const SortIcon =
-    sortColumnOrder === "asc" ? ArrowLongUpIcon : ArrowLongDownIcon;
-
-  const isInPromotionSpot = (position: number) => position < PROMOTION_SPOTS;
-  const isInRelegationSpot = (rowIdx: number) =>
-    rowIdx >= teams.length - RELEGATION_SPOTS;
-  const isHighlightedSortColumn = (colIdx: number) => colIdx === sortColumnIdx;
+  const table = League.getTable(fixtures, teams);
 
   return (
-    <table className={className.table}>
-      {tableHeaders.map((header, headerIdx) => (
-        <col
-          key={headerIdx}
-          className={cls({ "collapse lg:visible": header.collapseOnSm })}
-        ></col>
-      ))}
-      <thead className={className.tableHeader}>
-        <tr>
-          {tableHeaders.map((header, colIdx) => (
-            <th
-              key={header.key}
-              className={className.tableHeaderCell(
-                !header.hideHorizontalPadding,
-                colIdx === 0,
-                colIdx === tableHeaders.length - 1,
-                header.align as "left" | "center" | "right",
-                header.sortable,
-                header.collapseOnSm,
-              )}
-              onClick={header.sortable ? () => sortColumn(colIdx) : undefined}
-            >
-              <span className="relative">
-                <span className={cls({ "hidden lg:inline": header.shortLabel })}>{header.label}</span>
-                {header.shortLabel && <span className="lg:hidden">{header.shortLabel}</span>}
-                {isHighlightedSortColumn(colIdx) && (
-                  <SortIcon className={className.sortIcon} />
-                )}
-              </span>
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className={className.tableBody}>
-        {table.map((team, rowIdx) => (
-          <tr
-            className={className.tableBodyRow}
-            key={team.team.name}
-            title={spotsArray[rowIdx]?.label}
-          >
-            {mapTeamToRowData(team, teams).map((colData, colIdx) => (
-              <td
-                key={colData.key}
-                className={className.tableBodyRowCell(
-                  colData.showHorizontalPadding,
-                  colData.bold,
-                  colData.fullWidth,
-                  colData.align,
-                  isHighlightedSortColumn(colIdx),
-                  spotsArray[rowIdx]?.color,
-                  isInPromotionSpot(rowIdx) && isHighlightedSortColumn(colIdx),
-                  isInRelegationSpot(rowIdx) && isHighlightedSortColumn(colIdx)
-                )}
-              >
-                {colData.element ?? colData.value}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Table
+      headers={[
+        {
+          key: "position",
+          label: "Pos",
+          shortLabel: "#",
+        },
+        { key: "logo", label: "", sortable: false },
+        { key: "team", label: "Team", align: "left", sortable: false },
+        { key: "points", label: "Points", shortLabel: "P", sortable: true },
+        { key: "played", label: "Played", shortLabel: "G", sortable: true },
+        { key: "wins", label: "Wins", shortLabel: "W", sortable: true },
+        { key: "draws", label: "Draws", shortLabel: "D", sortable: true },
+        { key: "losses", label: "Losses", shortLabel: "L", sortable: true },
+        {
+          key: "goalsFor",
+          label: "GF",
+          hideHorizontalPadding: true,
+          sortable: true,
+        },
+        {
+          key: "goalsAgainst",
+          label: "GA",
+          hideHorizontalPadding: true,
+          sortable: true,
+        },
+        {
+          key: "goalsDifference",
+          label: "+/-",
+          hideHorizontalPadding: true,
+          sortable: true,
+        },
+        {
+          key: "percentage",
+          label: "%",
+          hideHorizontalPadding: true,
+          sortable: true,
+        },
+        { key: "form", label: "Form", sortable: true },
+      ]}
+      specialRows={specialRows}
+      data={table.map((tableTeam): DataDef[] => [
+        {
+          key: "position",
+          value: tableTeam.position,
+          showHorizontalPadding: true,
+        },
+        {
+          key: "logo",
+          element: (
+            <div className="flex items-center justify-center">
+              <TeamLogo team={tableTeam.team} className="h-4 lg:h-5" />
+            </div>
+          ),
+        },
+        {
+          key: "team",
+          value: tableTeam.team.name,
+          align: "left",
+          fullWidth: true,
+          showHorizontalPadding: true,
+        },
+        { key: "points", value: tableTeam.points, bold: true },
+        { key: "played", value: tableTeam.games.length },
+        { key: "wins", value: tableTeam.wins },
+        { key: "draws", value: tableTeam.draws },
+        { key: "losses", value: tableTeam.losses },
+        {
+          key: "goalsFor",
+          value: tableTeam.goalsScored,
+          showHorizontalPadding: true,
+        },
+        {
+          key: "goalsAgainst",
+          value: tableTeam.goalsConceived,
+          showHorizontalPadding: true,
+        },
+        {
+          key: "goalsDifference",
+          value: tableTeam.goalsDifference,
+          showHorizontalPadding: true,
+        },
+        {
+          key: "percentage",
+          value:
+            Math.round(100 * League.getTeamPercentage(tableTeam.points, tableTeam.games.length)),
+          showHorizontalPadding: true,
+        },
+        {
+          key: "form",
+          showHorizontalPadding: true,
+          value: tableTeam.games.slice(0, 5).reduce((acc, game) => acc + League.POINTS_PER_RESULT[game.result], 0),
+          element: (
+            <div className="w-16">
+              <TeamFormBullets
+                team={tableTeam.team}
+                results={tableTeam.games.slice(0, 5).reverse()}
+                leagueTeams={teams}
+              />
+            </div>
+          ),
+        },
+      ])}
+    />
   );
 }
